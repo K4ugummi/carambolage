@@ -1,7 +1,10 @@
 [package]
 name = "carambolage"
 version = "0.1.0"
-authors = ["Fabian Drinck <fabian.drinck@rwth-aachen.de>"]
+authors = [
+    "Fabian Drinck <fabian.drinck@rwth-aachen.de>",
+    "Stephan Schauerte <stephan@schauerte.online>"
+]
 
 [dependencies]
 glium = "*"

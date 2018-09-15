@@ -2,7 +2,7 @@ extern crate glium;
 extern crate nalgebra;
 extern crate time;
 
-use glium::glutin;
+use glium::{glutin, Surface};
 use glutin::{ControlFlow, Event, WindowEvent};
 
 mod scene;
@@ -52,7 +52,28 @@ fn main() {
     let mut events_loop = glutin::EventsLoop::new();
     let window = glutin::WindowBuilder::new();
     let context = glutin::ContextBuilder::new();
-    let _display = glium::Display::new(window, context, &events_loop).unwrap();
+    let display = glium::Display::new(window, context, &events_loop).unwrap();
+
     let mut game = Game::new();
-    events_loop.run_forever(|event| game.handle_events(event));
+
+    let mut should_close = false;
+    while !should_close {
+        let mut render_target = display.draw();
+
+        render_target.clear_color(0.0, 0.0, 1.0, 1.0);
+
+        // Update scene
+        game.run();
+
+        render_target.finish().unwrap();
+
+        // Handle events
+        events_loop.poll_events(|event| match event {
+            glutin::Event::WindowEvent { event, .. } => match event {
+                glutin::WindowEvent::CloseRequested => should_close = true,
+                _ => (),
+            },
+            _ => (),
+        });
+    }
 }

@@ -19,7 +19,7 @@ impl Scene {
     /// Update the scene based on the internal state and a given time step.
     pub(super) fn run(&mut self, time_step: Duration) {
         let time_step = (time_step.num_milliseconds() * 1_000) as f32;
-        assert!(time_step > 0.);
+        //assert!(time_step > 0.);
         for car in &mut self.cars {
             car.run(time_step);
         }
@@ -49,7 +49,7 @@ impl Car {
     /// Update the car position and velocity based on the internal car state for
     /// a given time step.
     fn run(&mut self, time_step: f32) {
-        assert!(time_step > 0.);
+        //assert!(time_step > 0.);
         self.pos += self.vel * time_step
             + self.force / (2. * self.mass) * time_step.powi(2);
         self.vel += self.force / self.mass * time_step;

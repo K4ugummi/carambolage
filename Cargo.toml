@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["Fabian Drinck <fabian.drinck@rwth-aachen.de>"]
 
 [dependencies]
-glium = "~0.22.0"
+glium = "*"
 nalgebra = "~0.16.1"
 time = "~0.1.40"
 

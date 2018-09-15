@@ -60,7 +60,7 @@ fn main() {
     while !should_close {
         let mut render_target = display.draw();
 
-        render_target.clear_color(0.0, 0.0, 1.0, 1.0);
+        render_target.clear_color(0.042, 0., 0.042, 1.0);
 
         // Update scene
         game.run();

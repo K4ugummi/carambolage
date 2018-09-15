@@ -28,6 +28,7 @@ impl Scene {
 
 pub(super) struct Car {
     pos: Point2<f32>,
+    rot: f32,
     vel: Vector2<f32>,
     force: Vector2<f32>,
     mass: f32,
@@ -38,6 +39,7 @@ impl Car {
         assert!(mass > 0.);
         Car {
             pos,
+            rot: 0.,
             vel: Vector2::new(0., 0.),
             force: Vector2::new(0., 0.),
             mass,

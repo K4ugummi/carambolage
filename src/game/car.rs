@@ -39,7 +39,7 @@ impl Car {
 }
 
 #[cfg(test)]
-mod car_test {
+mod test {
     use super::Car;
     use nalgebra::{Point2, Vector2};
 
@@ -47,6 +47,7 @@ mod car_test {
     fn go_car_1() {
         let mut car = Car {
             pos: Point2::new(0., 0.),
+            _rot: 0.,
             vel: Vector2::new(1., 0.),
             force: Vector2::new(0., 0.),
             mass: 1.,
@@ -59,6 +60,7 @@ mod car_test {
     fn go_car_2() {
         let mut car = Car {
             pos: Point2::new(0., 0.),
+            _rot: 0.,
             vel: Vector2::new(0., 0.),
             force: Vector2::new(1., 0.),
             mass: 1.,

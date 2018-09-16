@@ -1,4 +1,9 @@
+extern crate glium;
+extern crate nalgebra;
+extern crate rand;
+
 mod car;
+mod model;
 mod scene;
 
 use self::scene::*;

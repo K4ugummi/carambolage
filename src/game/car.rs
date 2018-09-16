@@ -1,8 +1,6 @@
-extern crate glium;
-extern crate nalgebra;
-
-use self::nalgebra::{Point2, Vector2};
-use glium::Frame;
+use super::glium::Frame;
+use super::model::Model;
+use super::nalgebra::{Point2, Vector2, Vector3};
 
 pub(super) struct Car {
     pos: Point2<f32>,
@@ -10,10 +8,12 @@ pub(super) struct Car {
     vel: Vector2<f32>,
     force: Vector2<f32>,
     mass: f32,
+
+    model: Model,
 }
 
 impl Car {
-    pub fn new(pos: Point2<f32>, mass: f32) -> Car {
+    pub fn new(pos: Point2<f32>, mass: f32, color: Vector3<f32>) -> Car {
         assert!(mass > 0.);
         Car {
             pos,
@@ -21,6 +21,8 @@ impl Car {
             vel: Vector2::new(0., 0.),
             force: Vector2::new(0., 0.),
             mass,
+
+            model: Model::new(color),
         }
     }
 

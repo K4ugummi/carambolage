@@ -1,3 +1,4 @@
+use super::glium;
 use super::glium::Frame;
 use super::model::Model;
 use super::nalgebra::{Point2, Vector2, Vector3};
@@ -13,7 +14,12 @@ pub(super) struct Car {
 }
 
 impl Car {
-    pub fn new(pos: Point2<f32>, mass: f32, color: Vector3<f32>) -> Car {
+    pub fn new(
+        pos: Point2<f32>,
+        mass: f32,
+        color: Vector3<f32>,
+        display: &glium::Display,
+    ) -> Car {
         assert!(mass > 0.);
         Car {
             pos,
@@ -22,7 +28,7 @@ impl Car {
             force: Vector2::new(0., 0.),
             mass,
 
-            model: Model::new(color),
+            model: Model::new(color, display),
         }
     }
 

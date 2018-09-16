@@ -5,6 +5,7 @@ extern crate rand;
 mod car;
 mod model;
 mod scene;
+mod shader;
 
 use self::scene::*;
 
@@ -19,9 +20,9 @@ pub(crate) struct Game {
 }
 
 impl Game {
-    pub(crate) fn new() -> Game {
+    pub(crate) fn new(display: &glium::Display) -> Game {
         Game {
-            scene: Scene::new(3),
+            scene: Scene::new(3, display),
             time: PreciseTime::now(),
         }
     }

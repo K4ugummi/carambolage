@@ -28,8 +28,7 @@ impl Scene {
                         },
                         display,
                     )
-                })
-                .collect(),
+                }).collect(),
         }
     }
 

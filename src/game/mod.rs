@@ -11,7 +11,7 @@ use self::scene::*;
 
 use glium::glutin::ControlFlow;
 use glium::Frame;
-
+use nalgebra::{Matrix4, Perspective3, Point3, Vector3};
 use time::{Duration, PreciseTime};
 
 pub(crate) struct Game {
@@ -42,7 +42,12 @@ impl Game {
     }
 
     pub fn draw(&self, target: &mut Frame) {
-        // TODO: Draw UI
+        let projection = Perspective3::new(1280. / 720., 45., 0.1, 100.);
+        let view = Matrix4::look_at_lh(
+            &Point3::new(0., 0., 10.),
+            &Point3::new(0., 0., 0.),
+            &Vector3::new(0., 1., 0.),
+        );
 
         // Draw game scene
         self.scene.draw(target);

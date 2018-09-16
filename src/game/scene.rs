@@ -22,8 +22,7 @@ impl Scene {
                         let b = rng.gen_range(0.0f32, 1.0f32);
                         Vector3::new(r, g, b)
                     })
-                })
-                .collect(),
+                }).collect(),
         }
     }
 

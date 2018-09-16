@@ -44,5 +44,3 @@ pub(super) fn generate_program(display: &glium::Display) -> glium::Program {
 
     program.unwrap()
 }
-
-pub(super) struct Shader {}

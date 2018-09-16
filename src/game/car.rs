@@ -1,7 +1,7 @@
 use super::glium;
-use super::glium::Frame;
+use super::glium::{glutin, Frame, Surface};
 use super::model::Model;
-use super::nalgebra::{Point2, Vector2, Vector3};
+use super::nalgebra::{Matrix4, Point2, Vector2, Vector3};
 
 pub(super) struct Car {
     pos: Point2<f32>,
@@ -41,8 +41,13 @@ impl Car {
         self.vel += self.force / self.mass * time_step;
     }
 
-    pub(super) fn draw(&self, _target: &mut Frame) {
-        //target.draw();
+    pub(super) fn draw(
+        &self,
+        target: &mut Frame,
+        view: &Matrix4<f32>,
+        projection: &Matrix4<f32>,
+    ) {
+        //target.draw()
     }
 }
 

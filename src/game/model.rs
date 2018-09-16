@@ -5,11 +5,11 @@ use super::shader::generate_program;
 
 pub(super) struct Model {
     pub(super) color: Vector3<f32>,
-    vertex_buffer: Vec<f32>,
-    index_buffer: Vec<usize>,
-    matrix: Matrix4<f32>,
+    pub(super) vertex_buffer: Vec<f32>,
+    pub(super) index_buffer: Vec<usize>,
+    pub(super) matrix: Matrix4<f32>,
 
-    program: glium::Program,
+    pub(super) program: glium::Program,
 }
 
 fn get_test_buffer() -> (Vec<f32>, Vec<usize>) {

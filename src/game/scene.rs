@@ -1,6 +1,6 @@
 use super::glium;
 use super::glium::Frame;
-use super::nalgebra::{Point2, Vector3};
+use super::nalgebra::{Matrix4, Perspective3, Point2, Point3, Vector3};
 use super::rand::{thread_rng, Rng};
 use time::Duration;
 
@@ -42,11 +42,17 @@ impl Scene {
     }
 
     pub(super) fn draw(&self, target: &mut Frame) {
-        // TODO: Draw environment.
+        let projection =
+            Perspective3::new(800. / 600., 45., 0.1, 100.).to_homogeneous();
+        let view = Matrix4::look_at_lh(
+            &Point3::new(0., 0., 10.),
+            &Point3::new(0., 0., 0.),
+            &Vector3::new(0., 1., 0.),
+        );
 
         // Draw objects.
         for car in &self.cars {
-            car.draw(target);
+            car.draw(target, &view, &projection);
         }
     }
 }

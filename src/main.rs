@@ -4,46 +4,54 @@ extern crate time;
 
 use glium::debug::DebugCallbackBehavior;
 use glium::{glutin, Surface};
+use glutin::dpi::{LogicalSize, PhysicalSize};
 
 mod game;
 use game::Game;
 
+fn print_display_info(display: &glium::Display) {
+    let vendor = display.get_opengl_vendor_string();
+    let version = display.get_opengl_version_string();
+    let renderer = display.get_opengl_renderer_string();
+    let dimensions = display.get_framebuffer_dimensions();
+    println!("# - Vendor:       {}", vendor);
+    println!("# - Renderer:     {}", renderer);
+    println!("# - Version:      {}", version);
+    println!("# - Dimension:    {:?}", dimensions);
+}
+
 fn main() {
-    println!("### Starting Carambolage ###");
-    println!("# Initializing OpenGL");
     let mut events_loop = glutin::EventsLoop::new();
-    let window = glutin::WindowBuilder::new().with_title("Carambolage");
+    let window = glutin::WindowBuilder::new()
+        .with_dimensions(LogicalSize::new(800., 600.))
+        .with_title("Carambolage");
+
     let gl_request = glutin::GlRequest::Specific(glutin::Api::OpenGl, (3, 3));
     let context = glutin::ContextBuilder::new()
         .with_gl(gl_request)
-        .with_gl_profile(glutin::GlProfile::Core);
+        .with_gl_profile(glutin::GlProfile::Core)
+        .with_gl_debug_flag(true);
     let gl_window =
         glutin::GlWindow::new(window, context, &events_loop).unwrap();
     let debug = DebugCallbackBehavior::PrintAll;
     let display = glium::Display::with_debug(gl_window, debug).unwrap();
+    print_display_info(&display);
 
-    // Print debug stuff
-    let version = display.get_opengl_version();
-    println!(
-        "# OpenGL version (API, MAJOR, MINOR): ({:?}, {}, {})",
-        version.0, version.1, version.2
-    );
-
-    println!("# Initializing game");
     let mut game = Game::new(&display);
 
-    println!("### Starting game loop ###");
     let mut should_close = false;
     while !should_close {
         events_loop.poll_events(|event| match event {
             glutin::Event::WindowEvent { event, .. } => match event {
                 glutin::WindowEvent::CloseRequested => should_close = true,
-                glutin::WindowEvent::KeyboardInput { input, .. } => match input
-                    .virtual_keycode
-                {
-                    Some(glutin::VirtualKeyCode::Escape) => should_close = true,
-                    _ => (),
-                },
+                glutin::WindowEvent::KeyboardInput { input, .. } => {
+                    match input.virtual_keycode {
+                        Some(glutin::VirtualKeyCode::Escape) => {
+                            should_close = true
+                        }
+                        _ => (),
+                    }
+                }
                 _ => (),
             },
             _ => (),

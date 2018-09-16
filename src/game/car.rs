@@ -43,7 +43,8 @@ impl Car {
 #[cfg(test)]
 mod test {
     use super::Car;
-    use nalgebra::{Point2, Vector2};
+    use super::Model;
+    use nalgebra::{Point2, Vector2, Vector3};
 
     #[test]
     fn go_car_1() {
@@ -53,6 +54,8 @@ mod test {
             vel: Vector2::new(1., 0.),
             force: Vector2::new(0., 0.),
             mass: 1.,
+
+            model: Model::new(Vector3::new(1., 0., 0.)),
         };
         car.run(1.);
         assert_eq!(car.pos, Point2::new(1., 0.));
@@ -66,6 +69,8 @@ mod test {
             vel: Vector2::new(0., 0.),
             force: Vector2::new(1., 0.),
             mass: 1.,
+
+            model: Model::new(Vector3::new(1., 0., 0.)),
         };
         car.run(2.);
         assert_eq!(car.pos, Point2::new(2., 0.));

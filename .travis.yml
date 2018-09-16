@@ -1,15 +1,14 @@
 language: rust
 
-matrix:
-    fast_finish: true
-    include:
-        - rust: stable
-          before_script:
-              - rustup component add rustfmt-preview
-              - rustup component add clippy-preview
-          script:
-              - rustc --version
-              - cargo fmt --all -- --check
-              - cargo clippy
-              - cargo test
+cache: cargo
+
+before_script:
+  - rustup component add rustfmt-preview
+  - rustup component add clippy-preview
+
+script:
+  - rustc --version
+  - cargo fmt --all -- --check
+  - cargo clippy
+  - cargo test
 

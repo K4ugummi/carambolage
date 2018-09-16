@@ -6,16 +6,18 @@ pub(super) fn generate_program(display: &glium::Display) -> glium::Program {
         #extension GL_ARB_explicit_uniform_location : enable
         #extension GL_ARB_separate_shader_objects : enable
 
-        layout(location = 0) in vec2 aPosition;
+        layout(location = 0) in vec2 position;
 
         layout(location = 0) out vec4 vColor;
 
-        layout(location = 0) uniform mat4 uMVP;
-        layout(location = 1) uniform vec3 uColor;
+        layout(location = 0) uniform mat4 uModel;
+        layout(location = 1) uniform mat4 uView;
+        layout(location = 2) uniform mat4 uProjection;
+        layout(location = 3) uniform vec3 uColor;
 
         void main() {
             vColor = vec4(uColor, 1.);
-            gl_Position = uMVP * vec4(aPosition, 0., 1.);
+            gl_Position = uModel * uView * uProjection * vec4(position, 0., 1.);
         }
     "#;
 

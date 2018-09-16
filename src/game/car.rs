@@ -47,7 +47,35 @@ impl Car {
         view: &Matrix4<f32>,
         projection: &Matrix4<f32>,
     ) {
-        //target.draw()
+        let model_ref = self.model.matrix.as_ref().clone();
+        let view_ref = view.as_ref().clone();
+        let projection_ref = projection.as_ref().clone();
+        let color_ref = self.model.color.as_ref().clone();
+
+        let uniforms = uniform! {
+            uModel: model_ref,
+            uView: view_ref,
+            uProjection: projection_ref,
+            uColor: color_ref,
+        };
+
+        let parameter = glium::DrawParameters {
+            depth: glium::Depth {
+                test: glium::DepthTest::IfLess,
+                write: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+
+        target
+            .draw(
+                &self.model.vertex_buffer,
+                &self.model.index_buffer,
+                &self.model.program,
+                &uniforms,
+                &parameter,
+            ).unwrap();
     }
 }
 

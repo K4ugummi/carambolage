@@ -21,9 +21,9 @@ impl Scene {
                         Point2::new(x as f32, 0.),
                         1.0,
                         {
-                            let r = rng.gen_range(0.0f32, 1.0f32);
-                            let g = rng.gen_range(0.0f32, 1.0f32);
-                            let b = rng.gen_range(0.0f32, 1.0f32);
+                            let r = 1.0f32; //rng.gen_range(0.0f32, 1.0f32);
+                            let g = 1.0f32; //rng.gen_range(0.0f32, 1.0f32);
+                            let b = 1.0f32; //rng.gen_range(0.0f32, 1.0f32);
                             Vector3::new(r, g, b)
                         },
                         display,
@@ -44,8 +44,8 @@ impl Scene {
     pub(super) fn draw(&self, target: &mut Frame) {
         let projection =
             Perspective3::new(800. / 600., 45., 0.1, 100.).to_homogeneous();
-        let view = Matrix4::look_at_lh(
-            &Point3::new(0., 0., 10.),
+        let view = Matrix4::look_at_rh(
+            &Point3::new(0., 0., 1.),
             &Point3::new(0., 0., 0.),
             &Vector3::new(0., 1., 0.),
         );

@@ -1,3 +1,4 @@
+#[macro_use]
 extern crate glium;
 extern crate nalgebra;
 extern crate time;
@@ -56,9 +57,10 @@ fn main() {
             },
             _ => (),
         });
+
         // Prepere next frame.
         let mut render_target = display.draw();
-        render_target.clear_color(0.042, 0., 0.042, 1.0);
+        render_target.clear_color(0., 0., 0., 1.0);
 
         // Update game (physics, user input, score, ...)
         game.run();

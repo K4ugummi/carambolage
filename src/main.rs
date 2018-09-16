@@ -35,6 +35,24 @@ fn main() {
     println!("### Starting game loop ###");
     let mut should_close = false;
     while !should_close {
+        events_loop.poll_events(|event| {
+            println!("{:?}", event);
+            match event {
+                glutin::Event::WindowEvent { event, .. } => match event {
+                    glutin::WindowEvent::CloseRequested => should_close = true,
+                    glutin::WindowEvent::KeyboardInput { input, .. } => {
+                        match input.virtual_keycode {
+                            Some(glutin::VirtualKeyCode::Escape) => {
+                                should_close = true
+                            }
+                            _ => (),
+                        }
+                    }
+                    _ => (),
+                },
+                _ => (),
+            }
+        });
         // Prepere next frame.
         let mut render_target = display.draw();
         render_target.clear_color(0.042, 0., 0.042, 1.0);
@@ -45,14 +63,5 @@ fn main() {
         game.draw(&mut render_target);
 
         render_target.finish().unwrap();
-
-        // Handle events
-        events_loop.poll_events(|event| match event {
-            glutin::Event::WindowEvent { event, .. } => match event {
-                glutin::WindowEvent::CloseRequested => should_close = true,
-                _ => (),
-            },
-            _ => (),
-        });
     }
 }

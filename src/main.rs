@@ -51,14 +51,12 @@ fn main() {
         events_loop.poll_events(|event| match event {
             glutin::Event::WindowEvent { event, .. } => match event {
                 glutin::WindowEvent::CloseRequested => should_close = true,
-                glutin::WindowEvent::KeyboardInput { input, .. } => {
-                    match input.virtual_keycode {
-                        Some(glutin::VirtualKeyCode::Escape) => {
-                            should_close = true
-                        }
-                        _ => (),
-                    }
-                }
+                glutin::WindowEvent::KeyboardInput { input, .. } => match input
+                    .virtual_keycode
+                {
+                    Some(glutin::VirtualKeyCode::Escape) => should_close = true,
+                    _ => (),
+                },
                 _ => (),
             },
             _ => (),

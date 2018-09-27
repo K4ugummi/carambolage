@@ -1,6 +1,6 @@
-use super::glium;
-use super::glium::Frame;
-use super::nalgebra::{Matrix4, Perspective3, Point2, Point3, Vector3};
+use glium;
+use glium::Frame;
+use nalgebra::{Matrix4, Perspective3, Point2, Point3, Vector3};
 use time::Duration;
 
 use super::car::Car;

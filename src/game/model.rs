@@ -1,7 +1,7 @@
-use super::glium;
-use super::glium::index::IndexBuffer;
-use super::glium::vertex::VertexBuffer;
-use super::nalgebra::{Matrix4, Vector3};
+use glium;
+use glium::index::IndexBuffer;
+use glium::vertex::VertexBuffer;
+use nalgebra::{Matrix4, Vector3};
 
 use super::shader::generate_program;
 

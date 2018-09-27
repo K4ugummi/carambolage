@@ -1,4 +1,4 @@
-use super::glium;
+use glium;
 
 const VERTEX_SHADER_SRC: &str = "
         #version 330

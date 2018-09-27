@@ -1,7 +1,7 @@
-use super::glium;
-use super::glium::{Frame, Surface};
 use super::model::Model;
-use super::nalgebra::{Matrix4, Point2, Vector2, Vector3};
+use glium;
+use glium::{Frame, Surface};
+use nalgebra::{Matrix4, Point2, Vector2, Vector3};
 
 pub(super) struct Car {
     pos: Point2<f32>,

@@ -39,19 +39,12 @@ fn get_test_buffer(
 ) -> (VertexBuffer<Vertex>, IndexBuffer<u16>) {
     let vertex_buffer = VertexBuffer::new(
         display,
+        #[cfg_attr(rustfmt, rustfmt_skip)]
         &[
-            Vertex {
-                position: [1., 1.5],
-            },
-            Vertex {
-                position: [-1., 1.5],
-            },
-            Vertex {
-                position: [-1., -1.5],
-            },
-            Vertex {
-                position: [1., -1.5],
-            },
+            Vertex { position: [1., 1.5], },
+            Vertex { position: [-1., 1.5], },
+            Vertex { position: [-1., -1.5], },
+            Vertex { position: [1., -1.5], },
         ],
     ).unwrap();
 

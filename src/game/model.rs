@@ -37,6 +37,7 @@ impl Model {
 fn get_test_buffer(
     display: &glium::Display,
 ) -> (VertexBuffer<Vertex>, IndexBuffer<u16>) {
+    #[cfg_attr(rustfmt, rustfmt_skip)]
     let vertex_buffer = VertexBuffer::new(
         display,
         &[

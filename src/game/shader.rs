@@ -1,7 +1,6 @@
 use super::glium;
 
-pub(super) fn generate_program(display: &glium::Display) -> glium::Program {
-    let vertex_shader_src = "
+const VERTEX_SHADER_SRC: &str = "
         #version 330
 
         in vec2 position;
@@ -17,7 +16,7 @@ pub(super) fn generate_program(display: &glium::Display) -> glium::Program {
         }
     ";
 
-    let fragment_shader_src = "
+const FRAGMENT_SHADER_SRC: &str = "
         #version 330
 
         in vec4 vColor;
@@ -29,14 +28,41 @@ pub(super) fn generate_program(display: &glium::Display) -> glium::Program {
         }
     ";
 
+pub(super) fn generate_program(display: &glium::Display) -> glium::Program {
     let program = glium::Program::from_source(
         display,
-        vertex_shader_src,
-        fragment_shader_src,
+        VERTEX_SHADER_SRC,
+        FRAGMENT_SHADER_SRC,
         None,
     );
-
-    assert!(program.is_ok());
-
     program.unwrap()
+}
+
+#[cfg(test)]
+mod test {
+    use super::{FRAGMENT_SHADER_SRC, VERTEX_SHADER_SRC};
+    use game::glium;
+    use glium::glutin;
+
+    #[test]
+    fn compile_shader() {
+        let version = glutin::GlRequest::Specific(glutin::Api::OpenGl, (3, 3));
+        let events_loop = glutin::EventsLoop::new();
+        let window = glutin::WindowBuilder::new().with_visibility(false);
+        let context = glutin::ContextBuilder::new()
+            .with_gl_debug_flag(true)
+            .with_gl(version);
+
+        let display =
+            glium::Display::new(window, context, &events_loop).unwrap();
+
+        let program = glium::Program::from_source(
+            &display,
+            VERTEX_SHADER_SRC,
+            FRAGMENT_SHADER_SRC,
+            None,
+        );
+
+        assert!(program.is_ok());
+    }
 }

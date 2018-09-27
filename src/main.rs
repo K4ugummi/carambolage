@@ -25,6 +25,7 @@ fn main() {
     let mut events_loop = glutin::EventsLoop::new();
     let window = glutin::WindowBuilder::new()
         .with_dimensions(LogicalSize::from((640, 480)))
+        .with_resizable(false)
         .with_title("Carambolage");
 
     let gl_request = glutin::GlRequest::Specific(glutin::Api::OpenGl, (3, 3));

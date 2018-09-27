@@ -71,13 +71,28 @@ impl Car {
 
 #[cfg(test)]
 mod test {
-    /*
     use super::Car;
     use super::Model;
+
+    use game::glium;
     use nalgebra::{Point2, Vector2, Vector3};
+
+    use glium::glutin;
+
+    fn get_test_display() -> glium::Display {
+        let version = glutin::GlRequest::Specific(glutin::Api::OpenGl, (3, 3));
+        let events_loop = glutin::EventsLoop::new();
+        let window = glutin::WindowBuilder::new().with_visibility(false);
+        let context = glutin::ContextBuilder::new()
+            .with_gl_debug_flag(true)
+            .with_gl(version);
+
+        glium::Display::new(window, context, &events_loop).unwrap()
+    }
 
     #[test]
     fn go_car_1() {
+        let display = get_test_display();
         let mut car = Car {
             pos: Point2::new(0., 0.),
             _rot: 0.,
@@ -85,7 +100,7 @@ mod test {
             force: Vector2::new(0., 0.),
             mass: 1.,
 
-            model: Model::new(Vector3::new(1., 0., 0.)),
+            model: Model::new(Vector3::new(1., 0., 0.), &display),
         };
         car.run(1.);
         assert_eq!(car.pos, Point2::new(1., 0.));
@@ -93,6 +108,7 @@ mod test {
 
     #[test]
     fn go_car_2() {
+        let display = get_test_display();
         let mut car = Car {
             pos: Point2::new(0., 0.),
             _rot: 0.,
@@ -100,11 +116,10 @@ mod test {
             force: Vector2::new(1., 0.),
             mass: 1.,
 
-            model: Model::new(Vector3::new(1., 0., 0.)),
+            model: Model::new(Vector3::new(1., 0., 0.), &display),
         };
         car.run(2.);
         assert_eq!(car.pos, Point2::new(2., 0.));
         assert_eq!(car.vel, Vector2::new(2., 0.));
     }
-    */
 }

@@ -66,5 +66,20 @@ impl Car {
                 &uniforms,
                 &Default::default(),
             ).unwrap();
+
+        // Write uniforms
+        let uniforms = uniform! {
+            uMVP: model_view_projection,
+            uColor: color_ref,
+        };
+
+        target
+            .draw(
+                &self.model.vertex_buffer,
+                &self.model.index_buffer,
+                &self.model.program,
+                &uniforms,
+                &Default::default(),
+            ).unwrap();
     }
 }

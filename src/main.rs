@@ -5,7 +5,7 @@ extern crate time;
 
 use glium::debug::DebugCallbackBehavior;
 use glium::{glutin, Surface};
-use glutin::dpi::{LogicalSize, PhysicalSize};
+use glutin::dpi::LogicalSize;
 
 mod game;
 use game::Game;
@@ -15,27 +15,32 @@ fn print_display_info(display: &glium::Display) {
     let version = display.get_opengl_version_string();
     let renderer = display.get_opengl_renderer_string();
     let dimensions = display.get_framebuffer_dimensions();
-    println!("# - Vendor:       {}", vendor);
-    println!("# - Renderer:     {}", renderer);
-    println!("# - Version:      {}", version);
-    println!("# - Dimension:    {:?}", dimensions);
+    println!("# INFO - Vendor:       {}", vendor);
+    println!("# INFO - Renderer:     {}", renderer);
+    println!("# INFO - Version:      {}", version);
+    println!("# INFO - Dimension:    {:?}", dimensions);
 }
 
 fn main() {
     let mut events_loop = glutin::EventsLoop::new();
     let window = glutin::WindowBuilder::new()
-        .with_dimensions(LogicalSize::new(800., 600.))
+        .with_dimensions(LogicalSize::from((640, 480)))
         .with_title("Carambolage");
 
     let gl_request = glutin::GlRequest::Specific(glutin::Api::OpenGl, (3, 3));
+
     let context = glutin::ContextBuilder::new()
         .with_gl(gl_request)
         .with_gl_profile(glutin::GlProfile::Core)
         .with_gl_debug_flag(true);
+
     let gl_window =
         glutin::GlWindow::new(window, context, &events_loop).unwrap();
-    let debug = DebugCallbackBehavior::PrintAll;
-    let display = glium::Display::with_debug(gl_window, debug).unwrap();
+
+    let display =
+        glium::Display::with_debug(gl_window, DebugCallbackBehavior::PrintAll)
+            .unwrap();
+
     print_display_info(&display);
 
     let mut game = Game::new(&display);
@@ -60,7 +65,7 @@ fn main() {
 
         // Prepere next frame.
         let mut render_target = display.draw();
-        render_target.clear_color(0., 0., 0., 1.0);
+        render_target.clear_color(0.05, 0.05, 0.05, 1.0);
 
         // Update game (physics, user input, score, ...)
         game.run();

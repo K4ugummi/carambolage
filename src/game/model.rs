@@ -20,7 +20,7 @@ impl Model {
         ];
         #[cfg_attr(rustfmt, rustfmt_skip)]
         let indices = vec![
-            0u32, 1, 2, 
+            0u32, 1, 2,
             0, 2, 3,
         ];
 
@@ -30,7 +30,7 @@ impl Model {
 
         let shader = Shader::new();
 
-        Model { meshes, shader, }
+        Model { meshes, shader }
     }
 
     pub fn draw(&self, mvp: &Matrix4<f32>) {
@@ -40,10 +40,8 @@ impl Model {
                 &CString::new("uColor").unwrap(),
                 &Vector3::new(1f32, 1., 1.),
             );
-            self.shader.set_uniform_mat(
-                &CString::new("uMVP").unwrap(),
-                &mvp,
-            );
+            self.shader
+                .set_uniform_mat(&CString::new("uMVP").unwrap(), &mvp);
             for mesh in &self.meshes {
                 mesh.draw(&self.shader);
             }

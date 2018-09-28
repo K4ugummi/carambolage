@@ -1,4 +1,5 @@
 use super::model::Model;
+use nalgebra::geometry::Translation;
 use nalgebra::{zero, Matrix4, Vector3};
 
 pub struct Car {
@@ -33,7 +34,7 @@ impl Car {
     }
 
     pub(super) fn draw(&self, view: &Matrix4<f32>, projection: &Matrix4<f32>) {
-        let model = Matrix4::identity();
+        let model = Translation::from_vector(self.pos).to_homogeneous();
         let mvp = projection * view * model;
         self.model.draw(&mvp);
     }

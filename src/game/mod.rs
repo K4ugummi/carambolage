@@ -133,16 +133,16 @@ pub fn process_input(
     }
 
     if window.get_key(Key::W) == Action::Press {
-        car.pos += Vector3::new(0f32, -1., 0.) * delta_time * 10.;
-    }
-    if window.get_key(Key::S) == Action::Press {
         car.pos += Vector3::new(0f32, 1., 0.) * delta_time * 10.;
     }
+    if window.get_key(Key::S) == Action::Press {
+        car.pos += Vector3::new(0f32, -1., 0.) * delta_time * 10.;
+    }
     if window.get_key(Key::A) == Action::Press {
-        car.pos += Vector3::new(1f32, 0., 0.) * delta_time * 10.;
+        car.pos += Vector3::new(-1f32, 0., 0.) * delta_time * 10.;
     }
     if window.get_key(Key::D) == Action::Press {
-        car.pos += Vector3::new(-1f32, 0., 0.) * delta_time * 10.;
+        car.pos += Vector3::new(1f32, 0., 0.) * delta_time * 10.;
     }
 }
 

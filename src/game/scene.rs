@@ -1,4 +1,4 @@
-use nalgebra::{zero, Matrix4, Point3, Vector2, Vector3};
+use nalgebra::{zero, Matrix4, Point3, Vector3};
 use rand::{thread_rng, Rng};
 use time::Duration;
 
@@ -15,7 +15,7 @@ impl Scene {
 
         Scene {
             cars: (0..cars)
-                .map(|x| {
+                .map(|_| {
                     Car::new(
                         {
                             let x = rng.gen_range(-20f32, 20f32);

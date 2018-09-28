@@ -4,21 +4,21 @@ use nalgebra::{zero, Matrix4, Vector3};
 
 pub struct Car {
     pub pos: Vector3<f32>,
-    vel: Vector3<f32>,
-    force: Vector3<f32>,
-    mass: f32,
+    _vel: Vector3<f32>,
+    _force: Vector3<f32>,
+    _mass: f32,
 
     model: Model,
 }
 
 impl Car {
-    pub fn new(pos: Vector3<f32>, mass: f32) -> Car {
-        assert!(mass > 0.);
+    pub fn new(pos: Vector3<f32>, _mass: f32) -> Car {
+        assert!(_mass > 0.);
         Car {
             pos,
-            vel: zero(),
-            force: zero(),
-            mass,
+            _vel: zero(),
+            _force: zero(),
+            _mass,
 
             model: Model::new(),
         }
@@ -26,7 +26,7 @@ impl Car {
 
     /// Update the car position and velocity based on the internal car state for
     /// a given time step.
-    pub(super) fn run(&mut self, time_step: f32) {
+    pub(super) fn run(&mut self, _time_step: f32) {
         //assert!(time_step > 0.);
         //self.pos += self.vel * time_step
         //    + self.force / (2. * self.mass) * time_step.powi(2);

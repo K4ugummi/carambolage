@@ -7,7 +7,6 @@ mod model;
 mod scene;
 mod shader;
 
-use self::car::Car;
 use self::glfw::{Action, Context, Glfw, Key, Window};
 use self::scene::Scene;
 use super::time::{Duration, PreciseTime};

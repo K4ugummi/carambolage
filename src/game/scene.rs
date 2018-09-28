@@ -1,4 +1,4 @@
-use nalgebra::{zero, Matrix4, Perspective3, Point3, Vector2, Vector3};
+use nalgebra::{zero, Matrix4, Point3, Vector2, Vector3};
 use rand::{thread_rng, Rng};
 use time::Duration;
 
@@ -36,15 +36,13 @@ impl Scene {
         }
     }
 
-    pub(super) fn draw(&self) {
+    pub(super) fn draw(&self, projection: &Matrix4<f32>) {
         let mut camera_pos = zero();
         for car in &self.cars {
             camera_pos += car.pos;
         }
         camera_pos /= self.cars.len() as f32;
 
-        let projection =
-            Perspective3::new(800. / 600., 70., 0.1, 1000.).unwrap();
         let view = Matrix4::look_at_rh(
             &Point3::from_coordinates(camera_pos + Vector3::new(0., 0., 100.)),
             &Point3::from_coordinates(camera_pos),

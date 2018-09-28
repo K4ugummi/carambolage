@@ -46,7 +46,6 @@ impl Shader {
         let vertex_code = CString::new(vertex_string.as_bytes()).unwrap();
         let fragment_code = CString::new(fragment_string.as_bytes()).unwrap();
 
-        // 2. compile shaders
         unsafe {
             // vertex shader
             let vertex = gl::CreateShader(gl::VERTEX_SHADER);
@@ -64,7 +63,7 @@ impl Shader {
             gl::AttachShader(id, fragment);
             gl::LinkProgram(id);
             shader.check_compile_errors(id, "PROGRAM");
-            // delete the shaders as they're linked into our program now and no longer necessary
+
             gl::DeleteShader(vertex);
             gl::DeleteShader(fragment);
             shader.id = id;

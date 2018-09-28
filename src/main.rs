@@ -1,5 +1,3 @@
-#[macro_use]
-extern crate glium;
 extern crate nalgebra;
 extern crate rand;
 extern crate time;

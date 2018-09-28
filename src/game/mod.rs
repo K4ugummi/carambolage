@@ -1,18 +1,27 @@
+extern crate gl;
+extern crate glfw;
+
 mod car;
+mod mesh;
 mod model;
 mod scene;
 mod shader;
 
+use self::car::Car;
+use self::glfw::{Action, Context, Glfw, Key, Window};
 use self::scene::Scene;
-
-use super::glium::debug::DebugCallbackBehavior;
-use super::glium::glutin::dpi::LogicalSize;
-use super::glium::{glutin, Display, Frame, Surface};
 use super::time::{Duration, PreciseTime};
+use nalgebra::Vector3;
+
+use std::cell::Cell;
+use std::sync::mpsc::Receiver;
+
+type Event = Receiver<(f64, glfw::WindowEvent)>;
 
 pub(crate) struct Game {
-    events_loop: glutin::EventsLoop,
-    display: Display,
+    glfw: Glfw,
+    window: Window,
+    events: Event,
 
     scene: Scene,
     time: PreciseTime,
@@ -22,75 +31,69 @@ impl Game {
     pub(crate) fn new() -> Game {
         let time = PreciseTime::now();
 
-        let mut events_loop = glutin::EventsLoop::new();
-        let window = glutin::WindowBuilder::new()
-            .with_dimensions(LogicalSize::from((640, 480)))
-            .with_resizable(false)
-            .with_title("Carambolage");
+        let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
+        glfw.window_hint(glfw::WindowHint::ContextVersion(3, 3));
+        glfw.window_hint(glfw::WindowHint::OpenGlProfile(
+            glfw::OpenGlProfileHint::Core,
+        ));
+        glfw.window_hint(glfw::WindowHint::ContextVersion(3, 3));
+        glfw.set_error_callback(Some(glfw::Callback {
+            f: error_callback,
+            data: Cell::new(0),
+        }));
 
-        let gl_request =
-            glutin::GlRequest::Specific(glutin::Api::OpenGl, (3, 3));
+        let (mut window, events) = glfw
+            .create_window(640, 480, "Carambolage", glfw::WindowMode::Windowed)
+            .expect("Failed to create GLFW window");
 
-        let context = glutin::ContextBuilder::new()
-            .with_gl(gl_request)
-            .with_gl_profile(glutin::GlProfile::Core)
-            .with_gl_debug_flag(true);
+        window.make_current();
+        window.set_framebuffer_size_polling(true);
+        window.set_cursor_pos_polling(true);
+        window.set_scroll_polling(true);
+        window.set_cursor_mode(glfw::CursorMode::Normal);
 
-        let gl_window =
-            glutin::GlWindow::new(window, context, &events_loop).unwrap();
+        gl::load_with(|symbol| window.get_proc_address(symbol) as *const _);
 
-        let display =
-            Display::with_debug(gl_window, DebugCallbackBehavior::PrintAll)
-                .unwrap();
-
-        let scene = Scene::new(3, &display);
-
-        print_display_info(&display);
+        let scene = Scene::new(3);
 
         Game {
-            events_loop,
-            display,
+            glfw,
+            window,
+            events,
             scene,
             time,
         }
     }
 
     pub(crate) fn run(&mut self) {
-        let mut keep_running = true;
         let mut delta_time = self.time.to(PreciseTime::now());
 
-        while keep_running {
-            self.events_loop.poll_events(|event| match event {
-                glutin::Event::WindowEvent { event, .. } => match event {
-                    glutin::WindowEvent::CloseRequested => keep_running = false,
-                    glutin::WindowEvent::KeyboardInput { input, .. } => {
-                        match input.virtual_keycode {
-                            Some(glutin::VirtualKeyCode::Escape) => {
-                                keep_running = false;
-                            }
-                            _ => (),
-                        }
-                    }
-                    _ => (),
-                },
-                _ => (),
-            });
+        while !self.window.should_close() {
+            process_events(&self.events);
 
-            // Prepere next frame.
-            let mut render_target = self.display.draw();
-            render_target.clear_color(0.05, 0.05, 0.05, 1.0);
+            process_input(
+                &mut self.window,
+                delta_time.num_microseconds().unwrap() as f32 * 1e-6,
+                &mut self.scene.cars[0],
+            );
 
-            // Update game (physics, user input, score, ...)
             self.scene.run(delta_time);
-            // Draw the current frame.
-            self.scene.draw(&mut render_target);
 
-            render_target.finish().unwrap();
+            unsafe {
+                gl::ClearColor(0.1, 0.1, 0.1, 1.0);
+                gl::Clear(gl::COLOR_BUFFER_BIT);
+            }
+
+            self.window.make_current();
+            self.scene.draw();
 
             let time_now = PreciseTime::now();
             delta_time = self.time.to(time_now);
             self.time = time_now;
             self.do_delta_time_sleep(delta_time);
+
+            self.window.swap_buffers();
+            self.glfw.poll_events();
         }
     }
 
@@ -109,13 +112,45 @@ impl Game {
     }
 }
 
-fn print_display_info(display: &Display) {
-    let vendor = display.get_opengl_vendor_string();
-    let version = display.get_opengl_version_string();
-    let renderer = display.get_opengl_renderer_string();
-    let dimensions = display.get_framebuffer_dimensions();
-    println!("# INFO - Vendor:       {}", vendor);
-    println!("# INFO - Renderer:     {}", renderer);
-    println!("# INFO - Version:      {}", version);
-    println!("# INFO - Dimension:    {:?}", dimensions);
+pub fn process_events(events: &Receiver<(f64, glfw::WindowEvent)>) {
+    for (_, event) in glfw::flush_messages(events) {
+        match event {
+            glfw::WindowEvent::FramebufferSize(width, height) => unsafe {
+                gl::Viewport(0, 0, width, height)
+            },
+            _ => {}
+        }
+    }
+}
+
+pub fn process_input(
+    window: &mut glfw::Window,
+    delta_time: f32,
+    car: &mut Car,
+) {
+    if window.get_key(Key::Escape) == Action::Press {
+        window.set_should_close(true)
+    }
+
+    if window.get_key(Key::W) == Action::Press {
+        car.pos += Vector3::new(0f32, -1., 0.) * delta_time * 10.;
+    }
+    if window.get_key(Key::S) == Action::Press {
+        car.pos += Vector3::new(0f32, 1., 0.) * delta_time * 10.;
+    }
+    if window.get_key(Key::A) == Action::Press {
+        car.pos += Vector3::new(1f32, 0., 0.) * delta_time * 10.;
+    }
+    if window.get_key(Key::D) == Action::Press {
+        car.pos += Vector3::new(-1f32, 0., 0.) * delta_time * 10.;
+    }
+}
+
+fn error_callback(
+    _: glfw::Error,
+    description: String,
+    error_count: &Cell<usize>,
+) {
+    println!("GLFW error {}: {}", error_count.get(), description);
+    error_count.set(error_count.get() + 1);
 }

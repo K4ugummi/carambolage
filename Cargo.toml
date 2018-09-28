@@ -7,10 +7,11 @@ authors = [
 ]
 
 [dependencies]
-glium = "~0.22.0"
 nalgebra = "~0.16.4"
 time = "~0.1.40"
 rand = "~0.5"
+gl = "0.10.0"
+glfw = "~0.24.0"
 
 [profile.release]
 lto = true

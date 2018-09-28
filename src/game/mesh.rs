@@ -1,11 +1,14 @@
 #![macro_use]
 
+use std::ffi::CString;
 use std::mem::size_of;
 use std::os::raw::c_void;
 use std::ptr;
 
 use super::gl;
 use super::shader::Shader;
+
+use nalgebra::Vector3;
 
 macro_rules! offset_of {
     ($ty:ty, $field:ident) => {
@@ -19,10 +22,12 @@ pub struct Vertex {
 }
 
 pub struct Mesh {
-    pub vertices: Vec<Vertex>,
-    pub indices: Vec<u32>,
+    vertices: Vec<Vertex>,
+    indices: Vec<u32>,
 
-    pub vao: u32,
+    pub color: Vector3<f32>,
+
+    vao: u32,
     vbo: u32,
     ibo: u32,
 }
@@ -32,6 +37,9 @@ impl Mesh {
         let mut mesh = Mesh {
             vertices,
             indices,
+
+            color: Vector3::new(1., 1., 1.),
+
             vao: 0,
             vbo: 0,
             ibo: 0,
@@ -45,7 +53,9 @@ impl Mesh {
     }
 
     /// render the mesh
-    pub unsafe fn draw(&self, _shader: &Shader) {
+    pub unsafe fn draw(&self, shader: &Shader) {
+        shader.set_uniform_vec(&CString::new("uColor").unwrap(), &self.color);
+
         gl::BindVertexArray(self.vao);
         gl::DrawElements(
             gl::TRIANGLES,

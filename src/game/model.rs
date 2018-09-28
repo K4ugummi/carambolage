@@ -2,7 +2,7 @@ use std::ffi::CString;
 
 use super::mesh::{Mesh, Vertex};
 use super::shader::Shader;
-use nalgebra::{Matrix4, Vector3};
+use nalgebra::Matrix4;
 
 pub struct Model {
     pub meshes: Vec<Mesh>,
@@ -55,10 +55,6 @@ impl Model {
     pub fn draw(&self, mvp: &Matrix4<f32>) {
         unsafe {
             self.shader.use_program();
-            self.shader.set_uniform_vec(
-                &CString::new("uColor").unwrap(),
-                &Vector3::new(1f32, 1., 1.),
-            );
             self.shader
                 .set_uniform_mat(&CString::new("uMVP").unwrap(), &mvp);
             for mesh in &self.meshes {

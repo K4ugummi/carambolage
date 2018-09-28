@@ -10,22 +10,24 @@ pub(super) struct Scene {
 
 impl Scene {
     /// Make a new scene with a given number of cars.
-    pub(super) fn new(cars: usize) -> Scene {
+    pub(super) fn new(num_cars: usize) -> Scene {
         let mut rng = thread_rng();
+        let mut cars: Vec<Car> = (0..num_cars)
+            .map(|_| {
+                Car::new(
+                    {
+                        let x = rng.gen_range(-20f32, 20f32);
+                        let y = rng.gen_range(-20f32, 20f32);
+                        Vector3::new(x, y, 0.)
+                    },
+                    1.0,
+                )
+            }).collect();
 
-        Scene {
-            cars: (0..cars)
-                .map(|_| {
-                    Car::new(
-                        {
-                            let x = rng.gen_range(-20f32, 20f32);
-                            let y = rng.gen_range(-20f32, 20f32);
-                            Vector3::new(x, y, 0.)
-                        },
-                        1.0,
-                    )
-                }).collect(),
-        }
+        assert!(num_cars > 0);
+        cars[0].model.meshes[0].color = Vector3::new(1., 0., 0.);
+
+        Scene { cars }
     }
 
     /// Update the scene based on the internal state and a given time step.

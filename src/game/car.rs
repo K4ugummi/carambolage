@@ -8,7 +8,7 @@ pub struct Car {
     _force: Vector3<f32>,
     _mass: f32,
 
-    model: Model,
+    pub model: Model,
 }
 
 impl Car {

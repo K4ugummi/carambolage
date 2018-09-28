@@ -17,7 +17,7 @@ Sadly, you're always busy learning good patterns during your work, so you have t
 - [K4ugummi](https://github.com/K4ugummi)
 
 ## License
-(I'm sorry, we will add one soon!)
+This program and all its resources are licensed under [GNU General Public License v3](/LICENSE)
 
 ## Download
 ~~You can download precompiled binaries for your system below:~~  

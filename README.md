@@ -37,5 +37,5 @@ You have to setup GLFW on your system in order to build the game. If you encount
 
 ## A huge thanks to
 - [The Rust Team](https://www.rust-lang.org/en-US/team.html) and everybody who is contributing to this project!
-- [DeepL Translator](https://www.deepl.com/translator) for an intelligent translation tool, which lets non native speakers write comments or readmes in propper english!
+- [DeepL Translator](https://www.deepl.com/translator) for an intelligent translation tool, which lets non native speakers write comments or readmes in proper english!
 - **YOU** for spending your time reading this readme, playing the game or even contributing to the project!

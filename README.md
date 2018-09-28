@@ -1,8 +1,8 @@
 # Carambolage
-A game written in Rust
+A game written in Rust!
 
 ## Dependencies
-- [GLFW 3.2 or higher](https://www.glfw.org/)
+- [GLFW](https://github.com/PistonDevelopers/glfw-rs)
 - OpenGL 3.3
 
 ## Build

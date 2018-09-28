@@ -44,7 +44,7 @@ impl Scene {
         camera_pos /= self.cars.len() as f32;
 
         let view = Matrix4::look_at_rh(
-            &Point3::from_coordinates(camera_pos + Vector3::new(0., 0., 100.)),
+            &Point3::from_coordinates(camera_pos + Vector3::new(0., 0., 50.)),
             &Point3::from_coordinates(camera_pos),
             &Vector3::y_axis(),
         );

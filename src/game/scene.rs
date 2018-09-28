@@ -1,4 +1,4 @@
-use nalgebra::{zero, Matrix4, Point3, Vector3};
+use nalgebra::{inf, sup, zero, Matrix4, Point3, Vector3};
 use rand::{thread_rng, Rng};
 use time::Duration;
 
@@ -37,14 +37,22 @@ impl Scene {
     }
 
     pub(super) fn draw(&self, projection: &Matrix4<f32>) {
+        assert!(self.cars.len() > 0);
+        let mut min = self.cars[0].pos;
+        let mut max = self.cars[0].pos;
         let mut camera_pos = zero();
         for car in &self.cars {
             camera_pos += car.pos;
+            min = inf(&min, &car.pos);
+            max = sup(&max, &car.pos);
         }
         camera_pos /= self.cars.len() as f32;
+        let camera_distance = (max - min).norm();
 
         let view = Matrix4::look_at_rh(
-            &Point3::from_coordinates(camera_pos + Vector3::new(0., 0., 50.)),
+            &Point3::from_coordinates(
+                camera_pos + Vector3::new(0., 0., camera_distance + 5.),
+            ),
             &Point3::from_coordinates(camera_pos),
             &Vector3::y_axis(),
         );

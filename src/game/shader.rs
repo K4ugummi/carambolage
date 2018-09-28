@@ -75,6 +75,7 @@ impl Shader {
     pub unsafe fn use_program(&self) {
         gl::UseProgram(self.id)
     }
+
     pub unsafe fn set_uniform_vec(&self, name: &CStr, value: &Vector3<f32>) {
         gl::Uniform3fv(
             gl::GetUniformLocation(self.id, name.as_ptr()),
@@ -82,6 +83,7 @@ impl Shader {
             value.as_slice().as_ptr(),
         );
     }
+
     pub unsafe fn set_uniform_mat(&self, name: &CStr, mat: &Matrix4<f32>) {
         gl::UniformMatrix4fv(
             gl::GetUniformLocation(self.id, name.as_ptr()),

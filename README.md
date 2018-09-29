@@ -1,4 +1,4 @@
-# Carambolage
+# Carambolage [![Build Status](https://travis-ci.com/fabric-and-ink/carambolage.svg?branch=master)](https://travis-ci.com/fabric-and-ink/carambolage)
 A game written in Rust!
 
 We are big fans of Rust and have been using this programming language in our working environment for some time now. After getting used to the fact that Rust doesn't let us get away with stupid things that crash our code at runtime (at least that's how we see it at the moment), we've become attached to this modern language. 

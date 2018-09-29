@@ -2,6 +2,7 @@
 
 use std::ffi::CString;
 use std::mem::size_of;
+use std::ops::Drop;
 use std::os::raw::c_void;
 use std::ptr;
 
@@ -97,5 +98,15 @@ impl Mesh {
         );
 
         gl::BindVertexArray(0);
+    }
+}
+
+impl Drop for Mesh {
+    fn drop(&mut self) {
+        unsafe {
+            gl::DeleteBuffers(1, &mut self.ibo);
+            gl::DeleteBuffers(1, &mut self.vbo);
+            gl::DeleteVertexArrays(1, &mut self.vao);
+        }
     }
 }

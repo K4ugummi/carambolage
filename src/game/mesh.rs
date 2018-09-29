@@ -48,19 +48,10 @@ pub struct Mesh {
 
 impl Mesh {
     pub fn new(vertices: Vec<Vertex>, indices: Vec<u32>) -> Mesh {
-        let mut mesh = Mesh {
-            vertices,
-            indices,
-
-            color: Vector3::new(1., 1., 1.),
-
-            vao: 0,
-            vbo: 0,
-            ibo: 0,
-        };
+        let mut mesh: Mesh = Default::default();
 
         unsafe {
-            mesh.setup_mesh();
+            mesh.init(vertices, indices);
         }
 
         mesh
@@ -80,7 +71,10 @@ impl Mesh {
         gl::BindVertexArray(0);
     }
 
-    unsafe fn setup_mesh(&mut self) {
+    unsafe fn init(&mut self, vertices: Vec<Vertex>, indices: Vec<u32>) {
+        self.vertices = vertices;
+        self.indices = indices;
+
         // VAO
         gl::GenVertexArrays(1, &mut self.vao);
         gl::BindVertexArray(self.vao);
@@ -111,6 +105,21 @@ impl Mesh {
         );
 
         gl::BindVertexArray(0);
+    }
+}
+
+impl Default for Mesh {
+    fn default() -> Mesh {
+        Mesh {
+            vertices: Vec::new(),
+            indices: Vec::new(),
+
+            color: Vector3::new(1., 1., 1.),
+
+            vao: 0,
+            vbo: 0,
+            ibo: 0,
+        }
     }
 }
 

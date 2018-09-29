@@ -55,9 +55,7 @@ impl Model {
             8, 11, 9,
         ];
 
-        let mut meshes = Vec::new();
-
-        meshes.push(Mesh::new(vertices, indices));
+        let meshes = vec![Mesh::new(vertices, indices)];
 
         let shader = Shader::new();
 

@@ -86,27 +86,23 @@ impl Shader {
         shader
     }
 
-    pub unsafe fn use_program(&self) {
-        gl::UseProgram(self.id)
+    pub unsafe fn bind(&self) {
+        gl::UseProgram(self.id);
     }
 
     pub unsafe fn set_uniform_vec(&self, name: &str, value: &Vector3<f32>) {
+        let name_c = CString::new(name).unwrap();
         gl::Uniform3fv(
-            gl::GetUniformLocation(
-                self.id,
-                CString::new(name).unwrap().as_ptr(),
-            ),
+            gl::GetUniformLocation(self.id, name_c.as_ptr()),
             1,
             value.as_slice().as_ptr(),
         );
     }
 
     pub unsafe fn set_uniform_mat(&self, name: &str, mat: &Matrix4<f32>) {
+        let name_c = CString::new(name).unwrap();
         gl::UniformMatrix4fv(
-            gl::GetUniformLocation(
-                self.id,
-                CString::new(name).unwrap().as_ptr(),
-            ),
+            gl::GetUniformLocation(self.id, name_c.as_ptr()),
             1,
             gl::FALSE,
             mat.as_slice().as_ptr(),
@@ -114,13 +110,13 @@ impl Shader {
     }
 
     unsafe fn check_compile_errors(&self, shader: u32, type_: &str) {
-        let mut success = gl::FALSE as i32;
+        let mut success = i32::from(gl::FALSE);
         let mut info_log = Vec::with_capacity(1024);
         info_log.set_len(1024 - 1);
 
         if type_ != "PROGRAM" {
             gl::GetShaderiv(shader, gl::COMPILE_STATUS, &mut success);
-            if success != gl::TRUE as i32 {
+            if success != i32::from(gl::TRUE) {
                 // i8 is a GLchar
                 gl::GetShaderInfoLog(
                     shader,
@@ -131,12 +127,12 @@ impl Shader {
                 println!(
                     "ERROR::SHADER_COMPILATION_ERROR of type: {}\n{}\n",
                     type_,
-                    str::from_utf8(&info_log).unwrap()
+                    str::from_utf8(&info_log).unwrap_or("UNKNOWN")
                 );
             }
         } else {
             gl::GetProgramiv(shader, gl::LINK_STATUS, &mut success);
-            if success != gl::TRUE as i32 {
+            if success != i32::from(gl::TRUE) {
                 gl::GetProgramInfoLog(
                     shader,
                     1024,
@@ -146,7 +142,7 @@ impl Shader {
                 println!(
                     "ERROR::PROGRAM_LINKING_ERROR of type: {}\n{}\n",
                     type_,
-                    str::from_utf8(&info_log).unwrap()
+                    str::from_utf8(&info_log).unwrap_or("UNKNOWN")
                 );
             }
         }

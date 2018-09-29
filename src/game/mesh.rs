@@ -126,9 +126,9 @@ impl Default for Mesh {
 impl Drop for Mesh {
     fn drop(&mut self) {
         unsafe {
-            gl::DeleteBuffers(1, &mut self.ibo);
-            gl::DeleteBuffers(1, &mut self.vbo);
-            gl::DeleteVertexArrays(1, &mut self.vao);
+            gl::DeleteBuffers(1, self.ibo as *const u32);
+            gl::DeleteBuffers(1, self.vbo as *const u32);
+            gl::DeleteVertexArrays(1, self.vao as *const u32);
         }
     }
 }

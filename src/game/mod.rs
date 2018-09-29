@@ -32,12 +32,16 @@ use std::sync::mpsc::Receiver;
 type Event = Receiver<(f64, glfw::WindowEvent)>;
 
 pub(crate) struct Game {
+    // Glfw and GL
     glfw: Glfw,
     window: Window,
     events: Event,
+
+    // Window
     width: i32,
     height: i32,
 
+    // Game
     scene: Scene,
     time: PreciseTime,
 }
@@ -124,7 +128,7 @@ impl Game {
 
     fn do_delta_time_sleep(&mut self, delta_time: Duration) {
         use std::thread::sleep;
-        let time_per_frame = Duration::nanoseconds(16666666);
+        let time_per_frame = Duration::nanoseconds(16_666_666);
 
         if delta_time < time_per_frame {
             let sleep_time = time_per_frame

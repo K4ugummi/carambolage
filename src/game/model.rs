@@ -64,7 +64,7 @@ impl Model {
 
     pub fn draw(&self, mvp: &Matrix4<f32>) {
         unsafe {
-            self.shader.use_program();
+            self.shader.bind();
             self.shader.set_uniform_mat(&"uMVP", &mvp);
             for mesh in &self.meshes {
                 mesh.draw(&self.shader);

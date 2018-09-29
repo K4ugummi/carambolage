@@ -6,11 +6,11 @@ We are big fans of Rust and have been using this programming language in our wor
 Sadly, you're always busy learning good patterns during your work, so you have to think about and rethink sooo much, and the fun is a little bit left behind. That's why we decided to write a little game in Rust. This is all about the fun of programming (if you found this project on GitHub, you can probably understand that). But that also means that we don't think so much about what we're typing down now.
 
 ## Contents
-1. [Authors](/#authors)
-2. [License](/#license)
-3. [Download](/#download)
-4. [Contributing](/#contributing)
-5. [Just saying thank you](/#a-huge-thanks-to)
+1. [Authors](#authors)
+2. [License](#license)
+3. [Download](#download)
+4. [Contributing](#contributing)
+5. [Just saying thank you](#a-huge-thanks-to)
 
 ## Authors
 - [fabric-and-ink](https://github.com/fabric-and-ink)

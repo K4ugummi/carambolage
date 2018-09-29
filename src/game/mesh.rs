@@ -14,7 +14,6 @@
 // along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 #![macro_use]
 
-use std::ffi::CString;
 use std::mem::size_of;
 use std::ops::Drop;
 use std::os::raw::c_void;
@@ -69,7 +68,7 @@ impl Mesh {
 
     /// render the mesh
     pub unsafe fn draw(&self, shader: &Shader) {
-        shader.set_uniform_vec(&CString::new("uColor").unwrap(), &self.color);
+        shader.set_uniform_vec(&"uColor", &self.color);
 
         gl::BindVertexArray(self.vao);
         gl::DrawElements(

@@ -12,7 +12,7 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-use std::ffi::{CStr, CString};
+use std::ffi::CString;
 use std::ptr;
 use std::str;
 
@@ -90,17 +90,23 @@ impl Shader {
         gl::UseProgram(self.id)
     }
 
-    pub unsafe fn set_uniform_vec(&self, name: &CStr, value: &Vector3<f32>) {
+    pub unsafe fn set_uniform_vec(&self, name: &str, value: &Vector3<f32>) {
         gl::Uniform3fv(
-            gl::GetUniformLocation(self.id, name.as_ptr()),
+            gl::GetUniformLocation(
+                self.id,
+                CString::new(name).unwrap().as_ptr(),
+            ),
             1,
             value.as_slice().as_ptr(),
         );
     }
 
-    pub unsafe fn set_uniform_mat(&self, name: &CStr, mat: &Matrix4<f32>) {
+    pub unsafe fn set_uniform_mat(&self, name: &str, mat: &Matrix4<f32>) {
         gl::UniformMatrix4fv(
-            gl::GetUniformLocation(self.id, name.as_ptr()),
+            gl::GetUniformLocation(
+                self.id,
+                CString::new(name).unwrap().as_ptr(),
+            ),
             1,
             gl::FALSE,
             mat.as_slice().as_ptr(),

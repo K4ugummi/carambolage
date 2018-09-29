@@ -12,8 +12,6 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-use std::ffi::CString;
-
 use super::mesh::{Mesh, Vertex};
 use super::shader::Shader;
 use nalgebra::Matrix4;
@@ -69,8 +67,7 @@ impl Model {
     pub fn draw(&self, mvp: &Matrix4<f32>) {
         unsafe {
             self.shader.use_program();
-            self.shader
-                .set_uniform_mat(&CString::new("uMVP").unwrap(), &mvp);
+            self.shader.set_uniform_mat(&"uMVP", &mvp);
             for mesh in &self.meshes {
                 mesh.draw(&self.shader);
             }

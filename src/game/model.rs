@@ -1,28 +1,65 @@
-use super::nalgebra::{Matrix4, Vector3};
+use std::ffi::CString;
 
-pub(super) struct Model {
-    pub(super) color: Vector3<f32>,
-    vertex_buffer: Vec<f32>,
-    index_buffer: Vec<usize>,
-    matrix: Matrix4<f32>,
-}
+use super::mesh::{Mesh, Vertex};
+use super::shader::Shader;
+use nalgebra::Matrix4;
 
-fn get_test_buffer() -> (Vec<f32>, Vec<usize>) {
-    let vertex_buffer = vec![0.2, 0.07, 0.2, -0.07, -0.2, -0.07, -0.2, 0.07];
-
-    let index_buffer = vec![0, 3, 2, 2, 1, 3];
-
-    (vertex_buffer, index_buffer)
+pub struct Model {
+    pub meshes: Vec<Mesh>,
+    pub shader: Shader,
 }
 
 impl Model {
-    pub(super) fn new(color: Vector3<f32>) -> Self {
-        let (vertex_buffer, index_buffer) = get_test_buffer();
-        Model {
-            color,
-            vertex_buffer,
-            index_buffer,
-            matrix: Matrix4::identity(),
+    pub fn new() -> Model {
+        #[cfg_attr(rustfmt, rustfmt_skip)]
+        let vertices = vec![
+            Vertex { position: [-0.49211, 1., 0.], },
+            Vertex { position: [0.49211, 1., 0.], },
+
+            Vertex { position: [-0.66146, 0.33333, 0.], },
+            Vertex { position: [-0.49053, 0.33333, 0.], },
+            Vertex { position: [0.49053, 0.33333, 0.], },
+            Vertex { position: [0.66146, 0.33333, 0.], },
+
+            Vertex { position: [-0.66146, -0.33333, 0.], },
+            Vertex { position: [-0.49053, -0.33333, 0.], },
+            Vertex { position: [0.49053, -0.33333, 0.], },
+            Vertex { position: [0.66146, -0.33333, 0.], },
+
+            Vertex { position: [-0.66146, -1., 0.], },
+            Vertex { position: [0.66146, -1., 0.], },
+        ];
+        #[cfg_attr(rustfmt, rustfmt_skip)]
+        let indices = vec![
+            0u32, 2, 3,
+            0, 3, 1,
+            3, 4, 1,
+            1, 4, 5,
+            3, 7, 4,
+            7, 8, 4,
+            6, 10, 7,
+            7, 10, 11,
+            7, 11, 8,
+            8, 11, 9,
+        ];
+
+        let mut meshes = Vec::new();
+
+        meshes.push(Mesh::new(vertices, indices));
+
+        let shader = Shader::new();
+
+        Model { meshes, shader }
+    }
+
+    pub fn draw(&self, mvp: &Matrix4<f32>) {
+        unsafe {
+            self.shader.use_program();
+            self.shader
+                .set_uniform_mat(&CString::new("uMVP").unwrap(), &mvp);
+            for mesh in &self.meshes {
+                mesh.draw(&self.shader);
+            }
         }
     }
 }

@@ -7,12 +7,13 @@ authors = [
 ]
 
 [dependencies]
-nalgebra = "~0.16.4"
-time = "~0.1.40"
-rand = "~0.5"
 gl = "0.10.0"
 glfw = "~0.24.0"
 image = "~0.20.0"
+nalgebra = "~0.16.4"
+rand = "~0.5"
+rodio = "~0.8.1"
+time = "~0.1.40"
 
 [profile.release]
 lto = true

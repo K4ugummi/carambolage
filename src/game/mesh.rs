@@ -15,7 +15,6 @@
 #![macro_use]
 
 use std::mem::size_of;
-use std::ops::Drop;
 use std::os::raw::c_void;
 use std::path::Path;
 use std::ptr;

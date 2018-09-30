@@ -162,19 +162,19 @@ impl Game {
         }
 
         if self.window.get_key(Key::W) == Action::Press {
-            self.scene.cars[0].pos +=
+            self.scene.cars[0].position +=
                 Vector3::new(0f32, 1., 0.) * delta_time * 10.;
         }
         if self.window.get_key(Key::S) == Action::Press {
-            self.scene.cars[0].pos +=
+            self.scene.cars[0].position +=
                 Vector3::new(0f32, -1., 0.) * delta_time * 10.;
         }
         if self.window.get_key(Key::A) == Action::Press {
-            self.scene.cars[0].pos +=
+            self.scene.cars[0].position +=
                 Vector3::new(-1f32, 0., 0.) * delta_time * 10.;
         }
         if self.window.get_key(Key::D) == Action::Press {
-            self.scene.cars[0].pos +=
+            self.scene.cars[0].position +=
                 Vector3::new(1f32, 0., 0.) * delta_time * 10.;
         }
     }

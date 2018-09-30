@@ -13,29 +13,27 @@
 // You should have received a copy of the GNU General Public License
 // along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 use super::model::Model;
-use nalgebra::geometry::Translation;
 use nalgebra::{zero, Matrix4, Vector3};
 
 pub struct Car {
-    pub pos: Vector3<f32>,
-    _vel: Vector3<f32>,
+    pub position: Vector3<f32>, // position in world space
+    pub rotation: Vector3<f32>, // rotation in radians per axis
+    _velocity: Vector3<f32>,
     _force: Vector3<f32>,
-    _mass: f32,
+    mass: f32,
 
     pub model: Model,
 }
 
 impl Car {
-    pub fn new(pos: Vector3<f32>, _mass: f32) -> Car {
-        assert!(_mass > 0.);
-        Car {
-            pos,
-            _vel: zero(),
-            _force: zero(),
-            _mass,
-
-            model: Model::new(),
+    pub fn new(position: Vector3<f32>, mass: f32) -> Car {
+        let mut car: Car = Default::default();
+        car.position = position;
+        if mass > 1. {
+            car.mass = mass;
         }
+
+        car
     }
 
     /// Update the car position and velocity based on the internal car state for
@@ -48,8 +46,28 @@ impl Car {
     }
 
     pub(super) fn draw(&self, view: &Matrix4<f32>, projection: &Matrix4<f32>) {
-        let model = Translation::from_vector(self.pos).to_homogeneous();
+        let rotation = Matrix4::from_euler_angles(
+            self.rotation[0],
+            self.rotation[1],
+            self.rotation[2],
+        );
+        let translation = Matrix4::new_translation(&self.position);
+        let model = rotation * translation;
         let mvp = projection * view * model;
         self.model.draw(&mvp);
+    }
+}
+
+impl Default for Car {
+    fn default() -> Car {
+        Car {
+            position: zero(),
+            rotation: zero(),
+            _velocity: zero(),
+            _force: zero(),
+            mass: 1.,
+
+            model: Model::new(),
+        }
     }
 }

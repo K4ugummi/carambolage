@@ -53,13 +53,13 @@ impl Scene {
     pub(super) fn draw(&self, projection: &Matrix4<f32>) {
         assert!(!self.cars.is_empty());
 
-        let mut min = self.cars[0].pos;
-        let mut max = self.cars[0].pos;
+        let mut min = self.cars[0].position;
+        let mut max = self.cars[0].position;
         let mut camera_pos = zero();
         for car in &self.cars {
-            camera_pos += car.pos;
-            min = inf(&min, &car.pos);
-            max = sup(&max, &car.pos);
+            camera_pos += car.position;
+            min = inf(&min, &car.position);
+            max = sup(&max, &car.position);
         }
         camera_pos /= self.cars.len() as f32;
         let camera_distance = (max - min).norm();

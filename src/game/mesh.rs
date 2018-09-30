@@ -14,7 +14,6 @@
 // along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 #![macro_use]
 
-use std::ffi::CString;
 use std::mem::size_of;
 use std::ops::Drop;
 use std::os::raw::c_void;
@@ -49,19 +48,10 @@ pub struct Mesh {
 
 impl Mesh {
     pub fn new(vertices: Vec<Vertex>, indices: Vec<u32>) -> Mesh {
-        let mut mesh = Mesh {
-            vertices,
-            indices,
-
-            color: Vector3::new(1., 1., 1.),
-
-            vao: 0,
-            vbo: 0,
-            ibo: 0,
-        };
+        let mut mesh: Mesh = Default::default();
 
         unsafe {
-            mesh.setup_mesh();
+            mesh.init(vertices, indices);
         }
 
         mesh
@@ -69,7 +59,7 @@ impl Mesh {
 
     /// render the mesh
     pub unsafe fn draw(&self, shader: &Shader) {
-        shader.set_uniform_vec(&CString::new("uColor").unwrap(), &self.color);
+        shader.set_uniform_vec(&"uColor", &self.color);
 
         gl::BindVertexArray(self.vao);
         gl::DrawElements(
@@ -81,7 +71,10 @@ impl Mesh {
         gl::BindVertexArray(0);
     }
 
-    unsafe fn setup_mesh(&mut self) {
+    unsafe fn init(&mut self, vertices: Vec<Vertex>, indices: Vec<u32>) {
+        self.vertices = vertices;
+        self.indices = indices;
+
         // VAO
         gl::GenVertexArrays(1, &mut self.vao);
         gl::BindVertexArray(self.vao);
@@ -115,12 +108,27 @@ impl Mesh {
     }
 }
 
+impl Default for Mesh {
+    fn default() -> Mesh {
+        Mesh {
+            vertices: Vec::new(),
+            indices: Vec::new(),
+
+            color: Vector3::new(1., 1., 1.),
+
+            vao: 0,
+            vbo: 0,
+            ibo: 0,
+        }
+    }
+}
+
 impl Drop for Mesh {
     fn drop(&mut self) {
         unsafe {
-            gl::DeleteBuffers(1, &mut self.ibo);
-            gl::DeleteBuffers(1, &mut self.vbo);
-            gl::DeleteVertexArrays(1, &mut self.vao);
+            gl::DeleteBuffers(1, self.ibo as *const u32);
+            gl::DeleteBuffers(1, self.vbo as *const u32);
+            gl::DeleteVertexArrays(1, self.vao as *const u32);
         }
     }
 }

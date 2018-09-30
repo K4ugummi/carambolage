@@ -25,6 +25,7 @@ pub(super) struct Scene {
 impl Scene {
     /// Make a new scene with a given number of cars.
     pub(super) fn new(num_cars: usize) -> Scene {
+        assert!(num_cars > 0);
         let mut rng = thread_rng();
         let mut cars: Vec<Car> = (0..num_cars)
             .map(|_| {
@@ -38,7 +39,6 @@ impl Scene {
                 )
             }).collect();
 
-        assert!(num_cars > 0);
         cars[0].model.meshes[0].color = Vector3::new(1., 0., 0.);
 
         Scene { cars }
@@ -53,7 +53,8 @@ impl Scene {
     }
 
     pub(super) fn draw(&self, projection: &Matrix4<f32>) {
-        assert!(self.cars.len() > 0);
+        assert!(!self.cars.is_empty());
+
         let mut min = self.cars[0].pos;
         let mut max = self.cars[0].pos;
         let mut camera_pos = zero();

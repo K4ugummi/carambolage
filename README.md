@@ -1,5 +1,6 @@
-# Carambolage [![Build Status](https://travis-ci.com/fabric-and-ink/carambolage.svg?branch=master)](https://travis-ci.com/fabric-and-ink/carambolage) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+# Carambolage [![Build Status](https://api.travis-ci.com/K4ugummi/carambolage.svg?branch=master)](https://travis-ci.com/K4ugummi/carambolage) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 A game written in Rust!
+
 
 We are big fans of Rust and have been using this programming language in our working environment for some time now. After getting used to the fact that Rust doesn't let us get away with stupid things that crash our code at runtime (at least that's how we see it at the moment), we've become attached to this modern language. 
 

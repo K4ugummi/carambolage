@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 use super::model::Model;
-use nalgebra::{zero, Matrix4, Vector3};
+use nalgebra::{zero, Matrix3, Matrix4, Vector3};
 
 pub struct Car {
     pub pos: Vector3<f32>, // position in world space
@@ -31,22 +31,21 @@ impl Car {
         }
     }
 
+    pub(super) fn steer(&mut self, angle: f32) {
+        self.ori = Matrix3::new_rotation(angle) * self.ori;
+    }
+
     /// Update the car position and velocity based on the internal car state for
     /// a given time step.
     pub(super) fn run(&mut self, time_step: f32) {
         assert!(time_step > 0.);
+        self.vel *= (1.0 - 0.2 * time_step);
         self.vel += self.acc * time_step;
         self.pos += self.ori * self.vel * time_step;
     }
 
     pub(super) fn draw(&self, view: &Matrix4<f32>, projection: &Matrix4<f32>) {
-        let rotation = Matrix4::from_euler_angles(
-            self.ori[0],
-            self.ori[1],
-            self.ori[2],
-        );
-        let translation = Matrix4::new_translation(&self.pos);
-        let model = rotation * translation;
+        let model = Matrix4::new_translation(&self.pos);
         let mvp = projection * view * model;
         self.model.draw(&mvp);
     }
@@ -60,7 +59,7 @@ impl Default for Car {
     fn default() -> Car {
         Car {
             pos: zero(),
-            ori: Vector3::new(0., 0., 0.),
+            ori: Vector3::new(0., 1., 0.),
             vel: zero(),
             acc: zero(),
             model: Model::new(),

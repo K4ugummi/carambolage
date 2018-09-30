@@ -17,6 +17,7 @@ use std::ptr;
 use std::str;
 
 use super::gl;
+use super::mesh::Texture;
 
 use nalgebra::{Matrix4, Vector3};
 
@@ -31,28 +32,32 @@ impl Shader {
         let vertex_string = String::from(
             "
             #version 330
+            #extension GL_ARB_separate_shader_objects : enable
 
-            in vec2 position;
+            in vec3 aPosition;
+            in vec2 aUV;
 
-            out vec4 vColor;
+            out vec2 vUV;
 
             uniform mat4 uMVP;
-            uniform vec3 uColor;
 
             void main() {
-                vColor = vec4(uColor, 1.);
-                gl_Position = uMVP * vec4(position, 0., 1.);
+                vUV = aUV;
+                gl_Position = uMVP * vec4(aPosition, 1.);
             }
         ",
         );
         let fragment_string = String::from(
             "
             #version 330
+            #extension GL_ARB_separate_shader_objects : enable
 
-            in vec4 vColor;
+            in vec2 vUV;
+
+            uniform sampler2D uTexture;
 
             void main() {
-                gl_FragColor = vColor;
+                gl_FragColor = texture(uTexture, vUV).rgba;
             }
         ",
         );
@@ -90,7 +95,12 @@ impl Shader {
         gl::UseProgram(self.id);
     }
 
-    pub unsafe fn set_uniform_vec(&self, name: &str, value: &Vector3<f32>) {
+    pub unsafe fn bind_texture(&self, id: u32, tex: &Texture) {
+        gl::ActiveTexture(gl::TEXTURE0 + id);
+        gl::BindTexture(gl::TEXTURE_2D, tex.id);
+    }
+
+    pub unsafe fn _set_uniform_vec3(&self, name: &str, value: &Vector3<f32>) {
         let name_c = CString::new(name).unwrap();
         gl::Uniform3fv(
             gl::GetUniformLocation(self.id, name_c.as_ptr()),

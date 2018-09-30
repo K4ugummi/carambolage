@@ -14,6 +14,7 @@
 // along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 extern crate gl;
 extern crate glfw;
+extern crate image;
 
 mod car;
 mod mesh;
@@ -78,7 +79,7 @@ impl Game {
 
         gl::load_with(|symbol| window.get_proc_address(symbol) as *const _);
 
-        let scene = Scene::new(3);
+        let scene = Scene::new(7);
 
         Game {
             glfw,
@@ -105,8 +106,10 @@ impl Game {
             self.scene.run(delta_time);
 
             unsafe {
-                gl::ClearColor(0.1, 0.1, 0.1, 1.0);
+                gl::ClearColor(0.2, 0.2, 0.2, 1.0);
                 gl::Clear(gl::COLOR_BUFFER_BIT);
+                gl::Enable(gl::BLEND);
+                gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
             }
             let projection = Perspective3::new(
                 self.width as f32 / self.height as f32,

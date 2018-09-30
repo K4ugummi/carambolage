@@ -12,7 +12,7 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-use super::mesh::{Mesh, Vertex};
+use super::mesh::{Mesh, Texture, Vertex};
 use super::shader::Shader;
 use nalgebra::Matrix4;
 
@@ -25,10 +25,10 @@ impl Model {
     pub fn new() -> Model {
         #[cfg_attr(rustfmt, rustfmt_skip)]
         let vertices = vec![
-            Vertex { position: [1., 1., 0.,] },
-            Vertex { position: [-1., 1., 0.,] },
-            Vertex { position: [-1., -1., 0.,] },
-            Vertex { position: [1., -1., 0.,] },
+            Vertex { pos: [2., 2., 0.,], uv: [1., 0.,] },
+            Vertex { pos: [-2., 2., 0.,], uv: [0., 0.,] },
+            Vertex { pos: [-2., -2., 0.,], uv: [0., 1.,] },
+            Vertex { pos: [2., -2., 0.,], uv: [1., 1.,] },
         ];
         #[cfg_attr(rustfmt, rustfmt_skip)]
         let indices = vec![
@@ -36,7 +36,23 @@ impl Model {
             0, 2, 3,
         ];
 
-        let meshes = vec![Mesh::new(vertices, indices)];
+        let textures = unsafe {
+            static mut CHOOSER: usize = 0;
+            let result = match CHOOSER {
+                0 => vec![Texture::new("res/textures/Ambulance.png")],
+                1 => vec![Texture::new("res/textures/Audi.png")],
+                2 => vec![Texture::new("res/textures/Black_viper.png")],
+                3 => vec![Texture::new("res/textures/Car.png")],
+                4 => vec![Texture::new("res/textures/Mini_truck.png")],
+                5 => vec![Texture::new("res/textures/Mini_van.png")],
+                6 => vec![Texture::new("res/textures/Police.png")],
+                _ => vec![Texture::new("res/textures/taxi.png")],
+            };
+            CHOOSER += 1;
+            result
+        };
+
+        let meshes = vec![Mesh::new(vertices, indices, textures)];
 
         let shader = Shader::new();
 

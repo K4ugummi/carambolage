@@ -12,6 +12,7 @@ time = "~0.1.40"
 rand = "~0.5"
 gl = "0.10.0"
 glfw = "~0.24.0"
+image = "~0.20.0"
 
 [profile.release]
 lto = true

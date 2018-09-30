@@ -15,6 +15,7 @@
 extern crate gl;
 extern crate glfw;
 extern crate image;
+extern crate rodio;
 
 mod car;
 mod mesh;
@@ -23,11 +24,14 @@ mod scene;
 mod shader;
 
 use self::glfw::{Action, Context, Glfw, Key, Window};
+use self::rodio::Source;
 use self::scene::Scene;
 use super::time::{Duration, PreciseTime};
 use nalgebra::{Perspective3, Vector3};
 
 use std::cell::Cell;
+use std::fs::File;
+use std::io::BufReader;
 use std::sync::mpsc::Receiver;
 
 type Event = Receiver<(f64, glfw::WindowEvent)>;
@@ -95,6 +99,15 @@ impl Game {
 
     pub(crate) fn run(&mut self) {
         let mut delta_time = self.time.to(PreciseTime::now());
+
+        // Play game music (sorry just testing)
+        let device = rodio::default_output_device().unwrap();
+
+        let file =
+            File::open("res/sounds/music/Rolemusic-01-Bacterial-Love.mp3")
+                .unwrap();
+        let source = rodio::Decoder::new(BufReader::new(file)).unwrap();
+        rodio::play_raw(&device, source.convert_samples());
 
         while !self.window.should_close() {
             self.window.make_current();

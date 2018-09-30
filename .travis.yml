@@ -6,6 +6,7 @@ addons:
   apt:
     packages:
       - xorg-dev
+      - libasound2-dev
       
 before_script:
   - rustup component add rustfmt-preview

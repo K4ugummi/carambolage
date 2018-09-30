@@ -29,13 +29,11 @@ impl Scene {
         let mut rng = thread_rng();
         let cars: Vec<Car> = (0..num_cars)
             .map(|_| {
-                Car::new(
-                    {
-                        let x = rng.gen_range(-10f32, 10f32);
-                        let y = rng.gen_range(-10f32, 10f32);
-                        Vector3::new(x, y, 0.)
-                    },
-                )
+                Car::new({
+                    let x = rng.gen_range(-10f32, 10f32);
+                    let y = rng.gen_range(-10f32, 10f32);
+                    Vector3::new(x, y, 0.)
+                })
             }).collect();
 
         Scene { cars }

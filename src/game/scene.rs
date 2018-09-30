@@ -11,7 +11,7 @@
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+// along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
 use nalgebra::{inf, sup, zero, Matrix4, Point3, Vector3};
 use rand::{thread_rng, Rng};
 use time::Duration;

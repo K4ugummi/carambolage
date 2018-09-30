@@ -12,14 +12,4 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
-extern crate nalgebra;
-extern crate rand;
-extern crate time;
-
-mod game;
-use game::Game;
-
-fn main() {
-    let mut game = Game::new();
-    game.run();
-}
+pub struct Map {}

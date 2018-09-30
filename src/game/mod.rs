@@ -161,21 +161,18 @@ impl Game {
             self.window.set_should_close(true)
         }
 
-        if self.window.get_key(Key::W) == Action::Press {
-            self.scene.cars[0].position +=
-                Vector3::new(0f32, 1., 0.) * delta_time * 10.;
-        }
-        if self.window.get_key(Key::S) == Action::Press {
-            self.scene.cars[0].position +=
-                Vector3::new(0f32, -1., 0.) * delta_time * 10.;
-        }
-        if self.window.get_key(Key::A) == Action::Press {
-            self.scene.cars[0].position +=
+        if self.window.get_key(Key::Up) == Action::Press {
+            self.scene.cars[0].set_acc(1.);
+        } else if self.window.get_key(Key::Down) == Action::Press {
+            self.scene.cars[0].set_acc(-1.);
+        } else if self.window.get_key(Key::A) == Action::Press {
+            self.scene.cars[0].pos +=
                 Vector3::new(-1f32, 0., 0.) * delta_time * 10.;
-        }
-        if self.window.get_key(Key::D) == Action::Press {
-            self.scene.cars[0].position +=
+        } else if self.window.get_key(Key::D) == Action::Press {
+            self.scene.cars[0].pos +=
                 Vector3::new(1f32, 0., 0.) * delta_time * 10.;
+        } else {
+            self.scene.cars[0].set_acc(0.);
         }
     }
 }

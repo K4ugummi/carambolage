@@ -31,11 +31,10 @@ impl Scene {
             .map(|_| {
                 Car::new(
                     {
-                        let x = rng.gen_range(-20f32, 20f32);
-                        let y = rng.gen_range(-20f32, 20f32);
+                        let x = rng.gen_range(-10f32, 10f32);
+                        let y = rng.gen_range(-10f32, 10f32);
                         Vector3::new(x, y, 0.)
                     },
-                    1.0,
                 )
             }).collect();
 
@@ -44,7 +43,7 @@ impl Scene {
 
     /// Update the scene based on the internal state and a given time step.
     pub(super) fn run(&mut self, time_step: Duration) {
-        let time_step = (time_step.num_milliseconds() * 1_000) as f32;
+        let time_step = time_step.num_milliseconds() as f32 / 1_000.;
         for car in &mut self.cars {
             car.run(time_step);
         }
@@ -53,13 +52,13 @@ impl Scene {
     pub(super) fn draw(&self, projection: &Matrix4<f32>) {
         assert!(!self.cars.is_empty());
 
-        let mut min = self.cars[0].position;
-        let mut max = self.cars[0].position;
+        let mut min = self.cars[0].pos;
+        let mut max = self.cars[0].pos;
         let mut camera_pos = zero();
         for car in &self.cars {
-            camera_pos += car.position;
-            min = inf(&min, &car.position);
-            max = sup(&max, &car.position);
+            camera_pos += car.pos;
+            min = inf(&min, &car.pos);
+            max = sup(&max, &car.pos);
         }
         camera_pos /= self.cars.len() as f32;
         let camera_distance = (max - min).norm();

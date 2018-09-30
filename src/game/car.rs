@@ -16,57 +16,53 @@ use super::model::Model;
 use nalgebra::{zero, Matrix4, Vector3};
 
 pub struct Car {
-    pub position: Vector3<f32>, // position in world space
-    pub rotation: Vector3<f32>, // rotation in radians per axis
-    _velocity: Vector3<f32>,
-    _force: Vector3<f32>,
-    mass: f32,
-
+    pub pos: Vector3<f32>, // position in world space
+    pub ori: Vector3<f32>, // rotation in radians per axis
+    vel: f32,
+    acc: f32,
     pub model: Model,
 }
 
 impl Car {
-    pub fn new(position: Vector3<f32>, mass: f32) -> Car {
-        let mut car: Car = Default::default();
-        car.position = position;
-        if mass > 1. {
-            car.mass = mass;
+    pub fn new(pos: Vector3<f32>) -> Car {
+        Car {
+            pos,
+            ..Default::default()
         }
-
-        car
     }
 
     /// Update the car position and velocity based on the internal car state for
     /// a given time step.
-    pub(super) fn run(&mut self, _time_step: f32) {
-        //assert!(time_step > 0.);
-        //self.pos += self.vel * time_step
-        //    + self.force / (2. * self.mass) * time_step.powi(2);
-        //self.vel += self.force / self.mass * time_step;
+    pub(super) fn run(&mut self, time_step: f32) {
+        assert!(time_step > 0.);
+        self.vel += self.acc * time_step;
+        self.pos += self.ori * self.vel * time_step;
     }
 
     pub(super) fn draw(&self, view: &Matrix4<f32>, projection: &Matrix4<f32>) {
         let rotation = Matrix4::from_euler_angles(
-            self.rotation[0],
-            self.rotation[1],
-            self.rotation[2],
+            self.ori[0],
+            self.ori[1],
+            self.ori[2],
         );
-        let translation = Matrix4::new_translation(&self.position);
+        let translation = Matrix4::new_translation(&self.pos);
         let model = rotation * translation;
         let mvp = projection * view * model;
         self.model.draw(&mvp);
+    }
+
+    pub(super) fn set_acc(&mut self, acc: f32) {
+        self.acc = acc;
     }
 }
 
 impl Default for Car {
     fn default() -> Car {
         Car {
-            position: zero(),
-            rotation: zero(),
-            _velocity: zero(),
-            _force: zero(),
-            mass: 1.,
-
+            pos: zero(),
+            ori: Vector3::new(0., 0., 0.),
+            vel: zero(),
+            acc: zero(),
             model: Model::new(),
         }
     }

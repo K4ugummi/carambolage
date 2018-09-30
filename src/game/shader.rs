@@ -13,6 +13,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
 use std::ffi::CString;
+use std::fs::File;
+use std::io::Read;
 use std::ptr;
 use std::str;
 
@@ -26,41 +28,26 @@ pub struct Shader {
 }
 
 impl Shader {
-    pub fn new() -> Shader {
+    pub fn new(file: &str) -> Shader {
         let mut shader = Shader { id: 0 };
 
-        let vertex_string = String::from(
-            "
-            #version 330
-            #extension GL_ARB_separate_shader_objects : enable
+        let vertex_file_path = format!("res/shaders/{}.vs", file);
+        let fragment_file_path = format!("res/shaders/{}.fs", file);
 
-            in vec3 aPosition;
-            in vec2 aUV;
+        let mut vertex_file = File::open(vertex_file_path)
+            .unwrap_or_else(|_| panic!("ERROR: Failed to open {}.vs", file));
+        let mut fragment_file = File::open(fragment_file_path)
+            .unwrap_or_else(|_| panic!("ERROR: Failed to open {}.fs", file));
 
-            out vec2 vUV;
+        let mut vertex_string = String::new();
+        let mut fragment_string = String::new();
 
-            uniform mat4 uMVP;
-
-            void main() {
-                vUV = aUV;
-                gl_Position = uMVP * vec4(aPosition, 1.);
-            }
-        ",
-        );
-        let fragment_string = String::from(
-            "
-            #version 330
-            #extension GL_ARB_separate_shader_objects : enable
-
-            in vec2 vUV;
-
-            uniform sampler2D uTexture;
-
-            void main() {
-                gl_FragColor = texture(uTexture, vUV).rgba;
-            }
-        ",
-        );
+        vertex_file
+            .read_to_string(&mut vertex_string)
+            .expect("ERROR: Failed to read vertex shader");
+        fragment_file
+            .read_to_string(&mut fragment_string)
+            .expect("ERROR: Failed to read fragment shader");
 
         let vertex_code = CString::new(vertex_string.as_bytes()).unwrap();
         let fragment_code = CString::new(fragment_string.as_bytes()).unwrap();

@@ -17,9 +17,11 @@ use rand::{thread_rng, Rng};
 use time::Duration;
 
 use super::car::Car;
+use super::map::Map;
 
 pub(super) struct Scene {
     pub cars: Vec<Car>,
+    pub map: Map,
 }
 
 impl Scene {
@@ -39,7 +41,9 @@ impl Scene {
                 )
             }).collect();
 
-        Scene { cars }
+        let map = Map::new("res/maps/example.png");
+
+        Scene { cars, map }
     }
 
     /// Update the scene based on the internal state and a given time step.

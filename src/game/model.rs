@@ -54,7 +54,7 @@ impl Model {
 
         let meshes = vec![Mesh::new(vertices, indices, textures)];
 
-        let shader = Shader::new();
+        let shader = Shader::new("car");
 
         Model { meshes, shader }
     }

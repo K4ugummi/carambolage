@@ -17,12 +17,15 @@
 use std::mem::size_of;
 use std::ops::Drop;
 use std::os::raw::c_void;
+use std::path::Path;
 use std::ptr;
 
 use super::gl;
 use super::shader::Shader;
 
-use nalgebra::Vector3;
+use super::image;
+use super::image::DynamicImage::*;
+use super::image::GenericImageView;
 
 macro_rules! offset_of {
     ($ty:ty, $field:ident) => {
@@ -32,26 +35,34 @@ macro_rules! offset_of {
 
 #[repr(C)]
 pub struct Vertex {
-    pub position: [f32; 3],
+    pub pos: [f32; 3],
+    pub uv: [f32; 2],
 }
 
 pub struct Mesh {
     vertices: Vec<Vertex>,
     indices: Vec<u32>,
-
-    pub color: Vector3<f32>,
+    textures: Vec<Texture>,
 
     vao: u32,
     vbo: u32,
     ibo: u32,
 }
 
+pub struct Texture {
+    pub id: u32,
+}
+
 impl Mesh {
-    pub fn new(vertices: Vec<Vertex>, indices: Vec<u32>) -> Mesh {
+    pub fn new(
+        vertices: Vec<Vertex>,
+        indices: Vec<u32>,
+        textures: Vec<Texture>,
+    ) -> Mesh {
         let mut mesh: Mesh = Default::default();
 
         unsafe {
-            mesh.init(vertices, indices);
+            mesh.init(vertices, indices, textures);
         }
 
         mesh
@@ -59,7 +70,7 @@ impl Mesh {
 
     /// render the mesh
     pub unsafe fn draw(&self, shader: &Shader) {
-        shader.set_uniform_vec(&"uColor", &self.color);
+        shader.bind_texture(0, &self.textures[0]);
 
         gl::BindVertexArray(self.vao);
         gl::DrawElements(
@@ -71,9 +82,15 @@ impl Mesh {
         gl::BindVertexArray(0);
     }
 
-    unsafe fn init(&mut self, vertices: Vec<Vertex>, indices: Vec<u32>) {
+    unsafe fn init(
+        &mut self,
+        vertices: Vec<Vertex>,
+        indices: Vec<u32>,
+        textures: Vec<Texture>,
+    ) {
         self.vertices = vertices;
         self.indices = indices;
+        self.textures = textures;
 
         // VAO
         gl::GenVertexArrays(1, &mut self.vao);
@@ -101,10 +118,38 @@ impl Mesh {
             gl::FLOAT,
             gl::FALSE,
             size,
-            offset_of!(Vertex, position) as *const c_void,
+            offset_of!(Vertex, pos) as *const c_void,
+        );
+        gl::EnableVertexAttribArray(1);
+        gl::VertexAttribPointer(
+            1,
+            2,
+            gl::FLOAT,
+            gl::FALSE,
+            size,
+            offset_of!(Vertex, uv) as *const c_void,
         );
 
         gl::BindVertexArray(0);
+    }
+}
+
+impl Texture {
+    pub fn new(path: &str) -> Texture {
+        unsafe {
+            Texture {
+                id: load_texture(path),
+            }
+        }
+    }
+}
+
+impl Default for Vertex {
+    fn default() -> Vertex {
+        Vertex {
+            pos: [0., 0., 0.],
+            uv: [0., 0.],
+        }
     }
 }
 
@@ -113,9 +158,7 @@ impl Default for Mesh {
         Mesh {
             vertices: Vec::new(),
             indices: Vec::new(),
-
-            color: Vector3::new(1., 1., 1.),
-
+            textures: Vec::new(),
             vao: 0,
             vbo: 0,
             ibo: 0,
@@ -126,9 +169,54 @@ impl Default for Mesh {
 impl Drop for Mesh {
     fn drop(&mut self) {
         unsafe {
+            for tex_id in 0..self.textures.len() {
+                gl::DeleteTextures(1, self.textures[tex_id].id as *const u32);
+            }
             gl::DeleteBuffers(1, self.ibo as *const u32);
             gl::DeleteBuffers(1, self.vbo as *const u32);
             gl::DeleteVertexArrays(1, self.vao as *const u32);
         }
     }
+}
+
+pub unsafe fn load_texture(path: &str) -> u32 {
+    let mut tex_id = 0;
+
+    gl::GenTextures(1, &mut tex_id);
+    let img = image::open(&Path::new(path)).expect("Texture failed to load");
+    match img {
+        ImageRgba8(_) => {}
+        _ => panic!("Texture must be in RGBA format!"),
+    };
+
+    let data = img.raw_pixels();
+
+    gl::BindTexture(gl::TEXTURE_2D, tex_id);
+    gl::TexImage2D(
+        gl::TEXTURE_2D,
+        0,
+        gl::RGBA8 as i32,
+        img.width() as i32,
+        img.height() as i32,
+        0,
+        gl::RGBA,
+        gl::UNSIGNED_BYTE,
+        &data[0] as *const u8 as *const c_void,
+    );
+    gl::GenerateMipmap(gl::TEXTURE_2D);
+
+    gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_S, gl::REPEAT as i32);
+    gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_T, gl::REPEAT as i32);
+    gl::TexParameteri(
+        gl::TEXTURE_2D,
+        gl::TEXTURE_MIN_FILTER,
+        gl::LINEAR as i32,
+    );
+    gl::TexParameteri(
+        gl::TEXTURE_2D,
+        gl::TEXTURE_MAG_FILTER,
+        gl::LINEAR as i32,
+    );
+
+    tex_id
 }

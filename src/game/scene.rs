@@ -27,7 +27,7 @@ impl Scene {
     pub(super) fn new(num_cars: usize) -> Scene {
         assert!(num_cars > 0);
         let mut rng = thread_rng();
-        let mut cars: Vec<Car> = (0..num_cars)
+        let cars: Vec<Car> = (0..num_cars)
             .map(|_| {
                 Car::new(
                     {
@@ -38,8 +38,6 @@ impl Scene {
                     1.0,
                 )
             }).collect();
-
-        cars[0].model.meshes[0].color = Vector3::new(1., 0., 0.);
 
         Scene { cars }
     }
@@ -74,17 +72,9 @@ impl Scene {
             &Vector3::y_axis(),
         );
 
-        unsafe {
-            static mut FIRST: bool = true;
-
-            // Draw objects.
-            for i in 0..self.cars.len() {
-                if FIRST {
-                    println!("Car_{}: position {}", i, self.cars[i].pos);
-                }
-                self.cars[i].draw(&view, &projection);
-            }
-            FIRST = false;
+        // Draw objects.
+        for i in 0..self.cars.len() {
+            self.cars[i].draw(&view, &projection);
         }
     }
 }

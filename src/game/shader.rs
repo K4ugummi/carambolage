@@ -31,39 +31,41 @@ impl Shader {
     pub fn new(file: &str) -> Shader {
         let mut shader = Shader { id: 0 };
 
+        // Load vertex shader code from file.
         let vertex_file_path = format!("res/shaders/{}.vs", file);
-        let fragment_file_path = format!("res/shaders/{}.fs", file);
-
         let mut vertex_file = File::open(vertex_file_path)
             .unwrap_or_else(|_| panic!("ERROR: Failed to open {}.vs", file));
-        let mut fragment_file = File::open(fragment_file_path)
-            .unwrap_or_else(|_| panic!("ERROR: Failed to open {}.fs", file));
-
         let mut vertex_string = String::new();
-        let mut fragment_string = String::new();
-
         vertex_file
             .read_to_string(&mut vertex_string)
             .expect("ERROR: Failed to read vertex shader");
+        let vertex_code = CString::new(vertex_string.as_bytes()).unwrap();
+
+        // Load fragment shader code from file.
+        let fragment_file_path = format!("res/shaders/{}.fs", file);
+        let mut fragment_file = File::open(fragment_file_path)
+            .unwrap_or_else(|_| panic!("ERROR: Failed to open {}.fs", file));
+        let mut fragment_string = String::new();
         fragment_file
             .read_to_string(&mut fragment_string)
             .expect("ERROR: Failed to read fragment shader");
-
-        let vertex_code = CString::new(vertex_string.as_bytes()).unwrap();
         let fragment_code = CString::new(fragment_string.as_bytes()).unwrap();
 
+        // Try to compile both shaders.
         unsafe {
-            // vertex shader
+            // Compile vertex shader.
             let vertex = gl::CreateShader(gl::VERTEX_SHADER);
             gl::ShaderSource(vertex, 1, &vertex_code.as_ptr(), ptr::null());
             gl::CompileShader(vertex);
             shader.check_compile_errors(vertex, "VERTEX");
-            // fragment Shader
+
+            // Compile fragment Shader.
             let fragment = gl::CreateShader(gl::FRAGMENT_SHADER);
             gl::ShaderSource(fragment, 1, &fragment_code.as_ptr(), ptr::null());
             gl::CompileShader(fragment);
             shader.check_compile_errors(fragment, "FRAGMENT");
 
+            // Create program from vertex and fragment shader.
             let id = gl::CreateProgram();
             gl::AttachShader(id, vertex);
             gl::AttachShader(id, fragment);

@@ -1,12 +1,13 @@
-#version 330
+#version 330 core
+#extension GL_ARB_explicit_uniform_location : enable
 #extension GL_ARB_separate_shader_objects : enable
 
-in vec3 aPosition;
-in vec2 aUV;
+layout (location = 0) in vec3 aPosition;
+layout (location = 1) in vec2 aUV;
 
-out vec2 vUV;
+layout (location = 0) out vec2 vUV;
 
-uniform mat4 uMVP;
+layout (location = 0) uniform mat4 uMVP;
 
 void main() {
     vUV = aUV;

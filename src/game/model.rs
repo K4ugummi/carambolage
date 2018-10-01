@@ -12,8 +12,9 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
-use super::mesh::{Mesh, Texture, Vertex};
+use super::mesh::{Mesh, Vertex};
 use super::shader::Shader;
+use super::texture::Texture;
 use nalgebra::Matrix4;
 
 pub struct Model {
@@ -62,7 +63,7 @@ impl Model {
     pub fn draw(&self, mvp: &Matrix4<f32>) {
         unsafe {
             self.shader.bind();
-            self.shader.set_uniform_mat(&"uMVP", &mvp);
+            self.shader.set_uniform_mat(0, &mvp);
             for mesh in &self.meshes {
                 mesh.draw(&self.shader);
             }

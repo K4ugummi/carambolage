@@ -70,12 +70,14 @@ impl Scene {
 
         let view = Matrix4::look_at_rh(
             &Point3::from_coordinates(
-                camera_pos + Vector3::new(0., 0., camera_distance + 5.),
+                camera_pos + Vector3::new(0., 0., camera_distance + 80.),
             ),
             &Point3::from_coordinates(camera_pos),
             &Vector3::y_axis(),
         );
 
+        // Draw map.
+        self.map.draw(&view, &projection);
         // Draw objects.
         for i in 0..self.cars.len() {
             self.cars[i].draw(&view, &projection);

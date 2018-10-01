@@ -19,7 +19,7 @@ use std::ptr;
 use std::str;
 
 use super::gl;
-use super::mesh::Texture;
+use super::texture::Texture;
 
 use nalgebra::{Matrix4, Vector3};
 
@@ -89,23 +89,12 @@ impl Shader {
         gl::BindTexture(gl::TEXTURE_2D, tex.id);
     }
 
-    pub unsafe fn _set_uniform_vec3(&self, name: &str, value: &Vector3<f32>) {
-        let name_c = CString::new(name).unwrap();
-        gl::Uniform3fv(
-            gl::GetUniformLocation(self.id, name_c.as_ptr()),
-            1,
-            value.as_slice().as_ptr(),
-        );
+    pub unsafe fn _set_uniform_vec3(&self, id: i32, value: &Vector3<f32>) {
+        gl::Uniform3fv(id, 1, value.as_slice().as_ptr());
     }
 
-    pub unsafe fn set_uniform_mat(&self, name: &str, mat: &Matrix4<f32>) {
-        let name_c = CString::new(name).unwrap();
-        gl::UniformMatrix4fv(
-            gl::GetUniformLocation(self.id, name_c.as_ptr()),
-            1,
-            gl::FALSE,
-            mat.as_slice().as_ptr(),
-        );
+    pub unsafe fn set_uniform_mat(&self, id: i32, mat: &Matrix4<f32>) {
+        gl::UniformMatrix4fv(id, 1, gl::FALSE, mat.as_slice().as_ptr());
     }
 
     unsafe fn check_compile_errors(&self, shader: u32, type_: &str) {

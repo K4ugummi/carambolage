@@ -73,7 +73,6 @@ impl Controller {
     }
 
     pub fn run(&mut self, delta_time: Duration) {
-        println!("Controller: {:?},{:?}", self.x_axis(), self.y_axis());
         if self.is_smooth {
             let dt = delta_time.num_milliseconds() as f32 / 1_000.;
             self.axis =
@@ -85,18 +84,20 @@ impl Controller {
         }
     }
 
+    pub fn get_x_axis(&self) -> f32 {
+        self.axis[0]
+    }
+
+    pub fn get_y_axis(&self) -> f32 {
+        self.axis[1]
+    }
+
     fn set_x_axis(&mut self, value: f32) {
         self.axis_goal[0] = value;
     }
+
     fn set_y_axis(&mut self, value: f32) {
         self.axis_goal[1] = value;
-    }
-
-    fn x_axis(&self) -> f32 {
-        self.axis[0]
-    }
-    fn y_axis(&self) -> f32 {
-        self.axis[1]
     }
 
     fn set_button_0(&mut self, is: bool) {

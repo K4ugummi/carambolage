@@ -1,4 +1,4 @@
-use super::glfw::{Action, Context, Glfw, Key, Window};
+use super::glfw::{Action, Key, Window};
 
 use nalgebra::{zero, Vector2};
 use time::Duration;

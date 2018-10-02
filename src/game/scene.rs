@@ -11,15 +11,17 @@
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+// along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
 use nalgebra::{inf, sup, zero, Matrix4, Point3, Vector3};
 use rand::{thread_rng, Rng};
 use time::Duration;
 
 use super::car::Car;
+use super::level::Level;
 
 pub(super) struct Scene {
     pub cars: Vec<Car>,
+    pub level: Level,
 }
 
 impl Scene {
@@ -39,7 +41,9 @@ impl Scene {
                 )
             }).collect();
 
-        Scene { cars }
+        let level = Level::new("res/maps/example.png");
+
+        Scene { cars, level }
     }
 
     /// Update the scene based on the internal state and a given time step.
@@ -66,12 +70,18 @@ impl Scene {
 
         let view = Matrix4::look_at_rh(
             &Point3::from_coordinates(
-                camera_pos + Vector3::new(0., 0., camera_distance + 5.),
+                camera_pos + Vector3::new(
+                    0.,
+                    0.,
+                    camera_distance + (50. / self.cars.len() as f32),
+                ),
             ),
             &Point3::from_coordinates(camera_pos),
             &Vector3::y_axis(),
         );
 
+        // Draw map.
+        self.level.draw(&view, &projection);
         // Draw objects.
         for i in 0..self.cars.len() {
             self.cars[i].draw(&view, &projection);

@@ -11,17 +11,19 @@
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+// along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
 extern crate gl;
 extern crate glfw;
 extern crate image;
 extern crate rodio;
 
 mod car;
+mod level;
 mod mesh;
 mod model;
 mod scene;
 mod shader;
+mod texture;
 
 use self::glfw::{Action, Context, Glfw, Key, Window};
 use self::rodio::Source;
@@ -83,7 +85,7 @@ impl Game {
 
         gl::load_with(|symbol| window.get_proc_address(symbol) as *const _);
 
-        let scene = Scene::new(7);
+        let scene = Scene::new(1);
 
         Game {
             glfw,

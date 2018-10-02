@@ -11,9 +11,10 @@
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-use super::mesh::{Mesh, Texture, Vertex};
+// along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
+use super::mesh::{Mesh, Vertex};
 use super::shader::Shader;
+use super::texture::Texture;
 use nalgebra::Matrix4;
 
 pub struct Model {
@@ -54,7 +55,7 @@ impl Model {
 
         let meshes = vec![Mesh::new(vertices, indices, textures)];
 
-        let shader = Shader::new();
+        let shader = Shader::new("car");
 
         Model { meshes, shader }
     }
@@ -62,7 +63,7 @@ impl Model {
     pub fn draw(&self, mvp: &Matrix4<f32>) {
         unsafe {
             self.shader.bind();
-            self.shader.set_uniform_mat(&"uMVP", &mvp);
+            self.shader.set_uniform_mat(0, &mvp);
             for mesh in &self.meshes {
                 mesh.draw(&self.shader);
             }

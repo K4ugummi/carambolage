@@ -12,14 +12,18 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
-extern crate nalgebra;
-extern crate rand;
-extern crate time;
+#version 330 core
+#extension GL_ARB_explicit_uniform_location : enable
+#extension GL_ARB_separate_shader_objects : enable
 
-mod game;
-use game::Game;
+layout (location = 0) in vec3 aPosition;
+layout (location = 1) in vec2 aUV;
 
-fn main() {
-    let mut game = Game::new();
-    game.run();
+layout (location = 0) out vec2 vUV;
+
+layout (location = 0) uniform mat4 uMVP;
+
+void main() {
+    vUV = aUV;
+    gl_Position = uMVP * vec4(aPosition, 1.);
 }

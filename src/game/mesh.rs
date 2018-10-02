@@ -11,20 +11,16 @@
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+// along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
 #![macro_use]
 
 use std::mem::size_of;
 use std::os::raw::c_void;
-use std::path::Path;
 use std::ptr;
 
 use super::gl;
 use super::shader::Shader;
-
-use super::image;
-use super::image::DynamicImage::*;
-use super::image::GenericImageView;
+use super::texture::Texture;
 
 macro_rules! offset_of {
     ($ty:ty, $field:ident) => {
@@ -38,6 +34,15 @@ pub struct Vertex {
     pub uv: [f32; 2],
 }
 
+impl Default for Vertex {
+    fn default() -> Vertex {
+        Vertex {
+            pos: [0., 0., 0.],
+            uv: [0., 0.],
+        }
+    }
+}
+
 pub struct Mesh {
     vertices: Vec<Vertex>,
     indices: Vec<u32>,
@@ -46,10 +51,6 @@ pub struct Mesh {
     vao: u32,
     vbo: u32,
     ibo: u32,
-}
-
-pub struct Texture {
-    pub id: u32,
 }
 
 impl Mesh {
@@ -133,25 +134,6 @@ impl Mesh {
     }
 }
 
-impl Texture {
-    pub fn new(path: &str) -> Texture {
-        unsafe {
-            Texture {
-                id: load_texture(path),
-            }
-        }
-    }
-}
-
-impl Default for Vertex {
-    fn default() -> Vertex {
-        Vertex {
-            pos: [0., 0., 0.],
-            uv: [0., 0.],
-        }
-    }
-}
-
 impl Default for Mesh {
     fn default() -> Mesh {
         Mesh {
@@ -176,46 +158,4 @@ impl Drop for Mesh {
             gl::DeleteVertexArrays(1, self.vao as *const u32);
         }
     }
-}
-
-pub unsafe fn load_texture(path: &str) -> u32 {
-    let mut tex_id = 0;
-
-    gl::GenTextures(1, &mut tex_id);
-    let img = image::open(&Path::new(path)).expect("Texture failed to load");
-    match img {
-        ImageRgba8(_) => {}
-        _ => panic!("Texture must be in RGBA format!"),
-    };
-
-    let data = img.raw_pixels();
-
-    gl::BindTexture(gl::TEXTURE_2D, tex_id);
-    gl::TexImage2D(
-        gl::TEXTURE_2D,
-        0,
-        gl::RGBA8 as i32,
-        img.width() as i32,
-        img.height() as i32,
-        0,
-        gl::RGBA,
-        gl::UNSIGNED_BYTE,
-        &data[0] as *const u8 as *const c_void,
-    );
-    gl::GenerateMipmap(gl::TEXTURE_2D);
-
-    gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_S, gl::REPEAT as i32);
-    gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_T, gl::REPEAT as i32);
-    gl::TexParameteri(
-        gl::TEXTURE_2D,
-        gl::TEXTURE_MIN_FILTER,
-        gl::LINEAR as i32,
-    );
-    gl::TexParameteri(
-        gl::TEXTURE_2D,
-        gl::TEXTURE_MAG_FILTER,
-        gl::LINEAR as i32,
-    );
-
-    tex_id
 }

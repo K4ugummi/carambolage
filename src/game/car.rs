@@ -12,8 +12,11 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+use super::controller::Controller;
 use super::model::Model;
+
 use nalgebra::{zero, Matrix4, Vector3};
+use time::Duration;
 
 pub struct Car {
     pub position: Vector3<f32>, // position in world space
@@ -38,11 +41,25 @@ impl Car {
 
     /// Update the car position and velocity based on the internal car state for
     /// a given time step.
-    pub(super) fn run(&mut self, _time_step: f32) {
-        //assert!(time_step > 0.);
-        //self.pos += self.vel * time_step
-        //    + self.force / (2. * self.mass) * time_step.powi(2);
-        //self.vel += self.force / self.mass * time_step;
+    pub(super) fn run(
+        &mut self,
+        delta_time: Duration,
+        controller: Option<Controller>,
+    ) {
+        /*
+        if controller.is_some() {
+            let dt = delta_time.num_milliseconds() as f32 / 1_000.;
+            let controls = controller.unwrap();
+            let translation = Matrix4::new_translation(
+                &(Vector3::new(0., 1., 0.) * controls.y_axis() * dt),
+            );
+            let rotation =
+                Matrix4::from_euler_angles(0., 0., controls.x_axis() * dt);
+            self.position = self.position + Vector3::from_homogeneous(
+                translation * rotation * self.position.to_homogeneous(),
+            );
+        }
+        */
     }
 
     pub(super) fn draw(&self, view: &Matrix4<f32>, projection: &Matrix4<f32>) {

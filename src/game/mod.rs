@@ -18,6 +18,7 @@ extern crate image;
 extern crate rodio;
 
 mod car;
+mod controller;
 mod level;
 mod mesh;
 mod model;
@@ -25,6 +26,7 @@ mod scene;
 mod shader;
 mod texture;
 
+use self::controller::Controller;
 use self::glfw::{Action, Context, Glfw, Key, Window};
 use self::rodio::Source;
 use self::scene::Scene;
@@ -51,6 +53,7 @@ pub(crate) struct Game {
     // Game
     scene: Scene,
     time: PreciseTime,
+    controller: Controller,
 }
 
 impl Game {
@@ -86,6 +89,7 @@ impl Game {
         gl::load_with(|symbol| window.get_proc_address(symbol) as *const _);
 
         let scene = Scene::new(1);
+        let controller = Controller::new(true);
 
         Game {
             glfw,
@@ -96,6 +100,7 @@ impl Game {
 
             scene,
             time,
+            controller,
         }
     }
 
@@ -114,11 +119,10 @@ impl Game {
         while !self.window.should_close() {
             self.window.make_current();
             self.process_events();
-            self.process_input(
-                delta_time.num_microseconds().unwrap() as f32 * 1e-6,
-            );
+            self.process_input();
 
-            self.scene.run(delta_time);
+            self.controller.run(delta_time);
+            self.scene.run(delta_time, &self.controller);
 
             unsafe {
                 gl::ClearColor(0.2, 0.2, 0.2, 1.0);
@@ -171,27 +175,12 @@ impl Game {
         }
     }
 
-    pub fn process_input(&mut self, delta_time: f32) {
+    pub fn process_input(&mut self) {
         if self.window.get_key(Key::Escape) == Action::Press {
             self.window.set_should_close(true)
         }
 
-        if self.window.get_key(Key::W) == Action::Press {
-            self.scene.cars[0].position +=
-                Vector3::new(0f32, 1., 0.) * delta_time * 10.;
-        }
-        if self.window.get_key(Key::S) == Action::Press {
-            self.scene.cars[0].position +=
-                Vector3::new(0f32, -1., 0.) * delta_time * 10.;
-        }
-        if self.window.get_key(Key::A) == Action::Press {
-            self.scene.cars[0].position +=
-                Vector3::new(-1f32, 0., 0.) * delta_time * 10.;
-        }
-        if self.window.get_key(Key::D) == Action::Press {
-            self.scene.cars[0].position +=
-                Vector3::new(1f32, 0., 0.) * delta_time * 10.;
-        }
+        self.controller.process_input(&self.window);
     }
 }
 

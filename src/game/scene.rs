@@ -17,6 +17,7 @@ use rand::{thread_rng, Rng};
 use time::Duration;
 
 use super::car::Car;
+use super::controller::Controller;
 use super::level::Level;
 
 pub(super) struct Scene {
@@ -47,10 +48,16 @@ impl Scene {
     }
 
     /// Update the scene based on the internal state and a given time step.
-    pub(super) fn run(&mut self, time_step: Duration) {
-        let time_step = (time_step.num_milliseconds() * 1_000) as f32;
-        for car in &mut self.cars {
-            car.run(time_step);
+    pub(super) fn run(
+        &mut self,
+        delta_time: Duration,
+        controller: &Controller,
+    ) {
+        for (id, car) in &mut self.cars.iter_mut().enumerate() {
+            match id {
+                0 => car.run(delta_time, Some(*controller)),
+                _ => car.run(delta_time, None),
+            }
         }
     }
 

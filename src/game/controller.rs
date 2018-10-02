@@ -14,7 +14,7 @@
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
 use super::glfw::{Action, Key, Window};
 
-use nalgebra::{zero, Vector2};
+use nalgebra::{clamp, zero, Vector2};
 use time::Duration;
 
 // Prototype controller emulation for keyboard users.
@@ -129,12 +129,14 @@ trait Lerp {
 
 impl Lerp for Vector2<f32> {
     fn lerp(a: &Self, b: &Self, factor: f32) -> Self {
-        a + (b - a) * factor
+        let f = clamp(factor, 0., 1.);
+        a + (b - a) * f
     }
 }
 
 impl Lerp for f32 {
     fn lerp(a: &Self, b: &Self, factor: f32) -> Self {
-        a + (b - a) * factor
+        let f = clamp(factor, 0., 1.);
+        a + (b - a) * f
     }
 }

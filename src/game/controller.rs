@@ -8,10 +8,10 @@ use time::Duration;
 pub struct Controller {
     // Settings and internal flags.
     is_smooth: bool,
-    is_W: bool,
-    is_A: bool,
-    is_S: bool,
-    is_D: bool,
+    is_w: bool,
+    is_a: bool,
+    is_s: bool,
+    is_d: bool,
 
     // Buttons and input axis.
     axis_goal: Vector2<f32>,
@@ -26,10 +26,10 @@ impl Controller {
     pub fn new(smooth: bool) -> Controller {
         Controller {
             is_smooth: smooth,
-            is_W: false,
-            is_A: false,
-            is_S: false,
-            is_D: false,
+            is_w: false,
+            is_a: false,
+            is_s: false,
+            is_d: false,
             axis_goal: zero(),
             axis: zero(),
             button_0: false,
@@ -38,37 +38,37 @@ impl Controller {
     }
 
     pub fn process_input(&mut self, window: &Window) {
-        if window.get_key(Key::W) == Action::Press && !self.is_W {
+        if window.get_key(Key::W) == Action::Press && !self.is_w {
             self.set_y_axis(1.);
-            self.is_W = true;
+            self.is_w = true;
         }
-        if window.get_key(Key::W) == Action::Release && self.is_W {
+        if window.get_key(Key::W) == Action::Release && self.is_w {
             self.set_y_axis(0.);
-            self.is_W = false;
+            self.is_w = false;
         }
-        if window.get_key(Key::S) == Action::Press && !self.is_S {
+        if window.get_key(Key::S) == Action::Press && !self.is_s {
             self.set_y_axis(-1.);
-            self.is_S = true;
+            self.is_s = true;
         }
-        if window.get_key(Key::S) == Action::Release && self.is_S {
+        if window.get_key(Key::S) == Action::Release && self.is_s {
             self.set_y_axis(0.);
-            self.is_S = false;
+            self.is_s = false;
         }
-        if window.get_key(Key::A) == Action::Press && !self.is_A {
+        if window.get_key(Key::A) == Action::Press && !self.is_a {
             self.set_x_axis(-1.);
-            self.is_A = true;
+            self.is_a = true;
         }
-        if window.get_key(Key::A) == Action::Release && self.is_A {
+        if window.get_key(Key::A) == Action::Release && self.is_a {
             self.set_x_axis(0.);
-            self.is_A = false;
+            self.is_a = false;
         }
-        if window.get_key(Key::D) == Action::Press && !self.is_D {
+        if window.get_key(Key::D) == Action::Press && !self.is_d {
             self.set_x_axis(1.);
-            self.is_D = true;
+            self.is_d = true;
         }
-        if window.get_key(Key::D) == Action::Release && self.is_D {
+        if window.get_key(Key::D) == Action::Release && self.is_d {
             self.set_x_axis(0.);
-            self.is_D = false;
+            self.is_d = false;
         }
     }
 
@@ -100,11 +100,11 @@ impl Controller {
         self.axis_goal[1] = value;
     }
 
-    fn set_button_0(&mut self, is: bool) {
+    fn _set_button_0(&mut self, is: bool) {
         self.button_0 = is;
     }
 
-    fn set_button_1(&mut self, is: bool) {
+    fn _set_button_1(&mut self, is: bool) {
         self.button_1 = is;
     }
 }

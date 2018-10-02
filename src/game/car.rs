@@ -53,25 +53,31 @@ impl Car {
             // accel:  0.0 - None
             //         1.0 - Pedal to the metal
             //        -1.0 - Emergency brake
+            let accel = ct.get_y_axis();
             // steer:  0.0 - Forward
             //         1.0 - Full right
             //        -1.0 - Full left
-            let accel = ct.get_x_axis();
-            let steer = ct.get_y_axis();
-            println!("accel: {}, steer: {}", accel, steer);
+            // * accel to prevent steering a non moving car.
+            let steer = ct.get_x_axis() * accel;
 
-            self.position += Vector3::new(accel, steer, 0.) * dt * 10.;
+            // x,y-axis rotation are fixed to 0. No rollovers!
+            self.rotation[2] -= steer * dt * 5.;
+            println!("accel: {}, steer: {}", accel, steer);
+            let rot_mat = Matrix4::new_rotation(self.rotation);
+            let mut forward = Vector3::new(0f32, 1., 0.).to_homogeneous();
+            forward = rot_mat * forward;
+            forward[3] = 0.;
+
+            self.position +=
+                Vector3::from_homogeneous(forward).unwrap() * accel * dt * 10.;
         }
     }
 
     pub(super) fn draw(&self, view: &Matrix4<f32>, projection: &Matrix4<f32>) {
-        let rotation = Matrix4::from_euler_angles(
-            self.rotation[0],
-            self.rotation[1],
-            self.rotation[2],
-        );
+        // x,y-axis rotation are fixed to 0. No rollovers!
+        let rotation = Matrix4::from_euler_angles(0., 0., self.rotation[2]);
         let translation = Matrix4::new_translation(&self.position);
-        let model = rotation * translation;
+        let model = translation * rotation;
         let mvp = projection * view * model;
         self.model.draw(&mvp);
     }

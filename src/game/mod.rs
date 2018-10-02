@@ -31,7 +31,7 @@ use self::glfw::{Action, Context, Glfw, Key, Window};
 use self::rodio::Source;
 use self::scene::Scene;
 use super::time::{Duration, PreciseTime};
-use nalgebra::{Perspective3, Vector3};
+use nalgebra::Perspective3;
 
 use std::cell::Cell;
 use std::fs::File;

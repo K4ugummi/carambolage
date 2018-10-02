@@ -6,15 +6,15 @@ use time::Duration;
 // Prototype controller emulation for keyboard users.
 #[derive(Copy, Clone, Debug)]
 pub struct Controller {
-    // Settings and internal flags.
+    // Internal settings and flags.
     is_smooth: bool,
     is_w: bool,
     is_a: bool,
     is_s: bool,
     is_d: bool,
-
-    // Buttons and input axis.
     axis_goal: Vector2<f32>,
+
+    // Buttons and input axis that can be used in the game.
     axis: Vector2<f32>,
     button_0: bool,
     button_1: bool,

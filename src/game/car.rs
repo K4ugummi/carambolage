@@ -46,20 +46,22 @@ impl Car {
         delta_time: Duration,
         controller: Option<Controller>,
     ) {
-        /*
         if controller.is_some() {
             let dt = delta_time.num_milliseconds() as f32 / 1_000.;
-            let controls = controller.unwrap();
-            let translation = Matrix4::new_translation(
-                &(Vector3::new(0., 1., 0.) * controls.y_axis() * dt),
-            );
-            let rotation =
-                Matrix4::from_euler_angles(0., 0., controls.x_axis() * dt);
-            self.position = self.position + Vector3::from_homogeneous(
-                translation * rotation * self.position.to_homogeneous(),
-            );
+            let ct = controller.unwrap();
+
+            // accel:  0.0 - None
+            //         1.0 - Pedal to the metal
+            //        -1.0 - Emergency brake
+            // steer:  0.0 - Forward
+            //         1.0 - Full right
+            //        -1.0 - Full left
+            let accel = ct.get_x_axis();
+            let steer = ct.get_y_axis();
+            println!("accel: {}, steer: {}", accel, steer);
+
+            self.position += Vector3::new(accel, steer, 0.) * dt * 10.;
         }
-        */
     }
 
     pub(super) fn draw(&self, view: &Matrix4<f32>, projection: &Matrix4<f32>) {

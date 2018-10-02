@@ -30,8 +30,6 @@ pub struct Controller {
 
     // Buttons and input axis that can be used in the game.
     axis: Vector2<f32>,
-    button_0: bool,
-    button_1: bool,
 }
 
 // DO NOT CHANGE WASD to other keys please. Setting your controls to e.g.
@@ -46,8 +44,6 @@ impl Controller {
             is_d: false,
             axis_goal: zero(),
             axis: zero(),
-            button_0: false,
-            button_1: false,
         }
     }
 
@@ -112,14 +108,6 @@ impl Controller {
 
     fn set_y_axis(&mut self, value: f32) {
         self.axis_goal[1] = value;
-    }
-
-    fn _set_button_0(&mut self, is: bool) {
-        self.button_0 = is;
-    }
-
-    fn _set_button_1(&mut self, is: bool) {
-        self.button_1 = is;
     }
 }
 

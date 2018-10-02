@@ -20,7 +20,13 @@ impl Texture {
     }
 }
 
-pub unsafe fn load_texture(path: &str) -> u32 {
+impl Default for Texture {
+    fn default() -> Texture {
+        Texture { id: 0 }
+    }
+}
+
+unsafe fn load_texture(path: &str) -> u32 {
     let mut tex_id = 0;
 
     gl::GenTextures(1, &mut tex_id);

@@ -18,7 +18,7 @@ extern crate image;
 extern crate rodio;
 
 mod car;
-mod map;
+mod level;
 mod mesh;
 mod model;
 mod scene;
@@ -85,7 +85,7 @@ impl Game {
 
         gl::load_with(|symbol| window.get_proc_address(symbol) as *const _);
 
-        let scene = Scene::new(7);
+        let scene = Scene::new(1);
 
         Game {
             glfw,

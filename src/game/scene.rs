@@ -17,11 +17,11 @@ use rand::{thread_rng, Rng};
 use time::Duration;
 
 use super::car::Car;
-use super::map::Map;
+use super::level::Level;
 
 pub(super) struct Scene {
     pub cars: Vec<Car>,
-    pub map: Map,
+    pub level: Level,
 }
 
 impl Scene {
@@ -41,9 +41,9 @@ impl Scene {
                 )
             }).collect();
 
-        let map = Map::new("res/maps/example.png");
+        let level = Level::new("res/maps/example.png");
 
-        Scene { cars, map }
+        Scene { cars, level }
     }
 
     /// Update the scene based on the internal state and a given time step.
@@ -70,14 +70,18 @@ impl Scene {
 
         let view = Matrix4::look_at_rh(
             &Point3::from_coordinates(
-                camera_pos + Vector3::new(0., 0., camera_distance + 80.),
+                camera_pos + Vector3::new(
+                    0.,
+                    0.,
+                    camera_distance + (50. / self.cars.len() as f32),
+                ),
             ),
             &Point3::from_coordinates(camera_pos),
             &Vector3::y_axis(),
         );
 
         // Draw map.
-        self.map.draw(&view, &projection);
+        self.level.draw(&view, &projection);
         // Draw objects.
         for i in 0..self.cars.len() {
             self.cars[i].draw(&view, &projection);

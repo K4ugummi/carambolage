@@ -19,7 +19,7 @@ use nalgebra::{zero, Matrix4, Vector3};
 use time::Duration;
 
 pub struct Car {
-    pub position: Vector3<f32>, // position in world space
+    pub center_of_mass: Vector3<f32>, // position in world space
     pub rotation: Vector3<f32>, // rotation in radians per axis
     mass: f32,
 
@@ -27,9 +27,9 @@ pub struct Car {
 }
 
 impl Car {
-    pub fn new(position: Vector3<f32>, mass: f32) -> Car {
+    pub fn new(center_of_mass: Vector3<f32>, mass: f32) -> Car {
         let mut car: Car = Default::default();
-        car.position = position;
+        car.center_of_mass = center_of_mass;
         if mass > 1. {
             car.mass = mass;
         }
@@ -62,14 +62,14 @@ impl Car {
             // Set homogeneous coordinate to 0 or unwrap() will panic.
             forward[3] = 0.;
 
-            self.position += Vector3::from_homogeneous(forward).unwrap() * accel * dt * 10.;
+            self.center_of_mass += Vector3::from_homogeneous(forward).unwrap() * accel * dt * 10.;
         }
     }
 
     pub(super) fn draw(&self, view: &Matrix4<f32>, projection: &Matrix4<f32>) {
         // x,y-axis rotation are fixed to 0. No rollovers!
         let rotation = Matrix4::from_euler_angles(0., 0., self.rotation[2]);
-        let translation = Matrix4::new_translation(&self.position);
+        let translation = Matrix4::new_translation(&self.center_of_mass);
         let model = translation * rotation;
         let mvp = projection * view * model;
         self.model.draw(&mvp);
@@ -79,7 +79,7 @@ impl Car {
 impl Default for Car {
     fn default() -> Car {
         Car {
-            position: zero(),
+            center_of_mass: zero(),
             rotation: zero(),
             mass: 1.,
 

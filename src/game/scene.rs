@@ -61,13 +61,13 @@ impl Scene {
         let view = if self.cars.is_empty() {
             Matrix4::look_at_rh(&Point3::new(0., 0., 50.), &Point3::new(0., 0., 0.), &Vector3::y())
         } else {
-            let mut min = self.cars[0].position;
-            let mut max = self.cars[0].position;
+            let mut min = self.cars[0].center_of_mass;
+            let mut max = self.cars[0].center_of_mass;
             let mut camera_pos = zero();
             for car in &self.cars {
-                camera_pos += car.position;
-                min = inf(&min, &car.position);
-                max = sup(&max, &car.position);
+                camera_pos += car.center_of_mass;
+                min = inf(&min, &car.center_of_mass);
+                max = sup(&max, &car.center_of_mass);
             }
             camera_pos /= self.cars.len() as f32;
             let camera_distance = (max - min).norm();

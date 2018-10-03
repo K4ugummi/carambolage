@@ -184,9 +184,7 @@ impl Tile {
                 &self.matrices[0] as *const Matrix4<f32> as *const c_void,
                 gl::STATIC_DRAW,
             );
-        }
 
-        unsafe {
             gl::BindVertexArray(self.vao);
 
             gl::EnableVertexAttribArray(2);

@@ -54,11 +54,7 @@ pub struct Mesh {
 }
 
 impl Mesh {
-    pub fn new(
-        vertices: Vec<Vertex>,
-        indices: Vec<u32>,
-        textures: Vec<Texture>,
-    ) -> Mesh {
+    pub fn new(vertices: Vec<Vertex>, indices: Vec<u32>, textures: Vec<Texture>) -> Mesh {
         let mut mesh: Mesh = Default::default();
 
         unsafe {
@@ -82,12 +78,7 @@ impl Mesh {
         gl::BindVertexArray(0);
     }
 
-    unsafe fn init(
-        &mut self,
-        vertices: Vec<Vertex>,
-        indices: Vec<u32>,
-        textures: Vec<Texture>,
-    ) {
+    unsafe fn init(&mut self, vertices: Vec<Vertex>, indices: Vec<u32>, textures: Vec<Texture>) {
         self.vertices = vertices;
         self.indices = indices;
         self.textures = textures;

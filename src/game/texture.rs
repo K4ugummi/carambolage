@@ -30,8 +30,7 @@ unsafe fn load_texture(path: &str) -> u32 {
     let mut tex_id = 0;
 
     gl::GenTextures(1, &mut tex_id);
-    let img =
-        image::open(&Path::new(path)).expect("ERROR: Failed to load texture!");
+    let img = image::open(&Path::new(path)).expect("ERROR: Failed to load texture!");
     let image_format = match img {
         ImageRgb8(_) => gl::RGB,
         ImageRgba8(_) => gl::RGBA,
@@ -56,16 +55,8 @@ unsafe fn load_texture(path: &str) -> u32 {
 
     gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_S, gl::REPEAT as i32);
     gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_T, gl::REPEAT as i32);
-    gl::TexParameteri(
-        gl::TEXTURE_2D,
-        gl::TEXTURE_MIN_FILTER,
-        gl::LINEAR as i32,
-    );
-    gl::TexParameteri(
-        gl::TEXTURE_2D,
-        gl::TEXTURE_MAG_FILTER,
-        gl::LINEAR as i32,
-    );
+    gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::LINEAR as i32);
+    gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::LINEAR as i32);
 
     tex_id
 }

@@ -89,8 +89,8 @@ impl Game {
         gl::load_with(|symbol| window.get_proc_address(symbol) as *const _);
 
         let controller = vec![
-            Controller::new(true, ControllerLayout::WASD),
-            Controller::new(true, ControllerLayout::Arrows),
+            Controller::new(true, &ControllerLayout::WASD),
+            Controller::new(true, &ControllerLayout::Arrows),
         ];
         let scene = Scene::new(controller.len());
 
@@ -113,9 +113,7 @@ impl Game {
         // Play game music (sorry just testing)
         let device = rodio::default_output_device().unwrap();
 
-        let file =
-            File::open("res/sounds/music/Rolemusic-01-Bacterial-Love.mp3")
-                .unwrap();
+        let file = File::open("res/sounds/music/Rolemusic-01-Bacterial-Love.mp3").unwrap();
         let source = rodio::Decoder::new(BufReader::new(file)).unwrap();
         rodio::play_raw(&device, source.convert_samples());
 
@@ -132,12 +130,8 @@ impl Game {
                 gl::Enable(gl::BLEND);
                 gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
             }
-            let projection = Perspective3::new(
-                self.width as f32 / self.height as f32,
-                70.,
-                0.1,
-                1000.,
-            ).unwrap();
+            let projection =
+                Perspective3::new(self.width as f32 / self.height as f32, 70., 0.1, 1000.).unwrap();
             self.scene.draw(&projection);
 
             let time_now = PreciseTime::now();
@@ -164,6 +158,7 @@ impl Game {
         }
     }
 
+    #[cfg_attr(feature = "cargo-clippy", allow(single_match))]
     pub fn process_events(&mut self) {
         for (_, event) in glfw::flush_messages(&self.events) {
             match event {
@@ -182,17 +177,14 @@ impl Game {
             self.window.set_should_close(true)
         }
 
-        for ctrl in self.controller.iter_mut() {
+        for ctrl in &mut self.controller.iter_mut() {
             ctrl.process_input(&self.window, delta_time);
         }
     }
 }
 
-fn error_callback(
-    _: glfw::Error,
-    description: String,
-    error_count: &Cell<usize>,
-) {
+#[cfg_attr(feature = "cargo-clippy", allow(needless_pass_by_value))]
+fn error_callback(_: glfw::Error, description: String, error_count: &Cell<usize>) {
     println!("GLFW error {}: {}", error_count.get(), description);
     error_count.set(error_count.get() + 1);
 }

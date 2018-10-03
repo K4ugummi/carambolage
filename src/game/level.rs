@@ -54,6 +54,7 @@ impl Default for TileVertex {
 }
 
 #[cfg_attr(rustfmt, rustfmt_skip)]
+#[cfg_attr(feature = "cargo-clippy", allow(enum_variant_names))]
 #[derive(Copy, Clone, Debug)]
 enum TileType {
     RoadNONE    = 0,
@@ -184,20 +185,11 @@ impl Tile {
                 &self.matrices[0] as *const Matrix4<f32> as *const c_void,
                 gl::STATIC_DRAW,
             );
-        }
 
-        unsafe {
             gl::BindVertexArray(self.vao);
 
             gl::EnableVertexAttribArray(2);
-            gl::VertexAttribPointer(
-                2,
-                4,
-                gl::FLOAT,
-                gl::FALSE,
-                size_mat4,
-                ptr::null(),
-            );
+            gl::VertexAttribPointer(2, 4, gl::FLOAT, gl::FALSE, size_mat4, ptr::null());
             gl::EnableVertexAttribArray(3);
             gl::VertexAttribPointer(
                 3,
@@ -338,9 +330,7 @@ impl Level {
             for x in 0..tiles_num_x {
                 let tile_type = get_tile_type(&img, x, y);
                 let matrix = Matrix4::new_translation(
-                    &(tile_start
-                        + stride_x * (x as f32)
-                        + stride_y * (y as f32)),
+                    &(tile_start + stride_x * (x as f32) + stride_y * (y as f32)),
                 );
                 tiles[tile_type as usize].matrices.push(matrix);
             }
@@ -372,10 +362,9 @@ impl Level {
 // Oh ohh... it works but needs some cleaning (later), when we have more tile sprites.
 fn get_tile_type(image: &image::DynamicImage, x: usize, y: usize) -> TileType {
     let pixel = image.get_pixel(x as u32, y as u32);
-    let pixel_data =
-        (pixel.data[0], pixel.data[1], pixel.data[2], pixel.data[3]);
+    let pixel_data = (pixel.data[0], pixel.data[1], pixel.data[2], pixel.data[3]);
 
-    let tile_type = if pixel_data == (0, 0, 0, 255) {
+    if pixel_data == (0, 0, 0, 255) {
         TileType::RoadNONE
     } else {
         let up = image.get_pixel(x as u32, (y + 1) as u32).data[0];
@@ -401,7 +390,5 @@ fn get_tile_type(image: &image::DynamicImage, x: usize, y: usize) -> TileType {
 
             (_, _, _, _) => TileType::RoadNONE,
         }
-    };
-
-    tile_type
+    }
 }

@@ -35,7 +35,7 @@ impl Scene {
                     {
                         let x = rng.gen_range(-20f32, 20f32);
                         let y = rng.gen_range(-20f32, 20f32);
-                        Vector3::new(x, y, 0.)
+                        Point3::new(x, y, 0.)
                     },
                     1.0,
                 )

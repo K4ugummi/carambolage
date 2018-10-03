@@ -15,7 +15,7 @@
 use super::controller::Controller;
 use super::model::Model;
 
-use nalgebra::{zero, Matrix4, Vector3};
+use nalgebra::{Matrix4, Vector3, Point3};
 use time::Duration;
 
 pub struct Car {
@@ -23,7 +23,7 @@ pub struct Car {
     ///
     /// Note that the car does not rotate around this point. It rotates around
     /// the rear axle.
-    pub center_of_mass: Vector3<f32>,
+    pub center_of_mass: Point3<f32>,
     /// The forward orientation of the car
     pub orientation: Vector3<f32>,
     /// Mass of the car in kg
@@ -37,7 +37,7 @@ pub struct Car {
 }
 
 impl Car {
-    pub fn new(center_of_mass: Vector3<f32>, mass: f32) -> Car {
+    pub fn new(center_of_mass: Point3<f32>, mass: f32) -> Car {
         let mut car: Car = Default::default();
         car.center_of_mass = center_of_mass;
         if mass > 1. {
@@ -45,6 +45,10 @@ impl Car {
         }
 
         car
+    }
+
+    fn get_rotation_point(&self) -> Point3<f32> {
+        self.center_of_mass - self.dist_rear_axle * self.orientation
     }
 
     /// Update the car position and velocity based on the internal car state for
@@ -88,8 +92,8 @@ impl Car {
 impl Default for Car {
     fn default() -> Car {
         Car {
-            center_of_mass: zero(),
-            orientation: zero(),
+            center_of_mass: Point3::new(0., 0., 0.),
+            orientation: Vector3::new(0., 1., 0.),
             mass: 1.,
             dist_front_axle: 1.,
             dist_rear_axle: 1.,

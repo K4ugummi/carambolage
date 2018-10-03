@@ -17,6 +17,8 @@ extern crate rand;
 extern crate time;
 
 mod game;
+mod util;
+
 use game::Game;
 
 fn main() {

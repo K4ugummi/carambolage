@@ -21,8 +21,6 @@ use time::Duration;
 pub struct Car {
     pub position: Vector3<f32>, // position in world space
     pub rotation: Vector3<f32>, // rotation in radians per axis
-    _velocity: Vector3<f32>,
-    _force: Vector3<f32>,
     mass: f32,
 
     pub model: Model,
@@ -84,8 +82,6 @@ impl Default for Car {
         Car {
             position: zero(),
             rotation: zero(),
-            _velocity: zero(),
-            _force: zero(),
             mass: 1.,
 
             model: Model::new(),

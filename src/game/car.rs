@@ -19,10 +19,20 @@ use nalgebra::{zero, Matrix4, Vector3};
 use time::Duration;
 
 pub struct Car {
-    pub center_of_mass: Vector3<f32>, // position in world space
-    pub rotation: Vector3<f32>, // rotation in radians per axis
+    /// The center of mass of the car
+    ///
+    /// Note that the car does not rotate around this point. It rotates around
+    /// the rear axle.
+    pub center_of_mass: Vector3<f32>,
+    /// The forward orientation of the car
+    pub orientation: Vector3<f32>,
+    /// Mass of the car in kg
     mass: f32,
-
+    /// Distance of the front axle from the center of mass in meter
+    dist_front_axle: f32,
+    /// Distance of the rear axle from the center of mass in meter
+    dist_rear_axle: f32,
+    /// The graphical model of the car
     pub model: Model,
 }
 
@@ -53,10 +63,9 @@ impl Car {
             // * accel to prevent steering a non moving car.
             let steer = ct.get_x_axis() * accel;
 
-            // x,y-axis rotation are fixed to 0. No rollovers!
-            self.rotation[2] -= steer * dt * 3.5;
+            self.orientation[2] -= steer * dt * 3.5;
 
-            let rot_mat = Matrix4::new_rotation(self.rotation);
+            let rot_mat = Matrix4::new_rotation(self.orientation);
             let mut forward = Vector3::new(0f32, 1., 0.).to_homogeneous();
             forward = rot_mat * forward;
             // Set homogeneous coordinate to 0 or unwrap() will panic.
@@ -68,7 +77,7 @@ impl Car {
 
     pub(super) fn draw(&self, view: &Matrix4<f32>, projection: &Matrix4<f32>) {
         // x,y-axis rotation are fixed to 0. No rollovers!
-        let rotation = Matrix4::from_euler_angles(0., 0., self.rotation[2]);
+        let rotation = Matrix4::from_euler_angles(0., 0., self.orientation[2]);
         let translation = Matrix4::new_translation(&self.center_of_mass);
         let model = translation * rotation;
         let mvp = projection * view * model;
@@ -80,9 +89,10 @@ impl Default for Car {
     fn default() -> Car {
         Car {
             center_of_mass: zero(),
-            rotation: zero(),
+            orientation: zero(),
             mass: 1.,
-
+            dist_front_axle: 1.,
+            dist_rear_axle: 1.,
             model: Model::new(),
         }
     }

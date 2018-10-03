@@ -57,13 +57,21 @@ impl Default for TileVertex {
 #[derive(Copy, Clone, Debug)]
 enum TileType {
     RoadNONE    = 0,
+    // Straight
     RoadNS      = 1,
     RoadEW      = 2,
+    // Curve
     RoadNE      = 3,
     RoadNW      = 4,
     RoadSE      = 5,
     RoadSW      = 6,
+    // X-Cross
     RoadNSEW    = 7,
+    // T-Cross
+    RoadNEW     = 8,
+    RoadNWS     = 9,
+    RoadEWS     = 10,
+    RoadNES     = 11,
 }
 
 struct Tile {
@@ -99,13 +107,21 @@ impl Tile {
 
         tile.texture = match tile_type {
             TileType::RoadNONE => Texture::new("res/maps/tiles/roadNONE.png"),
+
             TileType::RoadNS => Texture::new("res/maps/tiles/roadNS.png"),
             TileType::RoadEW => Texture::new("res/maps/tiles/roadEW.png"),
+
             TileType::RoadNE => Texture::new("res/maps/tiles/roadNE.png"),
             TileType::RoadNW => Texture::new("res/maps/tiles/roadNW.png"),
             TileType::RoadSE => Texture::new("res/maps/tiles/roadSE.png"),
             TileType::RoadSW => Texture::new("res/maps/tiles/roadSW.png"),
+
             TileType::RoadNSEW => Texture::new("res/maps/tiles/roadNSEW.png"),
+
+            TileType::RoadNEW => Texture::new("res/maps/tiles/roadNEW.png"),
+            TileType::RoadNWS => Texture::new("res/maps/tiles/roadNWS.png"),
+            TileType::RoadEWS => Texture::new("res/maps/tiles/roadEWS.png"),
+            TileType::RoadNES => Texture::new("res/maps/tiles/roadNES.png"),
         };
 
         tile
@@ -273,8 +289,9 @@ pub struct Level {
 impl Level {
     pub fn new(file: &str) -> Level {
         // Load the map file.
-        let img =
-            image::open(&Path::new(file)).expect("ERROR: Map failed to load");
+        let img = image::open(&Path::new(file))
+            .expect("ERROR: Map failed to load")
+            .flipv();
         match img {
             ImageRgba8(_) => {}
             _ => panic!("ERROR: Map must be in RGBA8 format!"),
@@ -286,13 +303,21 @@ impl Level {
         // Uhhh thats ugly :o
         let mut tiles: Vec<Tile> = Vec::new();
         tiles.push(Tile::new(TileType::RoadNONE));
+
         tiles.push(Tile::new(TileType::RoadNS));
         tiles.push(Tile::new(TileType::RoadEW));
+
         tiles.push(Tile::new(TileType::RoadNE));
         tiles.push(Tile::new(TileType::RoadNW));
         tiles.push(Tile::new(TileType::RoadSE));
         tiles.push(Tile::new(TileType::RoadSW));
+
         tiles.push(Tile::new(TileType::RoadNSEW));
+
+        tiles.push(Tile::new(TileType::RoadNEW));
+        tiles.push(Tile::new(TileType::RoadNWS));
+        tiles.push(Tile::new(TileType::RoadEWS));
+        tiles.push(Tile::new(TileType::RoadNES));
 
         // Load the tile shader.
         let shader = Shader::new("tile");
@@ -347,8 +372,10 @@ impl Level {
 // Oh ohh... it works but needs some cleaning (later), when we have more tile sprites.
 fn get_tile_type(image: &image::DynamicImage, x: usize, y: usize) -> TileType {
     let pixel = image.get_pixel(x as u32, y as u32);
+    let pixel_data =
+        (pixel.data[0], pixel.data[1], pixel.data[2], pixel.data[3]);
 
-    let tile_type = if pixel.data[3] == 0 {
+    let tile_type = if pixel_data == (0, 0, 0, 255) {
         TileType::RoadNONE
     } else {
         let up = image.get_pixel(x as u32, (y + 1) as u32).data[0];
@@ -366,6 +393,11 @@ fn get_tile_type(image: &image::DynamicImage, x: usize, y: usize) -> TileType {
             (255, 0, 0, 255) => TileType::RoadNE,
             (0, 255, 255, 0) => TileType::RoadSW,
             (0, 255, 0, 255) => TileType::RoadSE,
+
+            (255, 0, 255, 255) => TileType::RoadNEW,
+            (255, 255, 255, 0) => TileType::RoadNWS,
+            (0, 255, 255, 255) => TileType::RoadEWS,
+            (255, 255, 0, 255) => TileType::RoadNES,
 
             (_, _, _, _) => TileType::RoadNONE,
         }

@@ -113,9 +113,7 @@ impl Game {
         // Play game music (sorry just testing)
         let device = rodio::default_output_device().unwrap();
 
-        let file =
-            File::open("res/sounds/music/Rolemusic-01-Bacterial-Love.mp3")
-                .unwrap();
+        let file = File::open("res/sounds/music/Rolemusic-01-Bacterial-Love.mp3").unwrap();
         let source = rodio::Decoder::new(BufReader::new(file)).unwrap();
         rodio::play_raw(&device, source.convert_samples());
 
@@ -132,12 +130,8 @@ impl Game {
                 gl::Enable(gl::BLEND);
                 gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
             }
-            let projection = Perspective3::new(
-                self.width as f32 / self.height as f32,
-                70.,
-                0.1,
-                1000.,
-            ).unwrap();
+            let projection =
+                Perspective3::new(self.width as f32 / self.height as f32, 70., 0.1, 1000.).unwrap();
             self.scene.draw(&projection);
 
             let time_now = PreciseTime::now();
@@ -188,11 +182,7 @@ impl Game {
     }
 }
 
-fn error_callback(
-    _: glfw::Error,
-    description: String,
-    error_count: &Cell<usize>,
-) {
+fn error_callback(_: glfw::Error, description: String, error_count: &Cell<usize>) {
     println!("GLFW error {}: {}", error_count.get(), description);
     error_count.set(error_count.get() + 1);
 }

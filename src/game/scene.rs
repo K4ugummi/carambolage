@@ -48,11 +48,7 @@ impl Scene {
     }
 
     /// Update the scene based on the internal state and a given time step.
-    pub(super) fn run(
-        &mut self,
-        delta_time: Duration,
-        controller: &Vec<Controller>,
-    ) {
+    pub(super) fn run(&mut self, delta_time: Duration, controller: &Vec<Controller>) {
         for (id, car) in &mut self.cars.iter_mut().enumerate() {
             if id < controller.len() {
                 car.run(delta_time, Some(controller[id]));
@@ -78,11 +74,7 @@ impl Scene {
 
         let view = Matrix4::look_at_rh(
             &Point3::from_coordinates(
-                camera_pos + Vector3::new(
-                    0.,
-                    0.,
-                    camera_distance + (50. / self.cars.len() as f32),
-                ),
+                camera_pos + Vector3::new(0., 0., camera_distance + (50. / self.cars.len() as f32)),
             ),
             &Point3::from_coordinates(camera_pos),
             &Vector3::y_axis(),

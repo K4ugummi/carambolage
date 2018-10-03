@@ -83,10 +83,7 @@ pub struct Controller {
 // DO NOT CHANGE WASD to other keys please. Setting your controls to e.g.
 // arrow keys will come later. Thanks in advance, K4ugummi.
 impl Controller {
-    pub fn new(
-        smooth: bool,
-        controller_layout: ControllerLayout,
-    ) -> Controller {
+    pub fn new(smooth: bool, controller_layout: ControllerLayout) -> Controller {
         Controller {
             is_smooth: smooth,
             ci: ControllerInternal::new(controller_layout),
@@ -96,27 +93,19 @@ impl Controller {
     }
 
     pub fn process_input(&mut self, window: &Window, delta_time: Duration) {
-        if window.get_key(self.ci.forward) == Action::Press
-            && !self.ci.is_forward
-        {
+        if window.get_key(self.ci.forward) == Action::Press && !self.ci.is_forward {
             self.set_y_axis(1.);
             self.ci.is_forward = true;
         }
-        if window.get_key(self.ci.forward) == Action::Release
-            && self.ci.is_forward
-        {
+        if window.get_key(self.ci.forward) == Action::Release && self.ci.is_forward {
             self.set_y_axis(0.);
             self.ci.is_forward = false;
         }
-        if window.get_key(self.ci.backward) == Action::Press
-            && !self.ci.is_backward
-        {
+        if window.get_key(self.ci.backward) == Action::Press && !self.ci.is_backward {
             self.set_y_axis(-1.);
             self.ci.is_backward = true;
         }
-        if window.get_key(self.ci.backward) == Action::Release
-            && self.ci.is_backward
-        {
+        if window.get_key(self.ci.backward) == Action::Release && self.ci.is_backward {
             self.set_y_axis(0.);
             self.ci.is_backward = false;
         }
@@ -132,8 +121,7 @@ impl Controller {
             self.set_x_axis(1.);
             self.ci.is_right = true;
         }
-        if window.get_key(self.ci.right) == Action::Release && self.ci.is_right
-        {
+        if window.get_key(self.ci.right) == Action::Release && self.ci.is_right {
             self.set_x_axis(0.);
             self.ci.is_right = false;
         }

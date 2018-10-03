@@ -41,11 +41,7 @@ impl Car {
 
     /// Update the car position and velocity based on the internal car state for
     /// a given time step.
-    pub(super) fn run(
-        &mut self,
-        delta_time: Duration,
-        controller: Option<Controller>,
-    ) {
+    pub(super) fn run(&mut self, delta_time: Duration, controller: Option<Controller>) {
         if controller.is_some() {
             let dt = delta_time.num_milliseconds() as f32 / 1_000.;
             let ct = controller.unwrap();
@@ -69,8 +65,7 @@ impl Car {
             // Set homogeneous coordinate to 0 or unwrap() will panic.
             forward[3] = 0.;
 
-            self.position +=
-                Vector3::from_homogeneous(forward).unwrap() * accel * dt * 10.;
+            self.position += Vector3::from_homogeneous(forward).unwrap() * accel * dt * 10.;
         }
     }
 

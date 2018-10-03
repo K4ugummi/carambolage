@@ -14,6 +14,10 @@
 // along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 use nalgebra::{clamp, Vector2, Vector3};
 
+mod framelimiter;
+
+pub use self::framelimiter::FrameLimiter;
+
 /// Interpolate from a to b with a given factor.
 /// factor = 0.0 returns a
 /// factor = 1.0 returns b

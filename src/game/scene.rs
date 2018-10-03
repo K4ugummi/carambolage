@@ -28,7 +28,6 @@ pub(super) struct Scene {
 impl Scene {
     /// Make a new scene with a given number of cars.
     pub(super) fn new(num_cars: usize) -> Scene {
-        assert!(num_cars > 0);
         let mut rng = thread_rng();
         let cars: Vec<Car> = (0..num_cars)
             .map(|_| {
@@ -59,26 +58,26 @@ impl Scene {
     }
 
     pub(super) fn draw(&self, projection: &Matrix4<f32>) {
-        assert!(!self.cars.is_empty());
+        let view = if self.cars.is_empty() {
+            Matrix4::look_at_rh(&Point3::new(0., 0., 50.), &Point3::new(0., 0., 0.), &Vector3::y())
+        } else {
+            let mut min = self.cars[0].position;
+            let mut max = self.cars[0].position;
+            let mut camera_pos = zero();
+            for car in &self.cars {
+                camera_pos += car.position;
+                min = inf(&min, &car.position);
+                max = sup(&max, &car.position);
+            }
+            camera_pos /= self.cars.len() as f32;
+            let camera_distance = (max - min).norm();
 
-        let mut min = self.cars[0].position;
-        let mut max = self.cars[0].position;
-        let mut camera_pos = zero();
-        for car in &self.cars {
-            camera_pos += car.position;
-            min = inf(&min, &car.position);
-            max = sup(&max, &car.position);
-        }
-        camera_pos /= self.cars.len() as f32;
-        let camera_distance = (max - min).norm();
-
-        let view = Matrix4::look_at_rh(
-            &Point3::from_coordinates(
-                camera_pos + Vector3::new(0., 0., camera_distance + (50. / self.cars.len() as f32)),
-            ),
-            &Point3::from_coordinates(camera_pos),
-            &Vector3::y_axis(),
-        );
+            Matrix4::look_at_rh(
+                &Point3::from_coordinates(camera_pos + Vector3::new(0., 0., camera_distance + (50. / self.cars.len() as f32))),
+                &Point3::from_coordinates(camera_pos),
+                &Vector3::y(),
+            )
+        };
 
         // Draw map.
         self.level.draw(&view, &projection);

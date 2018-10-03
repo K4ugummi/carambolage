@@ -33,8 +33,7 @@ impl Shader {
 
         // Load vertex shader code from file.
         let vertex_file_path = format!("res/shaders/{}.vs", file);
-        let mut vertex_file = File::open(vertex_file_path)
-            .unwrap_or_else(|_| panic!("ERROR: Failed to open {}.vs", file));
+        let mut vertex_file = File::open(vertex_file_path).unwrap_or_else(|_| panic!("ERROR: Failed to open {}.vs", file));
         let mut vertex_string = String::new();
         vertex_file
             .read_to_string(&mut vertex_string)
@@ -43,8 +42,7 @@ impl Shader {
 
         // Load fragment shader code from file.
         let fragment_file_path = format!("res/shaders/{}.fs", file);
-        let mut fragment_file = File::open(fragment_file_path)
-            .unwrap_or_else(|_| panic!("ERROR: Failed to open {}.fs", file));
+        let mut fragment_file = File::open(fragment_file_path).unwrap_or_else(|_| panic!("ERROR: Failed to open {}.fs", file));
         let mut fragment_string = String::new();
         fragment_file
             .read_to_string(&mut fragment_string)
@@ -106,12 +104,7 @@ impl Shader {
             gl::GetShaderiv(shader, gl::COMPILE_STATUS, &mut success);
             if success != i32::from(gl::TRUE) {
                 // i8 is a GLchar
-                gl::GetShaderInfoLog(
-                    shader,
-                    1024,
-                    ptr::null_mut(),
-                    info_log.as_mut_ptr() as *mut i8,
-                );
+                gl::GetShaderInfoLog(shader, 1024, ptr::null_mut(), info_log.as_mut_ptr() as *mut i8);
                 println!(
                     "ERROR::SHADER_COMPILATION_ERROR of type: {}\n{}\n",
                     type_,
@@ -121,12 +114,7 @@ impl Shader {
         } else {
             gl::GetProgramiv(shader, gl::LINK_STATUS, &mut success);
             if success != i32::from(gl::TRUE) {
-                gl::GetProgramInfoLog(
-                    shader,
-                    1024,
-                    ptr::null_mut(),
-                    info_log.as_mut_ptr() as *mut i8,
-                );
+                gl::GetProgramInfoLog(shader, 1024, ptr::null_mut(), info_log.as_mut_ptr() as *mut i8);
                 println!(
                     "ERROR::PROGRAM_LINKING_ERROR of type: {}\n{}\n",
                     type_,

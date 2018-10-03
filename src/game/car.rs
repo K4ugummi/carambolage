@@ -61,7 +61,7 @@ impl Car {
             let steer = ct.get_x_axis() * accel;
 
             // x,y-axis rotation are fixed to 0. No rollovers!
-            self.rotation[2] -= steer * dt * 5.;
+            self.rotation[2] -= steer * dt * 3.5;
             println!("accel: {}, steer: {}", accel, steer);
             let rot_mat = Matrix4::new_rotation(self.rotation);
             let mut forward = Vector3::new(0f32, 1., 0.).to_homogeneous();

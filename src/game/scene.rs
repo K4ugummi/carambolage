@@ -51,12 +51,13 @@ impl Scene {
     pub(super) fn run(
         &mut self,
         delta_time: Duration,
-        controller: &Controller,
+        controller: &Vec<Controller>,
     ) {
         for (id, car) in &mut self.cars.iter_mut().enumerate() {
-            match id {
-                0 => car.run(delta_time, Some(*controller)),
-                _ => car.run(delta_time, None),
+            if id < controller.len() {
+                car.run(delta_time, Some(controller[id]));
+            } else {
+                car.run(delta_time, None);
             }
         }
     }

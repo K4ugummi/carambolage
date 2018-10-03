@@ -114,7 +114,9 @@ impl Game {
         let device = rodio::default_output_device().unwrap();
 
         let file = File::open("res/sounds/music/Rolemusic-01-Bacterial-Love.mp3").unwrap();
-        let source = rodio::Decoder::new(BufReader::new(file)).unwrap();
+        let source = rodio::Decoder::new(BufReader::new(file))
+            .unwrap()
+            .repeat_infinite();
         rodio::play_raw(&device, source.convert_samples());
 
         while !self.window.should_close() {

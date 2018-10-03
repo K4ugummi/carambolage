@@ -14,8 +14,9 @@
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
 use super::glfw::{Action, Key, Window};
 
-use nalgebra::{clamp, zero, Vector2};
+use nalgebra::{zero, Vector2};
 use time::Duration;
+use util::Lerp;
 
 use self::ControllerInternal as CI;
 use self::ControllerLayout as CL;
@@ -90,7 +91,10 @@ pub struct Controller {
 // DO NOT CHANGE WASD to other keys please. Setting your controls to e.g.
 // arrow keys will come later. Thanks in advance, K4ugummi.
 impl Controller {
-    pub fn new(smooth: bool, controller_layout: CL) -> Controller {
+    pub fn new(
+        smooth: bool,
+        controller_layout: ControllerLayout,
+    ) -> Controller {
         Controller {
             is_smooth: smooth,
             ci: ControllerInternal::new(controller_layout),
@@ -171,23 +175,5 @@ impl Controller {
 
     fn set_y_axis(&mut self, value: f32) {
         self.axis_goal[1] = value;
-    }
-}
-
-trait Lerp {
-    fn lerp(a: &Self, b: &Self, factor: f32) -> Self;
-}
-
-impl Lerp for Vector2<f32> {
-    fn lerp(a: &Self, b: &Self, factor: f32) -> Self {
-        let f = clamp(factor, 0., 1.);
-        a + (b - a) * f
-    }
-}
-
-impl Lerp for f32 {
-    fn lerp(a: &Self, b: &Self, factor: f32) -> Self {
-        let f = clamp(factor, 0., 1.);
-        a + (b - a) * f
     }
 }

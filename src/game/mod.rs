@@ -91,7 +91,6 @@ impl Game {
         let controller = vec![
             Controller::new(true, ControllerLayout::WASD),
             Controller::new(true, ControllerLayout::Arrows),
-            Controller::new(true, ControllerLayout::NumPad),
         ];
         let scene = Scene::new(controller.len());
 

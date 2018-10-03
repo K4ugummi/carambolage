@@ -24,7 +24,6 @@ use self::ControllerLayout as CL;
 pub enum ControllerLayout {
     WASD,
     Arrows,
-    NumPad,
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -48,13 +47,6 @@ impl ControllerInternal {
                 backward: Key::Down,
                 left: Key::Left,
                 right: Key::Right,
-                ..Default::default()
-            },
-            CL::NumPad => CI {
-                forward: Key::Num8,
-                backward: Key::Num5,
-                left: Key::Num4,
-                right: Key::Num6,
                 ..Default::default()
             },
         }
@@ -152,8 +144,7 @@ impl Controller {
     fn update(&mut self, delta_time: Duration) {
         if self.is_smooth {
             let dt = delta_time.num_milliseconds() as f32 / 1_000.;
-            self.axis =
-                Vector2::lerp(&self.axis, &self.axis_goal, 0.5 * dt * 10.);
+            self.axis = Vector2::lerp(&self.axis, &self.axis_goal, 5. * dt);
             self.axis[0] = (self.axis[0] * 10_000.).trunc() / 10_000.;
             self.axis[1] = (self.axis[1] * 10_000.).trunc() / 10_000.;
         } else {

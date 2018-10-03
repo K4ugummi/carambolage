@@ -39,7 +39,7 @@ struct ControllerInternal {
 }
 
 impl ControllerInternal {
-    pub fn new(controller_layout: CL) -> ControllerInternal {
+    pub fn new(controller_layout: &ControllerLayout) -> ControllerInternal {
         match controller_layout {
             CL::WASD => Default::default(),
             CL::Arrows => CI {
@@ -83,10 +83,10 @@ pub struct Controller {
 // DO NOT CHANGE WASD to other keys please. Setting your controls to e.g.
 // arrow keys will come later. Thanks in advance, K4ugummi.
 impl Controller {
-    pub fn new(smooth: bool, controller_layout: ControllerLayout) -> Controller {
+    pub fn new(smooth: bool, controller_layout: &ControllerLayout) -> Controller {
         Controller {
             is_smooth: smooth,
-            ci: ControllerInternal::new(controller_layout),
+            ci: ControllerInternal::new(&controller_layout),
             axis_goal: zero(),
             axis: zero(),
         }

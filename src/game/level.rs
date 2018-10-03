@@ -54,6 +54,7 @@ impl Default for TileVertex {
 }
 
 #[cfg_attr(rustfmt, rustfmt_skip)]
+#[cfg_attr(feature = "cargo-clippy", allow(enum_variant_names))]
 #[derive(Copy, Clone, Debug)]
 enum TileType {
     RoadNONE    = 0,
@@ -363,7 +364,7 @@ fn get_tile_type(image: &image::DynamicImage, x: usize, y: usize) -> TileType {
     let pixel = image.get_pixel(x as u32, y as u32);
     let pixel_data = (pixel.data[0], pixel.data[1], pixel.data[2], pixel.data[3]);
 
-    let tile_type = if pixel_data == (0, 0, 0, 255) {
+    if pixel_data == (0, 0, 0, 255) {
         TileType::RoadNONE
     } else {
         let up = image.get_pixel(x as u32, (y + 1) as u32).data[0];
@@ -389,7 +390,5 @@ fn get_tile_type(image: &image::DynamicImage, x: usize, y: usize) -> TileType {
 
             (_, _, _, _) => TileType::RoadNONE,
         }
-    };
-
-    tile_type
+    }
 }

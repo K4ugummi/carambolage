@@ -69,12 +69,7 @@ impl Mesh {
         shader.bind_texture(0, &self.textures[0]);
 
         gl::BindVertexArray(self.vao);
-        gl::DrawElements(
-            gl::TRIANGLES,
-            self.indices.len() as i32,
-            gl::UNSIGNED_INT,
-            ptr::null(),
-        );
+        gl::DrawElements(gl::TRIANGLES, self.indices.len() as i32, gl::UNSIGNED_INT, ptr::null());
         gl::BindVertexArray(0);
     }
 
@@ -103,23 +98,9 @@ impl Mesh {
 
         let size = size_of::<Vertex>() as i32;
         gl::EnableVertexAttribArray(0);
-        gl::VertexAttribPointer(
-            0,
-            3,
-            gl::FLOAT,
-            gl::FALSE,
-            size,
-            offset_of!(Vertex, pos) as *const c_void,
-        );
+        gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE, size, offset_of!(Vertex, pos) as *const c_void);
         gl::EnableVertexAttribArray(1);
-        gl::VertexAttribPointer(
-            1,
-            2,
-            gl::FLOAT,
-            gl::FALSE,
-            size,
-            offset_of!(Vertex, uv) as *const c_void,
-        );
+        gl::VertexAttribPointer(1, 2, gl::FLOAT, gl::FALSE, size, offset_of!(Vertex, uv) as *const c_void);
 
         gl::BindVertexArray(0);
     }

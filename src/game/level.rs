@@ -152,23 +152,9 @@ impl Tile {
 
         let size = size_of::<TileVertex>() as i32;
         gl::EnableVertexAttribArray(0);
-        gl::VertexAttribPointer(
-            0,
-            2,
-            gl::FLOAT,
-            gl::FALSE,
-            size,
-            offset_of!(TileVertex, pos) as *const c_void,
-        );
+        gl::VertexAttribPointer(0, 2, gl::FLOAT, gl::FALSE, size, offset_of!(TileVertex, pos) as *const c_void);
         gl::EnableVertexAttribArray(1);
-        gl::VertexAttribPointer(
-            1,
-            2,
-            gl::FLOAT,
-            gl::FALSE,
-            size,
-            offset_of!(TileVertex, uv) as *const c_void,
-        );
+        gl::VertexAttribPointer(1, 2, gl::FLOAT, gl::FALSE, size, offset_of!(TileVertex, uv) as *const c_void);
 
         gl::BindVertexArray(0);
     }
@@ -191,32 +177,11 @@ impl Tile {
             gl::EnableVertexAttribArray(2);
             gl::VertexAttribPointer(2, 4, gl::FLOAT, gl::FALSE, size_mat4, ptr::null());
             gl::EnableVertexAttribArray(3);
-            gl::VertexAttribPointer(
-                3,
-                4,
-                gl::FLOAT,
-                gl::FALSE,
-                size_mat4,
-                size_vec4 as *const c_void,
-            );
+            gl::VertexAttribPointer(3, 4, gl::FLOAT, gl::FALSE, size_mat4, size_vec4 as *const c_void);
             gl::EnableVertexAttribArray(4);
-            gl::VertexAttribPointer(
-                4,
-                4,
-                gl::FLOAT,
-                gl::FALSE,
-                size_mat4,
-                (2 * size_vec4) as *const c_void,
-            );
+            gl::VertexAttribPointer(4, 4, gl::FLOAT, gl::FALSE, size_mat4, (2 * size_vec4) as *const c_void);
             gl::EnableVertexAttribArray(5);
-            gl::VertexAttribPointer(
-                5,
-                4,
-                gl::FLOAT,
-                gl::FALSE,
-                size_mat4,
-                (3 * size_vec4) as *const c_void,
-            );
+            gl::VertexAttribPointer(5, 4, gl::FLOAT, gl::FALSE, size_mat4, (3 * size_vec4) as *const c_void);
 
             gl::VertexAttribDivisor(2, 1);
             gl::VertexAttribDivisor(3, 1);
@@ -281,9 +246,7 @@ pub struct Level {
 impl Level {
     pub fn new(file: &str) -> Level {
         // Load the map file.
-        let img = image::open(&Path::new(file))
-            .expect("ERROR: Map failed to load")
-            .flipv();
+        let img = image::open(&Path::new(file)).expect("ERROR: Map failed to load").flipv();
         match img {
             ImageRgba8(_) => {}
             _ => panic!("ERROR: Map must be in RGBA8 format!"),
@@ -329,9 +292,7 @@ impl Level {
         for y in 0..tiles_num_y {
             for x in 0..tiles_num_x {
                 let tile_type = get_tile_type(&img, x, y);
-                let matrix = Matrix4::new_translation(
-                    &(tile_start + stride_x * (x as f32) + stride_y * (y as f32)),
-                );
+                let matrix = Matrix4::new_translation(&(tile_start + stride_x * (x as f32) + stride_y * (y as f32)));
                 tiles[tile_type as usize].matrices.push(matrix);
             }
         }

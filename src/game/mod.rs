@@ -30,8 +30,9 @@ use self::controller::{Controller, ControllerLayout};
 use self::glfw::{Action, Context, Glfw, Key, Window};
 use self::rodio::Source;
 use self::scene::Scene;
-use super::time::{Duration, PreciseTime};
+use super::time::Duration;
 use nalgebra::Perspective3;
+use util::FrameLimiter;
 
 use std::cell::Cell;
 use std::fs::File;
@@ -47,24 +48,22 @@ pub(crate) struct Game {
     events: Event,
 
     // Window
+    frame_limiter: FrameLimiter,
     width: i32,
     height: i32,
 
     // Game
     scene: Scene,
-    time: PreciseTime,
     controller: Vec<Controller>,
 }
 
 impl Game {
     pub(crate) fn new() -> Game {
-        let time = PreciseTime::now();
+        let frame_limiter = FrameLimiter::new(60);
 
         let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
         glfw.window_hint(glfw::WindowHint::ContextVersion(3, 3));
-        glfw.window_hint(glfw::WindowHint::OpenGlProfile(
-            glfw::OpenGlProfileHint::Core,
-        ));
+        glfw.window_hint(glfw::WindowHint::OpenGlProfile(glfw::OpenGlProfileHint::Core));
         glfw.set_error_callback(Some(glfw::Callback {
             f: error_callback,
             data: Cell::new(0),
@@ -73,12 +72,8 @@ impl Game {
         let width = 640i32;
         let height = 480i32;
         let (mut window, events) = glfw
-            .create_window(
-                width as u32,
-                height as u32,
-                "Carambolage",
-                glfw::WindowMode::Windowed,
-            ).expect("Failed to create GLFW window");
+            .create_window(width as u32, height as u32, "Carambolage", glfw::WindowMode::Windowed)
+            .expect("Failed to create GLFW window");
 
         window.make_current();
         window.set_framebuffer_size_polling(true);
@@ -98,29 +93,28 @@ impl Game {
             glfw,
             window,
             events,
+
+            frame_limiter,
             width,
             height,
 
             scene,
-            time,
             controller,
         }
     }
 
     pub(crate) fn run(&mut self) {
-        let mut delta_time = self.time.to(PreciseTime::now());
-
         // Play game music (sorry just testing)
         let device = rodio::default_output_device().unwrap();
 
         let file = File::open("res/sounds/music/Rolemusic-01-Bacterial-Love.mp3").unwrap();
-        let source = rodio::Decoder::new(BufReader::new(file))
-            .unwrap()
-            .repeat_infinite();
+        let source = rodio::Decoder::new(BufReader::new(file)).unwrap().repeat_infinite();
         rodio::play_raw(&device, source.convert_samples());
 
         while !self.window.should_close() {
+            let delta_time = self.frame_limiter.start();
             self.window.make_current();
+            self.glfw.poll_events();
             self.process_events();
             self.process_input(delta_time);
 
@@ -132,31 +126,11 @@ impl Game {
                 gl::Enable(gl::BLEND);
                 gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
             }
-            let projection =
-                Perspective3::new(self.width as f32 / self.height as f32, 70., 0.1, 1000.).unwrap();
+            let projection = Perspective3::new(self.width as f32 / self.height as f32, 70., 0.1, 1000.).unwrap();
             self.scene.draw(&projection);
 
-            let time_now = PreciseTime::now();
-            delta_time = self.time.to(time_now);
-            self.time = time_now;
-            self.do_delta_time_sleep(delta_time);
-
             self.window.swap_buffers();
-            self.glfw.poll_events();
-        }
-    }
-
-    fn do_delta_time_sleep(&mut self, delta_time: Duration) {
-        use std::thread::sleep;
-        let time_per_frame = Duration::nanoseconds(16_666_666);
-
-        if delta_time < time_per_frame {
-            let sleep_time = time_per_frame
-                .checked_sub(&delta_time)
-                .unwrap()
-                .to_std()
-                .unwrap();
-            sleep(sleep_time);
+            self.frame_limiter.stop();
         }
     }
 

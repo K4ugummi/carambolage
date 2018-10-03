@@ -12,11 +12,7 @@ pub struct Texture {
 
 impl Texture {
     pub fn new(path: &str) -> Texture {
-        unsafe {
-            Texture {
-                id: load_texture(path),
-            }
-        }
+        unsafe { Texture { id: load_texture(path) } }
     }
 }
 

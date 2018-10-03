@@ -9,7 +9,7 @@ pub struct FrameLimiter {
 
 impl FrameLimiter {
     pub fn new(frame_rate: u32) -> FrameLimiter {
-        let time_per_frame = Duration::nanoseconds((1e9 / frame_rate as f64) as i64);
+        let time_per_frame = Duration::nanoseconds((1e9 / f64::from(frame_rate)) as i64);
         let time = PreciseTime::now();
 
         FrameLimiter {

@@ -14,6 +14,9 @@
 // along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 use nalgebra::{clamp, Vector2, Vector3};
 
+/// Interpolate from a to b with a given factor.
+/// factor = 0.0 returns a
+/// factor = 1.0 returns b
 pub trait Lerp {
     fn lerp(a: &Self, b: &Self, factor: f32) -> Self;
 }

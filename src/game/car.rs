@@ -62,10 +62,11 @@ impl Car {
 
             // x,y-axis rotation are fixed to 0. No rollovers!
             self.rotation[2] -= steer * dt * 3.5;
-            println!("accel: {}, steer: {}", accel, steer);
+
             let rot_mat = Matrix4::new_rotation(self.rotation);
             let mut forward = Vector3::new(0f32, 1., 0.).to_homogeneous();
             forward = rot_mat * forward;
+            // Set homogeneous coordinate to 0 or unwrap() will panic.
             forward[3] = 0.;
 
             self.position +=

@@ -12,10 +12,11 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
-use nalgebra::{inf, sup, zero, Matrix4, Point3, Vector3};
+use nalgebra::{inf, sup, Matrix4, Vector3};
 use rand::{thread_rng, Rng};
 use time::Duration;
 
+use super::camera::Camera;
 use super::car::Car;
 use super::controller::Controller;
 use super::level::Level;
@@ -23,6 +24,7 @@ use super::level::Level;
 pub(super) struct Scene {
     pub cars: Vec<Car>,
     pub level: Level,
+    pub camera: Camera,
 }
 
 impl Scene {
@@ -42,8 +44,9 @@ impl Scene {
             }).collect();
 
         let level = Level::new("res/maps/example.png");
+        let camera = Camera::new();
 
-        Scene { cars, level }
+        Scene { cars, level, camera }
     }
 
     /// Update the scene based on the internal state and a given time step.
@@ -55,30 +58,28 @@ impl Scene {
                 car.run(delta_time, None);
             }
         }
-    }
-
-    pub(super) fn draw(&self, projection: &Matrix4<f32>) {
-        let view = if self.cars.is_empty() {
-            Matrix4::look_at_rh(&Point3::new(0., 0., 50.), &Point3::new(0., 0., 0.), &Vector3::y())
+        let camera_focus = if self.cars.is_empty() {
+            Vector3::new(0., 0., 0.)
         } else {
             let mut min = self.cars[0].position;
             let mut max = self.cars[0].position;
-            let mut camera_pos = zero();
+            let mut lerp_pos = Vector3::new(0., 0., 0.);
             for car in &self.cars {
-                camera_pos += car.position;
+                lerp_pos += car.position;
                 min = inf(&min, &car.position);
                 max = sup(&max, &car.position);
             }
-            camera_pos /= self.cars.len() as f32;
+            lerp_pos /= self.cars.len() as f32;
             let camera_distance = (max - min).norm();
-
-            Matrix4::look_at_rh(
-                &Point3::from_coordinates(camera_pos + Vector3::new(0., 0., camera_distance + (50. / self.cars.len() as f32))),
-                &Point3::from_coordinates(camera_pos),
-                &Vector3::y(),
-            )
+            self.camera.move_to_height(camera_distance);
+            lerp_pos
         };
+        self.camera.move_to_focus(camera_focus);
+        self.camera.update(delta_time);
+    }
 
+    pub(super) fn draw(&mut self, projection: &Matrix4<f32>) {
+        let view = self.camera.get_viewmatrix();
         // Draw map.
         self.level.draw(&view, &projection);
         // Draw objects.

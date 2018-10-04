@@ -17,6 +17,7 @@ extern crate glfw;
 extern crate image;
 extern crate rodio;
 
+mod camera;
 mod car;
 mod controller;
 mod level;

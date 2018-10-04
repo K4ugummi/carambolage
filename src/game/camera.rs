@@ -46,7 +46,7 @@ impl Camera {
 
     pub fn update(&mut self, delta_time: Duration) {
         let dt = (delta_time.num_milliseconds() as f32) / 1_000.;
-        self.focus = Vector3::lerp(&self.focus, &self.focus_goal, speed * dt);
+        self.focus = Vector3::lerp(&self.focus, &self.focus_goal, self.speed * dt);
         self.position = self.focus + Vector3::new(0., 0., self.height);
     }
 

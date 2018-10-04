@@ -38,6 +38,7 @@ impl Camera {
             focus: Vector3::new(0., 0., 0.),
             up: Vector3::new(0., 1., 0.),
             height,
+            speed: 0.8,
 
             focus_goal: Vector3::new(0., 0., 0.),
         }

@@ -32,12 +32,12 @@ pub struct Camera {
 
 impl Camera {
     pub fn new() -> Camera {
+        let height = 50.;
         Camera {
             position: Vector3::new(0., 0., height),
             focus: Vector3::new(0., 0., 0.),
             up: Vector3::new(0., 1., 0.),
-            height: 50.,
-            speed: 0.8,
+            height,
 
             focus_goal: Vector3::new(0., 0., 0.),
         }
@@ -45,7 +45,7 @@ impl Camera {
 
     pub fn update(&mut self, delta_time: Duration) {
         let dt = (delta_time.num_milliseconds() as f32) / 1_000.;
-        self.focus = Vector3::lerp(&self.focus, &self.focus_goal, self.speed * dt);
+        self.focus = Vector3::lerp(&self.focus, &self.focus_goal, speed * dt);
         self.position = self.focus + Vector3::new(0., 0., self.height);
     }
 

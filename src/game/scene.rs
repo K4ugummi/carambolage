@@ -12,7 +12,7 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
-use nalgebra::{inf, sup, zero, Matrix4, Point3, Vector3};
+use nalgebra::{inf, sup, Matrix4, Vector3};
 use rand::{thread_rng, Rng};
 use time::Duration;
 
@@ -71,6 +71,7 @@ impl Scene {
             }
             lerp_pos /= self.cars.len() as f32;
             let camera_distance = (max - min).norm();
+            self.camera.move_to_height(camera_distance);
             lerp_pos
         };
         self.camera.move_to_focus(camera_focus);
@@ -79,7 +80,6 @@ impl Scene {
 
     pub(super) fn draw(&mut self, projection: &Matrix4<f32>) {
         let view = self.camera.get_viewmatrix();
-        println!("{}", view);
         // Draw map.
         self.level.draw(&view, &projection);
         // Draw objects.

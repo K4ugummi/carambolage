@@ -12,7 +12,7 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
-use nalgebra::{Matrix4, Point3, Vector3};
+use nalgebra::{clamp, Matrix4, Point3, Vector3};
 use time::Duration;
 use util::Lerp;
 
@@ -24,10 +24,13 @@ pub struct Camera {
 
     // Internal parameter.
     height: f32,
+    height_min: f32,
+    height_max: f32,
     speed: f32,
 
     // Parameter for camera movement.
     focus_goal: Vector3<f32>,
+    height_goal: f32,
 }
 
 impl Camera {
@@ -38,15 +41,19 @@ impl Camera {
             focus: Vector3::new(0., 0., 0.),
             up: Vector3::new(0., 1., 0.),
             height,
+            height_min: 20.,
+            height_max: 75.,
             speed: 0.8,
 
             focus_goal: Vector3::new(0., 0., 0.),
+            height_goal: height,
         }
     }
 
     pub fn update(&mut self, delta_time: Duration) {
         let dt = (delta_time.num_milliseconds() as f32) / 1_000.;
         self.focus = Vector3::lerp(&self.focus, &self.focus_goal, self.speed * dt);
+        self.height = f32::lerp(&self.height, &self.height_goal, self.speed * dt);
         self.position = self.focus + Vector3::new(0., 0., self.height);
     }
 
@@ -54,10 +61,19 @@ impl Camera {
         self.focus_goal = position;
     }
 
-    pub fn set_to_focus(&mut self, position: Vector3<f32>) {
+    pub fn _set_focus(&mut self, position: Vector3<f32>) {
         self.focus_goal = position;
         self.focus = position;
         self.position = position + Vector3::new(0., 0., self.height);
+    }
+
+    pub fn move_to_height(&mut self, distance: f32) {
+        self.height_goal = clamp(distance, self.height_min, self.height_max);
+    }
+
+    pub fn _set_height(&mut self, distance: f32) {
+        self.height_goal = clamp(distance, self.height_min, self.height_max);
+        self.height = self.height_goal;
     }
 
     pub fn get_viewmatrix(&self) -> Matrix4<f32> {

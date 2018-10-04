@@ -27,7 +27,6 @@ mod scene;
 mod shader;
 mod texture;
 
-use self::camera::Camera;
 use self::controller::{Controller, ControllerLayout};
 use self::glfw::{Action, Context, Glfw, Key, Window};
 use self::rodio::Source;

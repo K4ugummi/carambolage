@@ -26,6 +26,7 @@ mod model;
 mod scene;
 mod shader;
 mod texture;
+mod transform;
 
 use self::controller::{Controller, ControllerLayout};
 use self::glfw::{Action, Context, Glfw, Key, Window};

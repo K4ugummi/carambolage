@@ -49,19 +49,35 @@ pub(crate) struct Game {
     window: Window,
     events: Event,
 
-    // Window
     frame_limiter: FrameLimiter,
-    width: i32,
-    height: i32,
 
     // Game
+    settings: GameSettings,
     scene: Scene,
     controller: Vec<Controller>,
 }
 
+pub struct GameSettings {
+    pub is_fullscreen: bool,
+    pub width: u32,
+    pub height: u32,
+    pub fps: u32,
+}
+
+impl Default for GameSettings {
+    fn default() -> GameSettings {
+        GameSettings {
+            is_fullscreen: false,
+            width: 640,
+            height: 480,
+            fps: 60,
+        }
+    }
+}
+
 impl Game {
-    pub(crate) fn new() -> Game {
-        let frame_limiter = FrameLimiter::new(60);
+    pub(crate) fn new(settings: GameSettings) -> Game {
+        let frame_limiter = FrameLimiter::new(settings.fps);
 
         let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
         glfw.window_hint(glfw::WindowHint::ContextVersion(3, 3));
@@ -71,11 +87,16 @@ impl Game {
             data: Cell::new(0),
         }));
 
-        let width = 640i32;
-        let height = 480i32;
         let (mut window, events) = glfw
-            .create_window(width as u32, height as u32, "Carambolage", glfw::WindowMode::Windowed)
-            .expect("Failed to create GLFW window");
+            .with_primary_monitor(|glfw, m| {
+                glfw.create_window(settings.width, settings.height, "Carambolage", {
+                    if settings.is_fullscreen {
+                        m.map_or(glfw::WindowMode::Windowed, |m| glfw::WindowMode::FullScreen(m))
+                    } else {
+                        glfw::WindowMode::Windowed
+                    }
+                })
+            }).expect("Failed to create GLFW window");
 
         window.make_current();
         window.set_framebuffer_size_polling(true);
@@ -85,10 +106,7 @@ impl Game {
 
         gl::load_with(|symbol| window.get_proc_address(symbol) as *const _);
 
-        let controller = vec![
-            Controller::new(true, &ControllerLayout::WASD),
-            Controller::new(true, &ControllerLayout::Arrows),
-        ];
+        let controller = vec![Controller::new(true, &ControllerLayout::WASD)];
         let scene = Scene::new(controller.len());
 
         Game {
@@ -97,8 +115,7 @@ impl Game {
             events,
 
             frame_limiter,
-            width,
-            height,
+            settings,
 
             scene,
             controller,
@@ -128,7 +145,7 @@ impl Game {
                 gl::Enable(gl::BLEND);
                 gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
             }
-            let projection = Perspective3::new(self.width as f32 / self.height as f32, 70., 0.1, 1000.).unwrap();
+            let projection = Perspective3::new(self.settings.width as f32 / self.settings.height as f32, 70., 0.1, 1000.).unwrap();
             self.scene.draw(&projection);
 
             self.window.swap_buffers();

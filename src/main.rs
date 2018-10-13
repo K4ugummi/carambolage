@@ -26,7 +26,6 @@ use std::env;
 
 fn main() {
     // Read command line arguments.
-    let mut game_settings: GameSettings = Default::default();
     let args: Vec<String> = env::args().collect();
 
     let mut opts = Options::new();
@@ -40,21 +39,19 @@ fn main() {
         Err(f) => panic!(f.to_string()),
     };
 
+    let mut game_settings: GameSettings = Default::default();
     if matches.opt_present("f") {
         game_settings.is_fullscreen = true;
     }
-
     if matches.opt_str("w").is_some() {
         game_settings.width = matches.opt_str("w").unwrap().parse().unwrap();
-    };
-
+    }
     if matches.opt_str("h").is_some() {
         game_settings.height = matches.opt_str("h").unwrap().parse().unwrap();
-    };
-
+    }
     if matches.opt_str("l").is_some() {
         game_settings.fps = matches.opt_str("l").unwrap().parse().unwrap();
-    };
+    }
 
     let mut game = Game::new(game_settings);
     game.run();

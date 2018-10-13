@@ -41,7 +41,7 @@ impl Car {
 
     /// Update the car position and velocity based on the internal car state for
     /// a given time step.
-    pub(super) fn run(&mut self, delta_time: Duration, controller: Option<Controller>) {
+    pub(super) fn run(&mut self, delta_time: &Duration, controller: Option<Controller>) {
         if controller.is_some() {
             let dt = delta_time.num_milliseconds() as f32 / 1_000.;
             let ct = controller.unwrap();

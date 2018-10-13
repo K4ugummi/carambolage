@@ -37,12 +37,12 @@ impl FrameLimiter {
         }
     }
 
-    pub fn start(&mut self) -> Duration {
+    pub fn start(&mut self) -> &Duration {
         let now = PreciseTime::now();
         self.delta_time = self.time.to(now);
         self.time = now;
 
-        self.delta_time
+        &self.delta_time
     }
 
     pub fn stop(&mut self) {

@@ -92,7 +92,7 @@ impl Controller {
         }
     }
 
-    pub fn process_input(&mut self, window: &Window, delta_time: Duration) {
+    pub fn process_input(&mut self, window: &Window, delta_time: &Duration) {
         if window.get_key(self.ci.forward) == Action::Press && !self.ci.is_forward {
             self.set_y_axis(1.);
             self.ci.is_forward = true;
@@ -129,7 +129,7 @@ impl Controller {
         self.update(delta_time);
     }
 
-    fn update(&mut self, delta_time: Duration) {
+    fn update(&mut self, delta_time: &Duration) {
         if self.is_smooth {
             let dt = delta_time.num_milliseconds() as f32 / 1_000.;
             self.axis = Vector2::lerp(&self.axis, &self.axis_goal, 5. * dt);

@@ -41,16 +41,16 @@ impl Camera {
             focus: Vector3::new(0., 0., 0.),
             up: Vector3::new(0., 1., 0.),
             height,
-            height_min: 20.,
-            height_max: 75.,
-            speed: 0.8,
+            height_min: 30.,
+            height_max: 90.,
+            speed: 1.8,
 
             focus_goal: Vector3::new(0., 0., 0.),
             height_goal: height,
         }
     }
 
-    pub fn update(&mut self, delta_time: Duration) {
+    pub fn update(&mut self, delta_time: &Duration) {
         let dt = (delta_time.num_milliseconds() as f32) / 1_000.;
         self.focus = Vector3::lerp(&self.focus, &self.focus_goal, self.speed * dt);
         self.height = f32::lerp(&self.height, &self.height_goal, self.speed * dt);

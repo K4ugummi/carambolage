@@ -50,7 +50,7 @@ impl Scene {
     }
 
     /// Update the scene based on the internal state and a given time step.
-    pub(super) fn run(&mut self, delta_time: Duration, controller: &[Controller]) {
+    pub(super) fn run(&mut self, delta_time: &Duration, controller: &[Controller]) {
         for (id, car) in &mut self.cars.iter_mut().enumerate() {
             if id < controller.len() {
                 car.run(delta_time, Some(controller[id]));

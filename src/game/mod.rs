@@ -131,13 +131,13 @@ impl Game {
         rodio::play_raw(&device, source.convert_samples());
 
         while !self.window.should_close() {
-            let delta_time = self.frame_limiter.start();
+            let delta_time = *self.frame_limiter.start();
             self.window.make_current();
             self.glfw.poll_events();
             self.process_events();
-            self.process_input(delta_time);
+            self.process_input(&delta_time);
 
-            self.scene.run(delta_time, &self.controller);
+            self.scene.run(&delta_time, &self.controller);
 
             unsafe {
                 gl::ClearColor(0.2, 0.2, 0.2, 1.0);
@@ -159,15 +159,15 @@ impl Game {
             match event {
                 glfw::WindowEvent::FramebufferSize(width, height) => unsafe {
                     gl::Viewport(0, 0, width, height);
-                    self.width = width;
-                    self.height = height;
+                    self.settings.width = width as u32;
+                    self.settings.height = height as u32;
                 },
                 _ => {}
             }
         }
     }
 
-    pub fn process_input(&mut self, delta_time: Duration) {
+    pub fn process_input(&mut self, delta_time: &Duration) {
         if self.window.get_key(Key::Escape) == Action::Press {
             self.window.set_should_close(true)
         }

@@ -28,6 +28,7 @@ fn main() {
     // Read command line arguments.
     let args: Vec<String> = env::args().collect();
 
+    // Set command line options.
     let mut opts = Options::new();
     opts.optflag("f", "fullscreen", "enable fullscreen mode");
     opts.optopt("w", "width", "set window width", "WIDTH");
@@ -39,6 +40,7 @@ fn main() {
         Err(f) => panic!(f.to_string()),
     };
 
+    // Filter settings
     let mut game_settings: GameSettings = Default::default();
     if matches.opt_present("f") {
         game_settings.is_fullscreen = true;
@@ -53,6 +55,7 @@ fn main() {
         game_settings.fps = matches.opt_str("l").unwrap().parse().unwrap();
     }
 
+    // Start the game
     let mut game = Game::new(game_settings);
     game.run();
 }

@@ -40,6 +40,7 @@ use std::cell::Cell;
 use std::fs::File;
 use std::io::BufReader;
 use std::sync::mpsc::Receiver;
+use std::thread::sleep;
 
 type Event = Receiver<(f64, glfw::WindowEvent)>;
 
@@ -133,6 +134,8 @@ impl Game {
         let source = rodio::Decoder::new(BufReader::new(file)).unwrap().repeat_infinite();
         rodio::play_raw(&device, source.convert_samples());
 
+        let nano_sec = Duration::nanoseconds(1).to_std().unwrap();
+
         while !self.window.should_close() {
             let delta_time = *self.frame_limiter.start();
             self.window.make_current();
@@ -152,6 +155,7 @@ impl Game {
             self.window.swap_buffers();
             while self.frame_limiter.stop() {
                 self.glfw.poll_events();
+                sleep(nano_sec);
             }
         }
     }

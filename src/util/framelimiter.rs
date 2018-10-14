@@ -12,7 +12,6 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-use std::thread::sleep;
 use time::{Duration, PreciseTime};
 
 pub struct FrameLimiter {
@@ -39,16 +38,13 @@ impl FrameLimiter {
 
     pub fn start(&mut self) -> &Duration {
         let now = PreciseTime::now();
-        self.delta_time = self.time.to(now);
         self.time = now;
 
         &self.delta_time
     }
 
-    pub fn stop(&mut self) {
-        if self.delta_time < self.time_per_frame {
-            let sleep_time = self.time_per_frame.checked_sub(&self.delta_time).unwrap().to_std().unwrap();
-            sleep(sleep_time);
-        }
+    pub fn stop(&mut self) -> bool {
+        self.delta_time = self.time.to(PreciseTime::now());
+        self.delta_time < self.time_per_frame
     }
 }

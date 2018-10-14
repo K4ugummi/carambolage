@@ -149,7 +149,10 @@ impl Game {
             self.scene.draw(&projection);
 
             self.window.swap_buffers();
-            self.frame_limiter.stop();
+            while self.frame_limiter.stop() {
+                self.glfw.poll_events();
+                self.process_events();
+            }
         }
     }
 

@@ -29,6 +29,7 @@ pub struct Shader {
 
 impl Shader {
     pub fn new(file: &str) -> Shader {
+        info!("Loading shader {}", file);
         let mut shader = Shader { id: 0 };
 
         // Load vertex shader code from file.

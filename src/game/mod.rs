@@ -16,6 +16,7 @@ extern crate gl;
 extern crate glfw;
 extern crate image;
 extern crate rodio;
+extern crate tobj;
 
 mod camera;
 mod car;
@@ -78,6 +79,7 @@ impl Default for GameSettings {
 
 impl Game {
     pub(crate) fn new(settings: GameSettings) -> Game {
+        info!("Initializing game");
         let frame_limiter = FrameLimiter::new(settings.fps);
 
         let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
@@ -109,6 +111,8 @@ impl Game {
         unsafe {
             gl::Enable(gl::BLEND);
             gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
+            gl::Enable(gl::DEPTH_TEST);
+            gl::DepthFunc(gl::LESS);
         }
 
         let controller = vec![Controller::new(true, &ControllerLayout::WASD)];
@@ -149,7 +153,7 @@ impl Game {
                 gl::ClearColor(0.2, 0.2, 0.2, 1.0);
                 gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
             }
-            let projection = Perspective3::new(self.settings.width as f32 / self.settings.height as f32, 70., 0.1, 1000.).unwrap();
+            let projection = Perspective3::new(self.settings.width as f32 / self.settings.height as f32, 70., 0.1, 100.).unwrap();
             self.scene.draw(&projection);
 
             self.window.swap_buffers();

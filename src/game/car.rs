@@ -88,7 +88,7 @@ impl Default for Car {
             _force: zero(),
             mass: 1.,
 
-            model: Model::new(),
+            model: Model::new(&"c01.obj", "car-red.png"),
         }
     }
 }

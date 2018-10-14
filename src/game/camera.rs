@@ -16,6 +16,7 @@ use nalgebra::{clamp, Matrix4, Point3, Vector3};
 use time::Duration;
 use util::Lerp;
 
+#[derive(Debug)]
 pub struct Camera {
     // Parameter to create view matrix.
     position: Vector3<f32>,

@@ -21,5 +21,5 @@ layout (location = 0) in vec2 vUV;
 layout (location = 5) uniform sampler2D uTexture;
 
 void main() {
-    gl_FragColor = texture(uTexture, vUV).rgba;
+    gl_FragColor = vec4(texture(uTexture, vUV).rgb, 1.0);
 }

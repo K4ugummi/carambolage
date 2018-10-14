@@ -16,6 +16,11 @@ extern crate getopts;
 extern crate nalgebra;
 extern crate rand;
 extern crate time;
+#[macro_use]
+extern crate log;
+extern crate simplelog;
+
+use simplelog::*;
 
 mod game;
 mod util;
@@ -23,6 +28,7 @@ mod util;
 use game::{Game, GameSettings};
 use getopts::Options;
 use std::env;
+use std::fs::File;
 
 fn main() {
     // Read command line arguments.
@@ -55,7 +61,13 @@ fn main() {
         game_settings.fps = matches.opt_str("l").unwrap().parse().unwrap();
     }
 
+    CombinedLogger::init(vec![
+        TermLogger::new(LevelFilter::Warn, Config::default()).unwrap(),
+        WriteLogger::new(LevelFilter::Info, Config::default(), File::create("carambolage.log").unwrap()),
+    ]).unwrap();
+
     // Start the game
+    info!("Starting game");
     let mut game = Game::new(game_settings);
     game.run();
 }

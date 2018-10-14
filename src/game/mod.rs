@@ -105,6 +105,10 @@ impl Game {
         window.set_cursor_mode(glfw::CursorMode::Normal);
 
         gl::load_with(|symbol| window.get_proc_address(symbol) as *const _);
+        unsafe {
+            gl::Enable(gl::BLEND);
+            gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
+        }
 
         let controller = vec![Controller::new(true, &ControllerLayout::WASD)];
         let scene = Scene::new(controller.len());
@@ -125,7 +129,6 @@ impl Game {
     pub(crate) fn run(&mut self) {
         // Play game music (sorry just testing)
         let device = rodio::default_output_device().unwrap();
-
         let file = File::open("res/sounds/music/Rolemusic-01-Bacterial-Love.mp3").unwrap();
         let source = rodio::Decoder::new(BufReader::new(file)).unwrap().repeat_infinite();
         rodio::play_raw(&device, source.convert_samples());
@@ -141,9 +144,7 @@ impl Game {
 
             unsafe {
                 gl::ClearColor(0.2, 0.2, 0.2, 1.0);
-                gl::Clear(gl::COLOR_BUFFER_BIT);
-                gl::Enable(gl::BLEND);
-                gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
+                gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
             }
             let projection = Perspective3::new(self.settings.width as f32 / self.settings.height as f32, 70., 0.1, 1000.).unwrap();
             self.scene.draw(&projection);
@@ -151,7 +152,6 @@ impl Game {
             self.window.swap_buffers();
             while self.frame_limiter.stop() {
                 self.glfw.poll_events();
-                self.process_events();
             }
         }
     }

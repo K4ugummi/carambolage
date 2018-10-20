@@ -65,13 +65,15 @@ impl Model {
         Model { meshes, shader, texture }
     }
 
-    pub fn draw(&self, mvp: &Matrix4<f32>) {
+    pub fn draw(&self, model: &Matrix4<f32>, view: &Matrix4<f32>, projection: &Matrix4<f32>) {
         unsafe {
             self.shader.bind();
             self.shader.bind_texture(0, &self.texture);
-            self.shader.set_uniform_mat(0, &mvp);
+            self.shader.set_uniform_mat(0, model);
+            self.shader.set_uniform_mat(1, view);
+            self.shader.set_uniform_mat(2, projection);
             for mesh in &self.meshes {
-                mesh.draw(&self.shader);
+                mesh.draw();
             }
         }
     }

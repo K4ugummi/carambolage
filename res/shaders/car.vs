@@ -21,10 +21,17 @@ layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aUV;
 
 layout (location = 0) out vec2 vUV;
+layout (location = 1) out vec3 vFragPos;
+layout (location = 2) out vec3 vNormal;
 
-layout (location = 0) uniform mat4 uMVP;
+layout (location = 0) uniform mat4 uModel;
+layout (location = 1) uniform mat4 uView;
+layout (location = 2) uniform mat4 uProjection;
 
 void main() {
+    mat4 modelViewProj = uProjection * uView * uModel;
     vUV = aUV;
-    gl_Position = uMVP * vec4(aPosition, 1.);
+    vFragPos = vec3(uModel * vec4(aPosition, 1.0));
+    vNormal = normalize(vec3(transpose(inverse(uModel * uView)) * vec4(aNormal, 0.)));
+    gl_Position = modelViewProj * vec4(aPosition, 1.);
 }

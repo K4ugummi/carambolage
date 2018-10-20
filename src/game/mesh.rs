@@ -20,7 +20,6 @@ use std::ptr;
 
 use super::gl;
 use super::shader::Shader;
-use super::texture::Texture;
 
 macro_rules! offset_of {
     ($ty:ty, $field:ident) => {
@@ -66,7 +65,7 @@ impl Mesh {
     }
 
     /// render the mesh
-    pub unsafe fn draw(&self, shader: &Shader) {
+    pub unsafe fn draw(&self) {
         gl::BindVertexArray(self.vao);
         gl::DrawElements(gl::TRIANGLES, self.indices.len() as i32, gl::UNSIGNED_INT, ptr::null());
         gl::BindVertexArray(0);

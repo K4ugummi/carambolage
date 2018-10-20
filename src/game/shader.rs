@@ -29,12 +29,15 @@ pub struct Shader {
 
 impl Shader {
     pub fn new(file: &str) -> Shader {
-        info!("Loading shader {}", file);
+        info!("Initializing shader {}", file);
         let mut shader = Shader { id: 0 };
 
         // Load vertex shader code from file.
         let vertex_file_path = format!("res/shaders/{}.vs", file);
-        let mut vertex_file = File::open(vertex_file_path).unwrap_or_else(|_| panic!("ERROR: Failed to open {}.vs", file));
+        let mut vertex_file = File::open(vertex_file_path).unwrap_or_else(|_| {
+            error!("Failed to open {}.vs", file);
+            panic!("ERROR: Failed to open {}.vs", file)
+        });
         let mut vertex_string = String::new();
         vertex_file
             .read_to_string(&mut vertex_string)
@@ -43,7 +46,10 @@ impl Shader {
 
         // Load fragment shader code from file.
         let fragment_file_path = format!("res/shaders/{}.fs", file);
-        let mut fragment_file = File::open(fragment_file_path).unwrap_or_else(|_| panic!("ERROR: Failed to open {}.fs", file));
+        let mut fragment_file = File::open(fragment_file_path).unwrap_or_else(|_| {
+            error!("Failed to open {}.fs", file);
+            panic!("Failed to open {}.fs", file)
+        });
         let mut fragment_string = String::new();
         fragment_file
             .read_to_string(&mut fragment_string)
@@ -97,6 +103,7 @@ impl Shader {
     }
 
     unsafe fn check_compile_errors(&self, shader: u32, type_: &str) {
+        info!("Checking shader [{}] for compile errors", shader);
         let mut success = i32::from(gl::FALSE);
         let mut info_log = Vec::with_capacity(1024);
         info_log.set_len(1024 - 1);
@@ -106,8 +113,8 @@ impl Shader {
             if success != i32::from(gl::TRUE) {
                 // i8 is a GLchar
                 gl::GetShaderInfoLog(shader, 1024, ptr::null_mut(), info_log.as_mut_ptr() as *mut i8);
-                println!(
-                    "ERROR::SHADER_COMPILATION_ERROR of type: {}\n{}\n",
+                error!(
+                    "Shader compilation error of type: {}\nInfo log:\n{}",
                     type_,
                     str::from_utf8(&info_log).unwrap_or("UNKNOWN")
                 );
@@ -116,8 +123,8 @@ impl Shader {
             gl::GetProgramiv(shader, gl::LINK_STATUS, &mut success);
             if success != i32::from(gl::TRUE) {
                 gl::GetProgramInfoLog(shader, 1024, ptr::null_mut(), info_log.as_mut_ptr() as *mut i8);
-                println!(
-                    "ERROR::PROGRAM_LINKING_ERROR of type: {}\n{}\n",
+                error!(
+                    "Program linking error of type: {}\nInfo log:\n{}",
                     type_,
                     str::from_utf8(&info_log).unwrap_or("UNKNOWN")
                 );

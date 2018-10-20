@@ -36,6 +36,7 @@ pub struct Camera {
 
 impl Camera {
     pub fn new() -> Camera {
+        info!("Initializing camera");
         let height = 50.;
         Camera {
             position: Vector3::new(0., 0., height),
@@ -79,8 +80,8 @@ impl Camera {
 
     pub fn get_viewmatrix(&self) -> Matrix4<f32> {
         Matrix4::look_at_rh(
-            &Point3::from_coordinates(self.position),
-            &Point3::from_coordinates(self.focus),
+            &Point3::from_coordinates(self.position + Vector3::new(0., -5., 0.)),
+            &Point3::from_coordinates(self.focus_goal),
             &self.up,
         )
     }

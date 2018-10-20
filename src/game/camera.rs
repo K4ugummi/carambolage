@@ -16,6 +16,7 @@ use nalgebra::{clamp, Matrix4, Point3, Vector3};
 use time::Duration;
 use util::Lerp;
 
+#[derive(Debug)]
 pub struct Camera {
     // Parameter to create view matrix.
     position: Vector3<f32>,
@@ -35,6 +36,7 @@ pub struct Camera {
 
 impl Camera {
     pub fn new() -> Camera {
+        info!("Initializing camera");
         let height = 50.;
         Camera {
             position: Vector3::new(0., 0., height),
@@ -78,8 +80,8 @@ impl Camera {
 
     pub fn get_viewmatrix(&self) -> Matrix4<f32> {
         Matrix4::look_at_rh(
-            &Point3::from_coordinates(self.position),
-            &Point3::from_coordinates(self.focus),
+            &Point3::from_coordinates(self.position + Vector3::new(0., -5., 0.)),
+            &Point3::from_coordinates(self.focus_goal),
             &self.up,
         )
     }

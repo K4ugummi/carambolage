@@ -84,6 +84,7 @@ pub struct Controller {
 // arrow keys will come later. Thanks in advance, K4ugummi.
 impl Controller {
     pub fn new(smooth: bool, controller_layout: &ControllerLayout) -> Controller {
+        info!("Initializing controller");
         Controller {
             is_smooth: smooth,
             ci: ControllerInternal::new(&controller_layout),

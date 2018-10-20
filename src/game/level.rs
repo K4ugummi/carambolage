@@ -91,10 +91,10 @@ impl Tile {
         let mut tile: Tile = Default::default();
         #[cfg_attr(rustfmt, rustfmt_skip)]
         let vertices = vec![
-            TileVertex { pos: [5., 5.,], uv: [1., 0.,] },
-            TileVertex { pos: [-5., 5.,], uv: [0., 0.,] },
-            TileVertex { pos: [-5., -5.,], uv: [0., 1.,] },
-            TileVertex { pos: [5., -5.,], uv: [1., 1.,] },
+            TileVertex { pos: [5., -5.,], uv: [1., 0.,] },
+            TileVertex { pos: [-5., -5.,], uv: [0., 0.,] },
+            TileVertex { pos: [-5., 5.,], uv: [0., 1.,] },
+            TileVertex { pos: [5., 5.,], uv: [1., 1.,] },
         ];
         #[cfg_attr(rustfmt, rustfmt_skip)]
         let indices = vec![
@@ -107,22 +107,22 @@ impl Tile {
         }
 
         tile.texture = match tile_type {
-            TileType::RoadNONE => Texture::new("res/maps/tiles/roadNONE.png"),
+            TileType::RoadNONE => Texture::new("tiles/roadNONE.png"),
 
-            TileType::RoadNS => Texture::new("res/maps/tiles/roadNS.png"),
-            TileType::RoadEW => Texture::new("res/maps/tiles/roadEW.png"),
+            TileType::RoadNS => Texture::new("tiles/roadNS.png"),
+            TileType::RoadEW => Texture::new("tiles/roadEW.png"),
 
-            TileType::RoadNE => Texture::new("res/maps/tiles/roadNE.png"),
-            TileType::RoadNW => Texture::new("res/maps/tiles/roadNW.png"),
-            TileType::RoadSE => Texture::new("res/maps/tiles/roadSE.png"),
-            TileType::RoadSW => Texture::new("res/maps/tiles/roadSW.png"),
+            TileType::RoadNE => Texture::new("tiles/roadNE.png"),
+            TileType::RoadNW => Texture::new("tiles/roadNW.png"),
+            TileType::RoadSE => Texture::new("tiles/roadSE.png"),
+            TileType::RoadSW => Texture::new("tiles/roadSW.png"),
 
-            TileType::RoadNSEW => Texture::new("res/maps/tiles/roadNSEW.png"),
+            TileType::RoadNSEW => Texture::new("tiles/roadNSEW.png"),
 
-            TileType::RoadNEW => Texture::new("res/maps/tiles/roadNEW.png"),
-            TileType::RoadNWS => Texture::new("res/maps/tiles/roadNWS.png"),
-            TileType::RoadEWS => Texture::new("res/maps/tiles/roadEWS.png"),
-            TileType::RoadNES => Texture::new("res/maps/tiles/roadNES.png"),
+            TileType::RoadNEW => Texture::new("tiles/roadNEW.png"),
+            TileType::RoadNWS => Texture::new("tiles/roadNWS.png"),
+            TileType::RoadEWS => Texture::new("tiles/roadEWS.png"),
+            TileType::RoadNES => Texture::new("tiles/roadNES.png"),
         };
 
         tile
@@ -227,7 +227,6 @@ impl Default for Tile {
 impl Drop for Tile {
     fn drop(&mut self) {
         unsafe {
-            gl::DeleteTextures(1, self.texture.id as *const u32);
             gl::DeleteBuffers(1, self.instance_buffer as *const u32);
             gl::DeleteBuffers(1, self.ibo as *const u32);
             gl::DeleteBuffers(1, self.vbo as *const u32);
@@ -245,6 +244,7 @@ pub struct Level {
 
 impl Level {
     pub fn new(file: &str) -> Level {
+        info!("Loading level: {}", file);
         // Load the map file.
         let img = image::open(&Path::new(file)).expect("ERROR: Map failed to load").flipv();
         match img {

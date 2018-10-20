@@ -23,10 +23,15 @@ impl Default for Texture {
 }
 
 unsafe fn load_texture(path: &str) -> u32 {
+    let path_str = format!("{}{}", "res/textures/", path);
+    info!("Loading texture: {}", path_str);
+
+    let path = Path::new(&path_str);
+
     let mut tex_id = 0;
 
     gl::GenTextures(1, &mut tex_id);
-    let img = image::open(&Path::new(path)).expect("ERROR: Failed to load texture!");
+    let img = image::open(&path).expect("ERROR: Failed to load texture!").flipv();
     let image_format = match img {
         ImageRgb8(_) => gl::RGB,
         ImageRgba8(_) => gl::RGBA,
@@ -43,7 +48,7 @@ unsafe fn load_texture(path: &str) -> u32 {
         img.width() as i32,
         img.height() as i32,
         0,
-        gl::RGBA,
+        image_format,
         gl::UNSIGNED_BYTE,
         &data[0] as *const u8 as *const c_void,
     );
@@ -51,8 +56,18 @@ unsafe fn load_texture(path: &str) -> u32 {
 
     gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_S, gl::REPEAT as i32);
     gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_T, gl::REPEAT as i32);
-    gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::LINEAR as i32);
-    gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::LINEAR as i32);
+    gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::NEAREST as i32);
+    gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::NEAREST as i32);
+
+    info!("Texture loaded. ID:{}, WIDTH:{}px, HEIGHT:{}px", tex_id, img.width(), img.height());
 
     tex_id
+}
+
+impl Drop for Texture {
+    fn drop(&mut self) {
+        unsafe {
+            gl::DeleteTextures(1, self.id as *const u32);
+        }
+    }
 }

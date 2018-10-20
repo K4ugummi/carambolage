@@ -30,6 +30,7 @@ pub struct Car {
 
 impl Car {
     pub fn new(position: Vector3<f32>, mass: f32) -> Car {
+        info!("Initializing car at {:?}", position);
         let mut car: Car = Default::default();
         car.position = position;
         if mass > 1. {
@@ -74,8 +75,7 @@ impl Car {
         let rotation = Matrix4::from_euler_angles(0., 0., self.rotation[2]);
         let translation = Matrix4::new_translation(&self.position);
         let model = translation * rotation;
-        let mvp = projection * view * model;
-        self.model.draw(&mvp);
+        self.model.draw(&model, view, projection);
     }
 }
 
@@ -88,7 +88,7 @@ impl Default for Car {
             _force: zero(),
             mass: 1.,
 
-            model: Model::new(),
+            model: Model::new(&"c02.obj", "car-blue.png"),
         }
     }
 }

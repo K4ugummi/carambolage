@@ -15,6 +15,9 @@ nalgebra = "~0.16.4"
 rand = "~0.5"
 rodio = "~0.8.1"
 time = "~0.1.40"
+tobj = "~0.1.6"
+log = "~0.4.1"
+simplelog = "~0.5.3"
 
 [profile.release]
 lto = true

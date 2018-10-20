@@ -20,7 +20,6 @@ use std::ptr;
 
 use super::gl;
 use super::shader::Shader;
-use super::texture::Texture;
 
 macro_rules! offset_of {
     ($ty:ty, $field:ident) => {
@@ -30,14 +29,16 @@ macro_rules! offset_of {
 
 #[repr(C)]
 pub struct Vertex {
-    pub pos: [f32; 3],
+    pub position: [f32; 3],
+    pub normal: [f32; 3],
     pub uv: [f32; 2],
 }
 
 impl Default for Vertex {
     fn default() -> Vertex {
         Vertex {
-            pos: [0., 0., 0.],
+            position: [0., 0., 0.],
+            normal: [0., 0., 0.],
             uv: [0., 0.],
         }
     }
@@ -46,7 +47,6 @@ impl Default for Vertex {
 pub struct Mesh {
     vertices: Vec<Vertex>,
     indices: Vec<u32>,
-    textures: Vec<Texture>,
 
     vao: u32,
     vbo: u32,
@@ -54,29 +54,26 @@ pub struct Mesh {
 }
 
 impl Mesh {
-    pub fn new(vertices: Vec<Vertex>, indices: Vec<u32>, textures: Vec<Texture>) -> Mesh {
+    pub fn new(vertices: Vec<Vertex>, indices: Vec<u32>) -> Mesh {
         let mut mesh: Mesh = Default::default();
 
         unsafe {
-            mesh.init(vertices, indices, textures);
+            mesh.init(vertices, indices);
         }
 
         mesh
     }
 
     /// render the mesh
-    pub unsafe fn draw(&self, shader: &Shader) {
-        shader.bind_texture(0, &self.textures[0]);
-
+    pub unsafe fn draw(&self) {
         gl::BindVertexArray(self.vao);
         gl::DrawElements(gl::TRIANGLES, self.indices.len() as i32, gl::UNSIGNED_INT, ptr::null());
         gl::BindVertexArray(0);
     }
 
-    unsafe fn init(&mut self, vertices: Vec<Vertex>, indices: Vec<u32>, textures: Vec<Texture>) {
+    unsafe fn init(&mut self, vertices: Vec<Vertex>, indices: Vec<u32>) {
         self.vertices = vertices;
         self.indices = indices;
-        self.textures = textures;
 
         // VAO
         gl::GenVertexArrays(1, &mut self.vao);
@@ -98,9 +95,11 @@ impl Mesh {
 
         let size = size_of::<Vertex>() as i32;
         gl::EnableVertexAttribArray(0);
-        gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE, size, offset_of!(Vertex, pos) as *const c_void);
+        gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE, size, offset_of!(Vertex, position) as *const c_void);
         gl::EnableVertexAttribArray(1);
-        gl::VertexAttribPointer(1, 2, gl::FLOAT, gl::FALSE, size, offset_of!(Vertex, uv) as *const c_void);
+        gl::VertexAttribPointer(1, 3, gl::FLOAT, gl::FALSE, size, offset_of!(Vertex, normal) as *const c_void);
+        gl::EnableVertexAttribArray(2);
+        gl::VertexAttribPointer(2, 2, gl::FLOAT, gl::FALSE, size, offset_of!(Vertex, uv) as *const c_void);
 
         gl::BindVertexArray(0);
     }
@@ -111,7 +110,6 @@ impl Default for Mesh {
         Mesh {
             vertices: Vec::new(),
             indices: Vec::new(),
-            textures: Vec::new(),
             vao: 0,
             vbo: 0,
             ibo: 0,
@@ -122,9 +120,6 @@ impl Default for Mesh {
 impl Drop for Mesh {
     fn drop(&mut self) {
         unsafe {
-            for tex_id in 0..self.textures.len() {
-                gl::DeleteTextures(1, self.textures[tex_id].id as *const u32);
-            }
             gl::DeleteBuffers(1, self.ibo as *const u32);
             gl::DeleteBuffers(1, self.vbo as *const u32);
             gl::DeleteVertexArrays(1, self.vao as *const u32);

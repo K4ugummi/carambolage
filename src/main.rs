@@ -61,9 +61,19 @@ fn main() {
         game_settings.fps = matches.opt_str("l").unwrap().parse().unwrap();
     }
 
+    let terminal_log_config = Config {
+        time: Some(Level::Error),
+        target: Some(Level::Debug),
+        ..Default::default()
+    };
+    let write_log_config = Config {
+        time: Some(Level::Error),
+        target: Some(Level::Debug),
+        ..Default::default()
+    };
     CombinedLogger::init(vec![
-        TermLogger::new(LevelFilter::Warn, Config::default()).unwrap(),
-        WriteLogger::new(LevelFilter::Info, Config::default(), File::create("carambolage.log").unwrap()),
+        TermLogger::new(LevelFilter::Info, terminal_log_config).unwrap(),
+        WriteLogger::new(LevelFilter::Warn, write_log_config, File::create("carambolage.log").unwrap()),
     ]).unwrap();
 
     // Start the game

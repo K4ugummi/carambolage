@@ -17,9 +17,25 @@
 #extension GL_ARB_separate_shader_objects : enable
 
 layout (location = 0) in vec2 vUV;
+layout (location = 1) in vec3 vFragPos;
+layout (location = 2) in vec3 vNormal;
 
-layout (location = 5) uniform sampler2D uTile0;
+layout (location = 5) uniform sampler2D uTexture;
 
 void main() {
-    gl_FragColor = texture(uTile0, vUV).rgba;
+    vec3 normal = normalize(vNormal);
+    vec3 lightColor = vec3(1., 1., 1.);
+    vec3 lightDir = normalize(vec3(1., 2., 3.));
+
+    // Ambient lighting
+    float ambientStrength = 0.1;
+    vec3 ambient = ambientStrength * lightColor;
+
+    // Diffuse lighting
+    float diff = max(dot(vNormal, lightDir), 0.0);
+    vec3 diffuse = diff * lightColor;
+
+    // SPecular lighting will come soon.
+
+    gl_FragColor = vec4((ambient + diffuse) * texture(uTexture, vUV).rgb, 1.0);
 }

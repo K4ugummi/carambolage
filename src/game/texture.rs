@@ -24,7 +24,7 @@ impl Default for Texture {
 
 unsafe fn load_texture(path: &str) -> u32 {
     let path_str = format!("{}{}", "res/textures/", path);
-    info!("Loading texture: {}", path_str);
+    debug!("New from {}", path_str);
 
     let path = Path::new(&path_str);
 
@@ -33,9 +33,18 @@ unsafe fn load_texture(path: &str) -> u32 {
     gl::GenTextures(1, &mut tex_id);
     let img = image::open(&path).expect("ERROR: Failed to load texture!").flipv();
     let image_format = match img {
-        ImageRgb8(_) => gl::RGB,
-        ImageRgba8(_) => gl::RGBA,
-        _ => panic!("ERROR: Wrong image format!"),
+        ImageRgb8(_) => {
+            debug!("Format: RGB8");
+            gl::RGB
+        }
+        ImageRgba8(_) => {
+            debug!("Format: RGBA8");
+            gl::RGBA
+        }
+        _ => {
+            error!("Format wrong");
+            panic!("ERROR: Wrong image format!")
+        }
     };
 
     let data = img.raw_pixels();

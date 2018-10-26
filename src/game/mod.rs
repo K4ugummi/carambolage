@@ -27,6 +27,7 @@ mod model;
 mod scene;
 mod shader;
 mod texture;
+mod tile;
 mod transform;
 
 use self::controller::{Controller, ControllerLayout};
@@ -82,6 +83,7 @@ impl Game {
         info!("Initializing game");
         let frame_limiter = FrameLimiter::new(settings.fps);
 
+        debug!("Initializing glfw window");
         let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
         glfw.window_hint(glfw::WindowHint::ContextVersion(3, 3));
         glfw.window_hint(glfw::WindowHint::OpenGlProfile(glfw::OpenGlProfileHint::Core));
@@ -107,6 +109,7 @@ impl Game {
         window.set_scroll_polling(true);
         window.set_cursor_mode(glfw::CursorMode::Normal);
 
+        debug!("Initializing openGL attributes");
         gl::load_with(|symbol| window.get_proc_address(symbol) as *const _);
         unsafe {
             gl::Enable(gl::BLEND);

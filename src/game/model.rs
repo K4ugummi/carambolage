@@ -30,12 +30,13 @@ pub struct Model {
 impl Model {
     pub fn new(path: &str, palette: &str) -> Model {
         let path_str = format!("{}{}", "res/models/", path);
-        info!("Loading model: {}", path_str);
+        debug!("New from {} with palette {}", path_str, palette);
 
         let path = Path::new(&path_str);
         let obj = tobj::load_obj(path);
 
-        let (models, _materials) = obj.unwrap();
+        let (models, materials) = obj.unwrap();
+        debug!("{} meshes and {} materials", models.len(), materials.len());
 
         let mut meshes = Vec::new();
         for model in models {

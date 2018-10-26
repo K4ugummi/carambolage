@@ -26,7 +26,7 @@ mod game;
 mod util;
 
 use game::{Game, GameSettings};
-use getopts::Options;
+use getopts::{Matches, Options};
 use std::env;
 use std::fs::File;
 
@@ -42,19 +42,7 @@ fn main() {
     };
 
     // Filter settings
-    let mut game_settings: GameSettings = Default::default();
-    if matches.opt_present("f") {
-        game_settings.is_fullscreen = true;
-    }
-    if matches.opt_str("w").is_some() {
-        game_settings.width = matches.opt_str("w").unwrap().parse().unwrap();
-    }
-    if matches.opt_str("h").is_some() {
-        game_settings.height = matches.opt_str("h").unwrap().parse().unwrap();
-    }
-    if matches.opt_str("l").is_some() {
-        game_settings.fps = matches.opt_str("l").unwrap().parse().unwrap();
-    }
+    let game_settings = match_options(matches);
 
     let terminal_log_config = Config {
         time: Some(Level::Error),
@@ -84,6 +72,23 @@ fn get_options() -> Options {
     opts.optopt("h", "height", "set window height", "HEIGHT");
     opts.optopt("l", "limit-fps", "set max game fps [0 = unlimited]", "FPS");
     opts
+}
+
+fn match_options(matches: Matches) -> GameSettings {
+    let mut game_settings: GameSettings = Default::default();
+    if matches.opt_present("f") {
+        game_settings.is_fullscreen = true;
+    }
+    if matches.opt_str("w").is_some() {
+        game_settings.width = matches.opt_str("w").unwrap().parse().unwrap();
+    }
+    if matches.opt_str("h").is_some() {
+        game_settings.height = matches.opt_str("h").unwrap().parse().unwrap();
+    }
+    if matches.opt_str("l").is_some() {
+        game_settings.fps = matches.opt_str("l").unwrap().parse().unwrap();
+    }
+    game_settings
 }
 
 #[cfg(test)]

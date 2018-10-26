@@ -144,13 +144,13 @@ impl Game {
         let nano_sec = Duration::nanoseconds(1).to_std().unwrap();
 
         while !self.window.should_close() {
-            let delta_time = *self.frame_limiter.start();
+            let dt = self.frame_limiter.start();
             self.window.make_current();
             self.glfw.poll_events();
             self.process_events();
-            self.process_input(&delta_time);
+            self.process_input(dt);
 
-            self.scene.run(&delta_time, &self.controller);
+            self.scene.update(dt, &self.controller);
 
             unsafe {
                 gl::ClearColor(0.2, 0.2, 0.2, 1.0);
@@ -181,13 +181,13 @@ impl Game {
         }
     }
 
-    pub fn process_input(&mut self, delta_time: &Duration) {
+    pub fn process_input(&mut self, dt: f32) {
         if self.window.get_key(Key::Escape) == Action::Press {
             self.window.set_should_close(true)
         }
 
         for ctrl in &mut self.controller.iter_mut() {
-            ctrl.process_input(&self.window, delta_time);
+            ctrl.process_input(&self.window, dt);
         }
     }
 }

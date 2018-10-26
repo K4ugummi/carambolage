@@ -13,7 +13,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
 use nalgebra::{inf, sup, Matrix4, Vector3};
-use time::Duration;
 
 use super::camera::Camera;
 use super::car::Car;
@@ -41,12 +40,12 @@ impl Scene {
     }
 
     /// Update the scene based on the internal state and a given time step.
-    pub(super) fn run(&mut self, delta_time: &Duration, controller: &[Controller]) {
+    pub(super) fn update(&mut self, dt: f32, controller: &[Controller]) {
         for (id, car) in &mut self.cars.iter_mut().enumerate() {
             if id < controller.len() {
-                car.run(delta_time, Some(controller[id]));
+                car.update(dt, Some(controller[id]));
             } else {
-                car.run(delta_time, None);
+                car.update(dt, None);
             }
         }
         let camera_focus = if self.cars.is_empty() {
@@ -66,7 +65,7 @@ impl Scene {
             lerp_pos
         };
         self.camera.move_to_focus(camera_focus);
-        self.camera.update(delta_time);
+        self.camera.update(dt);
     }
 
     pub(super) fn draw(&mut self, projection: &Matrix4<f32>) {

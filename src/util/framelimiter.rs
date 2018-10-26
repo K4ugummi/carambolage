@@ -17,6 +17,7 @@ use time::{Duration, PreciseTime};
 pub struct FrameLimiter {
     time_per_frame: Duration,
     delta_time: Duration,
+    dt: f32,
     time: PreciseTime,
 }
 
@@ -25,26 +26,28 @@ impl FrameLimiter {
         let time_per_frame = if frame_rate == 0 {
             Duration::nanoseconds(1)
         } else {
-            Duration::nanoseconds((1e9 / f64::from(frame_rate)) as i64)
+            Duration::microseconds((1e6 / f64::from(frame_rate)) as i64)
         };
         let time = PreciseTime::now();
 
         FrameLimiter {
             time_per_frame,
-            delta_time: Duration::nanoseconds(0),
+            delta_time: Duration::microseconds(1),
+            dt: 1e-6f32,
             time,
         }
     }
 
-    pub fn start(&mut self) -> &Duration {
+    pub fn start(&mut self) -> f32 {
         let now = PreciseTime::now();
         self.time = now;
 
-        &self.delta_time
+        self.dt
     }
 
     pub fn stop(&mut self) -> bool {
         self.delta_time = self.time.to(PreciseTime::now());
+        self.dt = self.delta_time.num_microseconds().unwrap() as f32 * 1e-6f32;
         self.delta_time < self.time_per_frame
     }
 }

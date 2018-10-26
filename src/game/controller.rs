@@ -15,7 +15,6 @@
 use super::glfw::{Action, Key, Window};
 
 use nalgebra::{zero, Vector2};
-use time::Duration;
 use util::Lerp;
 
 use self::ControllerInternal as CI;
@@ -94,7 +93,7 @@ impl Controller {
         }
     }
 
-    pub fn process_input(&mut self, window: &Window, delta_time: &Duration) {
+    pub fn process_input(&mut self, window: &Window, delta_time: f32) {
         if window.get_key(self.ci.forward) == Action::Press && !self.ci.is_forward {
             self.set_y_axis(1.);
             self.ci.is_forward = true;
@@ -131,9 +130,8 @@ impl Controller {
         self.update(delta_time);
     }
 
-    fn update(&mut self, delta_time: &Duration) {
+    fn update(&mut self, dt: f32) {
         if self.is_smooth {
-            let dt = delta_time.num_milliseconds() as f32 / 1_000.;
             self.axis = Vector2::lerp(&self.axis, &self.axis_goal, 5. * dt);
             self.axis[0] = (self.axis[0] * 10_000.).trunc() / 10_000.;
             self.axis[1] = (self.axis[1] * 10_000.).trunc() / 10_000.;

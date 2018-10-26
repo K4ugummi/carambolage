@@ -13,7 +13,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
 use nalgebra::{clamp, Matrix4, Point3, Vector3};
-use time::Duration;
 use util::Lerp;
 
 #[derive(Debug)]
@@ -52,8 +51,7 @@ impl Camera {
         }
     }
 
-    pub fn update(&mut self, delta_time: &Duration) {
-        let dt = (delta_time.num_milliseconds() as f32) / 1_000.;
+    pub fn update(&mut self, dt: f32) {
         self.focus = Vector3::lerp(&self.focus, &self.focus_goal, self.speed * dt);
         self.height = f32::lerp(&self.height, &self.height_goal, self.speed * dt);
         self.position = self.focus + Vector3::new(0., 0., self.height);

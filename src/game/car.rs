@@ -16,7 +16,6 @@ use super::controller::Controller;
 use super::model::Model;
 
 use nalgebra::{zero, Matrix4, Vector3};
-use time::Duration;
 
 pub struct Car {
     pub position: Vector3<f32>, // position in world space
@@ -46,9 +45,8 @@ impl Car {
 
     /// Update the car position and velocity based on the internal car state for
     /// a given time step.
-    pub(super) fn run(&mut self, delta_time: &Duration, controller: Option<Controller>) {
+    pub(super) fn update(&mut self, dt: f32, controller: Option<Controller>) {
         if controller.is_some() {
-            let dt = delta_time.num_milliseconds() as f32 / 1_000.;
             let ct = controller.unwrap();
 
             // accel:  0.0 - None

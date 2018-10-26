@@ -93,7 +93,7 @@ fn match_options(matches: Matches) -> GameSettings {
 
 #[cfg(test)]
 mod tests {
-    use super::get_options;
+    use super::{get_options, match_options};
 
     #[test]
     fn arguments() {
@@ -112,14 +112,12 @@ mod tests {
             Ok(m) => m,
             Err(f) => panic!(f.to_string()),
         };
-        let is_fullscreen = matches.opt_present("f");
-        let width: u32 = matches.opt_str("w").unwrap().parse().unwrap();
-        let height: u32 = matches.opt_str("h").unwrap().parse().unwrap();
-        let fps_limit: u32 = matches.opt_str("l").unwrap().parse().unwrap();
 
-        assert_eq!(is_fullscreen, true);
-        assert_eq!(width, 1920);
-        assert_eq!(height, 1080);
-        assert_eq!(fps_limit, 60);
+        let settings = match_options(matches);
+
+        assert_eq!(settings.is_fullscreen, true);
+        assert_eq!(settings.width, 1920);
+        assert_eq!(settings.height, 1080);
+        assert_eq!(settings.fps, 60);
     }
 }

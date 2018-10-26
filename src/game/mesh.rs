@@ -19,7 +19,6 @@ use std::os::raw::c_void;
 use std::ptr;
 
 use super::gl;
-use super::shader::Shader;
 
 macro_rules! offset_of {
     ($ty:ty, $field:ident) => {
@@ -45,17 +44,18 @@ impl Default for Vertex {
 }
 
 pub struct Mesh {
-    vertices: Vec<Vertex>,
-    indices: Vec<u32>,
+    pub(super) vertices: Vec<Vertex>,
+    pub(super) indices: Vec<u32>,
 
-    vao: u32,
-    vbo: u32,
-    ibo: u32,
+    pub(super) vao: u32,
+    pub(super) vbo: u32,
+    pub(super) ibo: u32,
 }
 
 impl Mesh {
     pub fn new(vertices: Vec<Vertex>, indices: Vec<u32>) -> Mesh {
         let mut mesh: Mesh = Default::default();
+        debug!("New {} vertices, {} indices", vertices.len(), indices.len());
 
         unsafe {
             mesh.init(vertices, indices);
@@ -77,10 +77,12 @@ impl Mesh {
 
         // VAO
         gl::GenVertexArrays(1, &mut self.vao);
+        debug!("vao = {}", self.vao);
         gl::BindVertexArray(self.vao);
 
         // VBO
         gl::GenBuffers(1, &mut self.vbo);
+        debug!("vbo = {}", self.vbo);
         gl::BindBuffer(gl::ARRAY_BUFFER, self.vbo);
         let size = (self.vertices.len() * size_of::<Vertex>()) as isize;
         let data = &self.vertices[0] as *const Vertex as *const c_void;
@@ -88,6 +90,7 @@ impl Mesh {
 
         // IBO
         gl::GenBuffers(1, &mut self.ibo);
+        debug!("ibo = {}", self.ibo);
         gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, self.ibo);
         let size = (self.indices.len() * size_of::<u32>()) as isize;
         let data = &self.indices[0] as *const u32 as *const c_void;

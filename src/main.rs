@@ -26,7 +26,7 @@ mod game;
 mod util;
 
 use game::{Game, GameSettings};
-use getopts::Options;
+use getopts::{Matches, Options};
 use std::env;
 use std::fs::File;
 
@@ -35,18 +35,46 @@ fn main() {
     let args: Vec<String> = env::args().collect();
 
     // Set command line options.
-    let mut opts = Options::new();
-    opts.optflag("f", "fullscreen", "enable fullscreen mode");
-    opts.optopt("w", "width", "set window width", "WIDTH");
-    opts.optopt("h", "height", "set window height", "HEIGHT");
-    opts.optopt("l", "limit-fps", "set max game fps [0 = unlimited]", "FPS");
-
+    let opts = get_options();
     let matches = match opts.parse(&args[1..]) {
         Ok(m) => m,
         Err(f) => panic!(f.to_string()),
     };
 
     // Filter settings
+    let game_settings = match_options(&matches);
+
+    let terminal_log_config = Config {
+        time: Some(Level::Error),
+        target: Some(Level::Debug),
+        ..Default::default()
+    };
+    let write_log_config = Config {
+        time: Some(Level::Error),
+        target: Some(Level::Debug),
+        ..Default::default()
+    };
+    CombinedLogger::init(vec![
+        TermLogger::new(LevelFilter::Warn, terminal_log_config).unwrap(),
+        WriteLogger::new(LevelFilter::Debug, write_log_config, File::create("carambolage.log").unwrap()),
+    ]).unwrap();
+
+    // Start the game
+    info!("Starting game");
+    let mut game = Game::new(game_settings);
+    game.run();
+}
+
+fn get_options() -> Options {
+    let mut opts = Options::new();
+    opts.optflag("f", "fullscreen", "enable fullscreen mode");
+    opts.optopt("w", "width", "set window width", "WIDTH");
+    opts.optopt("h", "height", "set window height", "HEIGHT");
+    opts.optopt("l", "limit-fps", "set max game fps [0 = unlimited]", "FPS");
+    opts
+}
+
+fn match_options(matches: &Matches) -> GameSettings {
     let mut game_settings: GameSettings = Default::default();
     if matches.opt_present("f") {
         game_settings.is_fullscreen = true;
@@ -60,21 +88,12 @@ fn main() {
     if matches.opt_str("l").is_some() {
         game_settings.fps = matches.opt_str("l").unwrap().parse().unwrap();
     }
-
-    CombinedLogger::init(vec![
-        TermLogger::new(LevelFilter::Warn, Config::default()).unwrap(),
-        WriteLogger::new(LevelFilter::Info, Config::default(), File::create("carambolage.log").unwrap()),
-    ]).unwrap();
-
-    // Start the game
-    info!("Starting game");
-    let mut game = Game::new(game_settings);
-    game.run();
+    game_settings
 }
 
 #[cfg(test)]
 mod tests {
-    use getopts::Options;
+    use super::{get_options, match_options};
 
     #[test]
     fn arguments() {
@@ -88,23 +107,17 @@ mod tests {
             String::from("-l"),
             String::from("60"),
         ];
-        let mut opts = Options::new();
-        opts.optflag("f", "fullscreen", "enable fullscreen mode");
-        opts.optopt("w", "width", "set window width", "WIDTH");
-        opts.optopt("h", "height", "set window height", "HEIGHT");
-        opts.optopt("l", "limit-fps", "set max game fps [0 = unlimited]", "FPS");
+        let opts = get_options();
         let matches = match opts.parse(&args[1..]) {
             Ok(m) => m,
             Err(f) => panic!(f.to_string()),
         };
-        let is_fullscreen = matches.opt_present("f");
-        let width: u32 = matches.opt_str("w").unwrap().parse().unwrap();
-        let height: u32 = matches.opt_str("h").unwrap().parse().unwrap();
-        let fps_limit: u32 = matches.opt_str("l").unwrap().parse().unwrap();
 
-        assert_eq!(is_fullscreen, true);
-        assert_eq!(width, 1920);
-        assert_eq!(height, 1080);
-        assert_eq!(fps_limit, 60);
+        let settings = match_options(&matches);
+
+        assert_eq!(settings.is_fullscreen, true);
+        assert_eq!(settings.width, 1920);
+        assert_eq!(settings.height, 1080);
+        assert_eq!(settings.fps, 60);
     }
 }

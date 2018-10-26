@@ -31,15 +31,12 @@ mod transform;
 
 use self::controller::{Controller, ControllerLayout};
 use self::glfw::{Action, Context, Glfw, Key, Window};
-use self::rodio::Source;
 use self::scene::Scene;
 use super::time::Duration;
 use nalgebra::Perspective3;
 use util::FrameLimiter;
 
 use std::cell::Cell;
-use std::fs::File;
-use std::io::BufReader;
 use std::sync::mpsc::Receiver;
 use std::thread::sleep;
 
@@ -82,6 +79,7 @@ impl Game {
         info!("Initializing game");
         let frame_limiter = FrameLimiter::new(settings.fps);
 
+        debug!("Initializing glfw window");
         let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
         glfw.window_hint(glfw::WindowHint::ContextVersion(3, 3));
         glfw.window_hint(glfw::WindowHint::OpenGlProfile(glfw::OpenGlProfileHint::Core));
@@ -107,6 +105,7 @@ impl Game {
         window.set_scroll_polling(true);
         window.set_cursor_mode(glfw::CursorMode::Normal);
 
+        debug!("Initializing openGL attributes");
         gl::load_with(|symbol| window.get_proc_address(symbol) as *const _);
         unsafe {
             gl::Enable(gl::BLEND);
@@ -115,8 +114,11 @@ impl Game {
             gl::DepthFunc(gl::LESS);
         }
 
-        let controller = vec![Controller::new(true, &ControllerLayout::WASD)];
-        let scene = Scene::new(controller.len());
+        let controller = vec![
+            Controller::new(true, &ControllerLayout::WASD),
+            Controller::new(true, &ControllerLayout::Arrows),
+        ];
+        let scene = Scene::new();
 
         Game {
             glfw,
@@ -133,10 +135,10 @@ impl Game {
 
     pub(crate) fn run(&mut self) {
         // Play game music (sorry just testing)
-        let device = rodio::default_output_device().unwrap();
-        let file = File::open("res/sounds/music/Rolemusic-01-Bacterial-Love.mp3").unwrap();
-        let source = rodio::Decoder::new(BufReader::new(file)).unwrap().repeat_infinite();
-        rodio::play_raw(&device, source.convert_samples());
+        //let device = rodio::default_output_device().unwrap();
+        //let file = File::open("res/sounds/music/Rolemusic-01-Bacterial-Love.mp3").unwrap();
+        //let source = rodio::Decoder::new(BufReader::new(file)).unwrap().repeat_infinite();
+        //rodio::play_raw(&device, source.convert_samples());
 
         let nano_sec = Duration::nanoseconds(1).to_std().unwrap();
 

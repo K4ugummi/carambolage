@@ -13,7 +13,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
 use nalgebra::{inf, sup, Matrix4, Vector3};
-use rand::{thread_rng, Rng};
 use time::Duration;
 
 use super::camera::Camera;
@@ -29,21 +28,13 @@ pub(super) struct Scene {
 
 impl Scene {
     /// Make a new scene with a given number of cars.
-    pub(super) fn new(num_cars: usize) -> Scene {
-        let mut rng = thread_rng();
-        let cars: Vec<Car> = (0..num_cars)
-            .map(|_| {
-                Car::new(
-                    {
-                        let x = rng.gen_range(-20f32, 20f32);
-                        let y = rng.gen_range(-20f32, 20f32);
-                        Vector3::new(x, y, 0.)
-                    },
-                    1.0,
-                )
-            }).collect();
+    pub(super) fn new() -> Scene {
+        let cars = vec![
+            Car::new("c02.obj", "car-blue.png", Vector3::new(-1.5, 0., 0.), 1.0),
+            Car::new("c03.obj", "car-red.png", Vector3::new(1.5, 0., 0.), 1.0),
+        ];
 
-        let level = Level::new("res/maps/example.png");
+        let level = Level::new("maps/race_track_1.obj");
         let camera = Camera::new();
 
         Scene { cars, level, camera }

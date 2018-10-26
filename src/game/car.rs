@@ -23,21 +23,25 @@ pub struct Car {
     pub rotation: Vector3<f32>, // rotation in radians per axis
     _velocity: Vector3<f32>,
     _force: Vector3<f32>,
-    mass: f32,
+    _mass: f32,
 
     pub model: Model,
 }
 
 impl Car {
-    pub fn new(position: Vector3<f32>, mass: f32) -> Car {
-        info!("Initializing car at {:?}", position);
-        let mut car: Car = Default::default();
-        car.position = position;
-        if mass > 1. {
-            car.mass = mass;
+    pub fn new(model: &str, color_palette: &str, position: Vector3<f32>, mass: f32) -> Car {
+        debug!(
+            "New model: {}, color_palette: {}, position: {:?}, mass: {}",
+            model, color_palette, position, mass
+        );
+        Car {
+            position,
+            rotation: zero(),
+            _velocity: zero(),
+            _force: zero(),
+            _mass: mass,
+            model: Model::new(model, color_palette),
         }
-
-        car
     }
 
     /// Update the car position and velocity based on the internal car state for
@@ -74,21 +78,7 @@ impl Car {
         // x,y-axis rotation are fixed to 0. No rollovers!
         let rotation = Matrix4::from_euler_angles(0., 0., self.rotation[2]);
         let translation = Matrix4::new_translation(&self.position);
-        let model = translation * rotation;
+        let model = translation * rotation * Matrix4::new_scaling(0.5f32);
         self.model.draw(&model, view, projection);
-    }
-}
-
-impl Default for Car {
-    fn default() -> Car {
-        Car {
-            position: zero(),
-            rotation: zero(),
-            _velocity: zero(),
-            _force: zero(),
-            mass: 1.,
-
-            model: Model::new(&"c02.obj", "car-blue.png"),
-        }
     }
 }

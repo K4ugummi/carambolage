@@ -136,10 +136,10 @@ impl Game {
 
     pub(crate) fn run(&mut self) {
         // Play game music (sorry just testing)
-        let device = rodio::default_output_device().unwrap();
-        let file = File::open("res/sounds/music/Rolemusic-01-Bacterial-Love.mp3").unwrap();
-        let source = rodio::Decoder::new(BufReader::new(file)).unwrap().repeat_infinite();
-        rodio::play_raw(&device, source.convert_samples());
+        //let device = rodio::default_output_device().unwrap();
+        //let file = File::open("res/sounds/music/Rolemusic-01-Bacterial-Love.mp3").unwrap();
+        //let source = rodio::Decoder::new(BufReader::new(file)).unwrap().repeat_infinite();
+        //rodio::play_raw(&device, source.convert_samples());
 
         let nano_sec = Duration::nanoseconds(1).to_std().unwrap();
 

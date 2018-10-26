@@ -59,7 +59,7 @@ impl Model {
             meshes.push(Mesh::new(vertices, indices));
         }
 
-        let shader = Shader::new("car");
+        let shader = Shader::new("default");
 
         let texture = Texture::new(palette);
 

@@ -42,7 +42,7 @@ fn main() {
     };
 
     // Filter settings
-    let game_settings = match_options(matches);
+    let game_settings = match_options(&matches);
 
     let terminal_log_config = Config {
         time: Some(Level::Error),
@@ -55,8 +55,8 @@ fn main() {
         ..Default::default()
     };
     CombinedLogger::init(vec![
-        TermLogger::new(LevelFilter::Info, terminal_log_config).unwrap(),
-        WriteLogger::new(LevelFilter::Warn, write_log_config, File::create("carambolage.log").unwrap()),
+        TermLogger::new(LevelFilter::Warn, terminal_log_config).unwrap(),
+        WriteLogger::new(LevelFilter::Debug, write_log_config, File::create("carambolage.log").unwrap()),
     ]).unwrap();
 
     // Start the game
@@ -74,7 +74,7 @@ fn get_options() -> Options {
     opts
 }
 
-fn match_options(matches: Matches) -> GameSettings {
+fn match_options(matches: &Matches) -> GameSettings {
     let mut game_settings: GameSettings = Default::default();
     if matches.opt_present("f") {
         game_settings.is_fullscreen = true;
@@ -113,7 +113,7 @@ mod tests {
             Err(f) => panic!(f.to_string()),
         };
 
-        let settings = match_options(matches);
+        let settings = match_options(&matches);
 
         assert_eq!(settings.is_fullscreen, true);
         assert_eq!(settings.width, 1920);

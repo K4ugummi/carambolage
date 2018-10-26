@@ -27,20 +27,16 @@ mod model;
 mod scene;
 mod shader;
 mod texture;
-mod tile;
 mod transform;
 
 use self::controller::{Controller, ControllerLayout};
 use self::glfw::{Action, Context, Glfw, Key, Window};
-use self::rodio::Source;
 use self::scene::Scene;
 use super::time::Duration;
 use nalgebra::Perspective3;
 use util::FrameLimiter;
 
 use std::cell::Cell;
-use std::fs::File;
-use std::io::BufReader;
 use std::sync::mpsc::Receiver;
 use std::thread::sleep;
 
@@ -118,8 +114,11 @@ impl Game {
             gl::DepthFunc(gl::LESS);
         }
 
-        let controller = vec![Controller::new(true, &ControllerLayout::WASD)];
-        let scene = Scene::new(controller.len());
+        let controller = vec![
+            Controller::new(true, &ControllerLayout::WASD),
+            Controller::new(true, &ControllerLayout::Arrows),
+        ];
+        let scene = Scene::new();
 
         Game {
             glfw,

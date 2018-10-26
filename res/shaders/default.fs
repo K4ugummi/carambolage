@@ -28,11 +28,11 @@ void main() {
     vec3 lightDir = normalize(vec3(1., 2., 3.));
 
     // Ambient lighting
-    float ambientStrength = 0.1;
+    float ambientStrength = 0.2;
     vec3 ambient = ambientStrength * lightColor;
 
     // Diffuse lighting
-    float diff = max(dot(vNormal, lightDir), 0.0);
+    float diff = max(dot(vNormal, lightDir) * 0.9, 0.0);
     vec3 diffuse = diff * lightColor;
 
     // SPecular lighting will come soon.

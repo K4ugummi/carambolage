@@ -68,7 +68,7 @@ unsafe fn load_texture(path: &str) -> u32 {
     gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::NEAREST as i32);
     gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::NEAREST as i32);
 
-    info!("Texture loaded. ID:{}, WIDTH:{}px, HEIGHT:{}px", tex_id, img.width(), img.height());
+    debug!("id:{}, width:{}px, height:{}px", tex_id, img.width(), img.height());
 
     tex_id
 }

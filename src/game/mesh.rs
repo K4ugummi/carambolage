@@ -82,7 +82,7 @@ impl Mesh {
 
         // VBO
         gl::GenBuffers(1, &mut self.vbo);
-        debug!("vbo = {}", self.vao);
+        debug!("vbo = {}", self.vbo);
         gl::BindBuffer(gl::ARRAY_BUFFER, self.vbo);
         let size = (self.vertices.len() * size_of::<Vertex>()) as isize;
         let data = &self.vertices[0] as *const Vertex as *const c_void;
@@ -90,7 +90,7 @@ impl Mesh {
 
         // IBO
         gl::GenBuffers(1, &mut self.ibo);
-        debug!("ibo = {}", self.vao);
+        debug!("ibo = {}", self.ibo);
         gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, self.ibo);
         let size = (self.indices.len() * size_of::<u32>()) as isize;
         let data = &self.indices[0] as *const u32 as *const c_void;

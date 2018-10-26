@@ -35,12 +35,7 @@ fn main() {
     let args: Vec<String> = env::args().collect();
 
     // Set command line options.
-    let mut opts = Options::new();
-    opts.optflag("f", "fullscreen", "enable fullscreen mode");
-    opts.optopt("w", "width", "set window width", "WIDTH");
-    opts.optopt("h", "height", "set window height", "HEIGHT");
-    opts.optopt("l", "limit-fps", "set max game fps [0 = unlimited]", "FPS");
-
+    let opts = get_options();
     let matches = match opts.parse(&args[1..]) {
         Ok(m) => m,
         Err(f) => panic!(f.to_string()),
@@ -82,9 +77,18 @@ fn main() {
     game.run();
 }
 
+fn get_options() -> Options {
+    let mut opts = Options::new();
+    opts.optflag("f", "fullscreen", "enable fullscreen mode");
+    opts.optopt("w", "width", "set window width", "WIDTH");
+    opts.optopt("h", "height", "set window height", "HEIGHT");
+    opts.optopt("l", "limit-fps", "set max game fps [0 = unlimited]", "FPS");
+    opts
+}
+
 #[cfg(test)]
 mod tests {
-    use getopts::Options;
+    use super::get_options;
 
     #[test]
     fn arguments() {
@@ -98,11 +102,7 @@ mod tests {
             String::from("-l"),
             String::from("60"),
         ];
-        let mut opts = Options::new();
-        opts.optflag("f", "fullscreen", "enable fullscreen mode");
-        opts.optopt("w", "width", "set window width", "WIDTH");
-        opts.optopt("h", "height", "set window height", "HEIGHT");
-        opts.optopt("l", "limit-fps", "set max game fps [0 = unlimited]", "FPS");
+        let opts = get_options();
         let matches = match opts.parse(&args[1..]) {
             Ok(m) => m,
             Err(f) => panic!(f.to_string()),

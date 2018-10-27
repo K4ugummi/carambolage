@@ -12,10 +12,6 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
-extern crate image;
-extern crate rodio;
-extern crate tobj;
-
 mod camera;
 mod car;
 mod controller;
@@ -25,10 +21,12 @@ mod transform;
 
 use self::controller::{Controller, ControllerLayout};
 use self::scene::Scene;
-use super::time::Duration;
+use grphx::FrameBuffer;
+use util::FrameLimiter;
+
 use glfw::{Action, Context, Glfw, Key, Window};
 use nalgebra::Perspective3;
-use util::FrameLimiter;
+use time::Duration;
 
 use std::cell::Cell;
 use std::sync::mpsc::Receiver;
@@ -43,6 +41,7 @@ pub(crate) struct Game {
     events: Event,
 
     frame_limiter: FrameLimiter,
+    frame_buffer: FrameBuffer,
 
     // Game
     settings: GameSettings,
@@ -110,6 +109,8 @@ impl Game {
             gl::DepthFunc(gl::LESS);
         }
 
+        let frame_buffer = FrameBuffer::new(settings.width as i32, settings.height as i32);
+
         let controller = vec![
             Controller::new(true, &ControllerLayout::WASD),
             Controller::new(true, &ControllerLayout::Arrows),
@@ -122,8 +123,9 @@ impl Game {
             events,
 
             frame_limiter,
-            settings,
+            frame_buffer,
 
+            settings,
             scene,
             controller,
         }
@@ -170,6 +172,7 @@ impl Game {
                     gl::Viewport(0, 0, width, height);
                     self.settings.width = width as u32;
                     self.settings.height = height as u32;
+                    self.frame_buffer.resize(width, height);
                 },
                 _ => {}
             }

@@ -5,6 +5,15 @@
 
 ![screenshot](Example_201810.png "Screenshot")
 
+### Controls
+General:  
+`[Esc]` Quit  
+`[F1]`-`[F7]` Posprocessing effect  
+Player 1 movement:  `[W]`,`[A]`,`[S]`,`[D]`  
+Player 2 movement: `[Up]`,`[Left]`,`[Down]`,`[Right]`
+
+---
+
 We are big fans of Rust and have been using this programming language in our working environment for some time now. After getting used to the fact that Rust doesn't let us get away with stupid things that crash our code at runtime (at least that's how we see it at the moment), we've become attached to this modern language. 
 
 Sadly, you're always busy learning good patterns during your work, so you have to think about and rethink sooo much, and the fun is a little bit left behind. That's why we decided to write a little game in Rust. This is all about the fun of programming (if you found this project on GitHub, you can probably understand that). But that also means that we don't think so much about what we're typing down now.

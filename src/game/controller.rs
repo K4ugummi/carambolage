@@ -12,7 +12,7 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
-use super::glfw::{Action, Key, Window};
+use glfw::{Action, Key, Window};
 
 use nalgebra::{zero, Vector2};
 use util::Lerp;

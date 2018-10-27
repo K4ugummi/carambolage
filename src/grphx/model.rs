@@ -12,12 +12,10 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
-use super::mesh::{Mesh, Vertex};
-use super::shader::Shader;
-use super::texture::Texture;
-use super::tobj;
+use grphx::{Mesh, Shader, Texture, Vertex};
 
 use nalgebra::Matrix4;
+use tobj;
 
 use std::path::Path;
 

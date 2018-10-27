@@ -12,8 +12,6 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
-extern crate gl;
-extern crate glfw;
 extern crate image;
 extern crate rodio;
 extern crate tobj;
@@ -22,17 +20,13 @@ mod camera;
 mod car;
 mod controller;
 mod level;
-mod mesh;
-mod model;
 mod scene;
-mod shader;
-mod texture;
 mod transform;
 
 use self::controller::{Controller, ControllerLayout};
-use self::glfw::{Action, Context, Glfw, Key, Window};
 use self::scene::Scene;
 use super::time::Duration;
+use glfw::{Action, Context, Glfw, Key, Window};
 use nalgebra::Perspective3;
 use util::FrameLimiter;
 

@@ -13,18 +13,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 use super::controller::Controller;
-use super::model::Model;
+use grphx::Model;
 
 use nalgebra::{zero, Matrix4, Vector3};
 
-pub struct Car {
-    pub position: Vector3<f32>, // position in world space
-    pub rotation: Vector3<f32>, // rotation in radians per axis
+pub(crate) struct Car {
+    pub(crate) position: Vector3<f32>, // position in world space
+    pub(crate) rotation: Vector3<f32>, // rotation in radians per axis
     _velocity: Vector3<f32>,
     _force: Vector3<f32>,
     _mass: f32,
 
-    pub model: Model,
+    pub(crate) model: Model,
 }
 
 impl Car {

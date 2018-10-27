@@ -12,16 +12,16 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
+use grphx::Texture;
+
+use gl;
+use nalgebra::{Matrix4, Vector3};
+
 use std::ffi::CString;
 use std::fs::File;
 use std::io::Read;
 use std::ptr;
 use std::str;
-
-use super::gl;
-use super::texture::Texture;
-
-use nalgebra::{Matrix4, Vector3};
 
 pub struct Shader {
     pub id: u32,

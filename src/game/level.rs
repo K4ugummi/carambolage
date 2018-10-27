@@ -14,7 +14,7 @@
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
 #![macro_use]
 //use super::tile::{Tile, TileType};
-use super::model::Model;
+use grphx::Model;
 
 use nalgebra::Matrix4;
 

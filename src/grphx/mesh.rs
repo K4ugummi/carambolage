@@ -18,7 +18,7 @@ use std::mem::size_of;
 use std::os::raw::c_void;
 use std::ptr;
 
-use super::gl;
+use gl;
 
 macro_rules! offset_of {
     ($ty:ty, $field:ident) => {

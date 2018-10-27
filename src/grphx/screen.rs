@@ -64,7 +64,7 @@ impl Screen {
             vbo,
             frame_buffer,
             post_proc_shader,
-            post_proc_effect: 0,
+            post_proc_effect: 7,
         }
     }
 

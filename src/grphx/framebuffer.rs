@@ -20,7 +20,7 @@ pub(crate) struct FrameBuffer {
     fbo: u32,
     rbo: u32,
 
-    color_buffer: u32,
+    pub color_buffer: u32,
 
     width: i32,
     height: i32,
@@ -77,9 +77,8 @@ impl FrameBuffer {
         gl::BindFramebuffer(gl::FRAMEBUFFER, self.fbo);
     }
 
-    pub unsafe fn clear() {
-        gl::ClearColor(0.1, 0.1, 0.1, 1.0);
-        gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
+    pub unsafe fn unbind(&self) {
+        gl::BindFramebuffer(gl::FRAMEBUFFER, 0);
     }
 
     pub unsafe fn resize(&mut self, width: i32, height: i32) {

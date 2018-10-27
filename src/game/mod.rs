@@ -21,7 +21,7 @@ mod transform;
 
 use self::controller::{Controller, ControllerLayout};
 use self::scene::Scene;
-use grphx::FrameBuffer;
+use grphx::{FrameBuffer, Shader};
 use util::FrameLimiter;
 
 use glfw::{Action, Context, Glfw, Key, Window};
@@ -29,6 +29,9 @@ use nalgebra::Perspective3;
 use time::Duration;
 
 use std::cell::Cell;
+use std::mem::size_of;
+use std::os::raw::c_void;
+use std::ptr;
 use std::sync::mpsc::Receiver;
 use std::thread::sleep;
 
@@ -39,9 +42,11 @@ pub(crate) struct Game {
     glfw: Glfw,
     window: Window,
     events: Event,
-
     frame_limiter: FrameLimiter,
+
     frame_buffer: FrameBuffer,
+    post_proc_shader: Shader,
+    post_proc_effect: i32,
 
     // Game
     settings: GameSettings,
@@ -76,7 +81,6 @@ impl Game {
         let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
         glfw.window_hint(glfw::WindowHint::ContextVersion(3, 3));
         glfw.window_hint(glfw::WindowHint::OpenGlProfile(glfw::OpenGlProfileHint::Core));
-        glfw.window_hint(glfw::WindowHint::Samples(Some(4u32)));
         glfw.window_hint(glfw::WindowHint::SRgbCapable(true));
         glfw.set_error_callback(Some(glfw::Callback {
             f: error_callback,
@@ -110,6 +114,7 @@ impl Game {
         }
 
         let frame_buffer = FrameBuffer::new(settings.width as i32, settings.height as i32);
+        let post_proc_shader = Shader::new("post_proc");
 
         let controller = vec![
             Controller::new(true, &ControllerLayout::WASD),
@@ -121,9 +126,11 @@ impl Game {
             glfw,
             window,
             events,
-
             frame_limiter,
+
             frame_buffer,
+            post_proc_shader,
+            post_proc_effect: 0,
 
             settings,
             scene,
@@ -140,6 +147,32 @@ impl Game {
 
         let nano_sec = Duration::nanoseconds(1).to_std().unwrap();
 
+        let screen_vertices: [f32; 24] = [
+            -1.0, 1.0, 0.0, 1.0, -1.0, -1.0, 0.0, 0.0, 1.0, -1.0, 1.0, 0.0, -1.0, 1.0, 0.0, 1.0, 1.0, -1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0,
+        ];
+        let mut screen_vao = 0;
+        let mut screen_vbo = 0;
+
+        unsafe {
+            gl::GenVertexArrays(1, &mut screen_vao);
+            gl::BindVertexArray(screen_vao);
+
+            gl::GenBuffers(1, &mut screen_vbo);
+            gl::BindBuffer(gl::ARRAY_BUFFER, screen_vbo);
+            gl::BufferData(
+                gl::ARRAY_BUFFER,
+                (screen_vertices.len() * size_of::<f32>()) as isize,
+                &screen_vertices[0] as *const f32 as *const c_void,
+                gl::STATIC_DRAW,
+            );
+
+            let stride = 4 * size_of::<f32>() as i32;
+            gl::EnableVertexAttribArray(0);
+            gl::VertexAttribPointer(0, 2, gl::FLOAT, gl::FALSE, stride, ptr::null());
+            gl::EnableVertexAttribArray(1);
+            gl::VertexAttribPointer(1, 2, gl::FLOAT, gl::FALSE, stride, (2 * size_of::<f32>()) as *const c_void);
+        }
+
         while !self.window.should_close() {
             let dt = self.frame_limiter.start();
             self.window.make_current();
@@ -150,11 +183,27 @@ impl Game {
             self.scene.update(dt, &self.controller);
 
             unsafe {
+                self.frame_buffer.bind();
+                gl::Enable(gl::DEPTH_TEST);
                 gl::ClearColor(0.2, 0.2, 0.2, 1.0);
                 gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
+
+                let projection = Perspective3::new(self.settings.width as f32 / self.settings.height as f32, 70., 0.1, 100.).unwrap();
+                self.scene.draw(&projection);
+
+                self.frame_buffer.unbind();
+
+                gl::Disable(gl::DEPTH_TEST);
+                gl::ClearColor(1.0, 1.0, 1.0, 1.0);
+                gl::Clear(gl::COLOR_BUFFER_BIT);
+
+                self.post_proc_shader.bind();
+                self.post_proc_shader.set_uniform_int(0, self.post_proc_effect);
+                gl::BindVertexArray(screen_vao);
+                gl::ActiveTexture(5);
+                gl::BindTexture(gl::TEXTURE_2D, self.frame_buffer.color_buffer);
+                gl::DrawArrays(gl::TRIANGLES, 0, 6);
             }
-            let projection = Perspective3::new(self.settings.width as f32 / self.settings.height as f32, 70., 0.1, 100.).unwrap();
-            self.scene.draw(&projection);
 
             self.window.swap_buffers();
             while self.frame_limiter.stop() {
@@ -182,6 +231,37 @@ impl Game {
     pub fn process_input(&mut self, dt: f32) {
         if self.window.get_key(Key::Escape) == Action::Press {
             self.window.set_should_close(true)
+        }
+
+        if self.window.get_key(Key::F1) == Action::Press {
+            self.post_proc_effect = 1;
+        }
+        if self.window.get_key(Key::F2) == Action::Press {
+            self.post_proc_effect = 2;
+        }
+        if self.window.get_key(Key::F3) == Action::Press {
+            self.post_proc_effect = 3;
+        }
+        if self.window.get_key(Key::F4) == Action::Press {
+            self.post_proc_effect = 4;
+        }
+        if self.window.get_key(Key::F5) == Action::Press {
+            self.post_proc_effect = 5;
+        }
+        if self.window.get_key(Key::F6) == Action::Press {
+            self.post_proc_effect = 6;
+        }
+        if self.window.get_key(Key::F7) == Action::Press {
+            self.post_proc_effect = 7;
+        }
+        if self.window.get_key(Key::F8) == Action::Press {
+            self.post_proc_effect = 8;
+        }
+        if self.window.get_key(Key::F9) == Action::Press {
+            self.post_proc_effect = 9;
+        }
+        if self.window.get_key(Key::F10) == Action::Press {
+            self.post_proc_effect = 10;
         }
 
         for ctrl in &mut self.controller.iter_mut() {

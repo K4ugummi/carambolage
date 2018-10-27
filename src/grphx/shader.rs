@@ -104,6 +104,10 @@ impl Shader {
         gl::UniformMatrix4fv(id, 1, gl::FALSE, mat.as_slice().as_ptr());
     }
 
+    pub unsafe fn set_uniform_int(&self, id: i32, value: i32) {
+        gl::Uniform1i(id, value);
+    }
+
     unsafe fn check_compile_errors(&self, shader: u32, shader_type: &str) {
         debug!("Checking {} shader for compile errors", shader_type);
         let mut success = i32::from(gl::FALSE);

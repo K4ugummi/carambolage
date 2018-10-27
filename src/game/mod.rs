@@ -84,6 +84,7 @@ impl Game {
         glfw.window_hint(glfw::WindowHint::ContextVersion(3, 3));
         glfw.window_hint(glfw::WindowHint::OpenGlProfile(glfw::OpenGlProfileHint::Core));
         glfw.window_hint(glfw::WindowHint::Samples(Some(4u32)));
+        glfw.window_hint(glfw::WindowHint::SRgbCapable(true));
         glfw.set_error_callback(Some(glfw::Callback {
             f: error_callback,
             data: Cell::new(0),

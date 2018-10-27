@@ -20,7 +20,11 @@ layout (location = 0) in vec2 vUV;
 layout (location = 1) in vec3 vFragPos;
 layout (location = 2) in vec3 vNormal;
 
+out vec4 FragColor;
+
 layout (location = 5) uniform sampler2D uTexture;
+
+#define GAMMA_CORRECTION 1.1
 
 void main() {
     vec3 normal = normalize(vNormal);
@@ -35,7 +39,8 @@ void main() {
     float diff = max(dot(vNormal, lightDir) * 0.9, 0.0);
     vec3 diffuse = diff * lightColor;
 
-    // SPecular lighting will come soon.
-
-    gl_FragColor = vec4((ambient + diffuse) * texture(uTexture, vUV).rgb, 1.0);
+    // Specular lighting will come soon, maybe :D
+    // I like the comic style
+    FragColor = vec4((ambient + diffuse) * texture(uTexture, vUV).rgb, 1.0);
+    FragColor.rgb = pow(FragColor.rgb, vec3(1.0/GAMMA_CORRECTION));
 }

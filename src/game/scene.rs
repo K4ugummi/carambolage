@@ -29,8 +29,8 @@ impl Scene {
     /// Make a new scene with a given number of cars.
     pub(super) fn new() -> Scene {
         let cars = vec![
-            Car::new("c02.obj", "car-blue.png", Vector3::new(-1.5, 0., 0.), 1.0),
-            Car::new("c03.obj", "car-red.png", Vector3::new(1.5, 0., 0.), 1.0),
+            Car::new("c03.obj", "car-blue.png", Vector3::new(-1.5, 0., 0.), 1.0),
+            Car::new("c04.obj", "car-red.png", Vector3::new(1.5, 0., 0.), 1.0),
         ];
 
         let level = Level::new("maps/race_track_1.obj");

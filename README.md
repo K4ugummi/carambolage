@@ -20,9 +20,13 @@ Sadly, you're always busy learning good patterns during your work, so you have t
 ---
 
 ## Controls
-Quit: `[Esc]` 
-Player 1 movement:  `[W]`,`[A]`,`[S]`,`[D]`  
-Player 2 movement: `[Up]`,`[Left]`,`[Down]`,`[Right]`
+Quit: `[Esc]`  
+Player 1  
+movement:  `[W]`,`[A]`,`[S]`,`[D]`  
+boost: `[Left Shift]`  
+Player 2  
+movement: `[Up]`,`[Left]`,`[Down]`,`[Right]`  
+boost: `[Right Shift]`
 
 ---
 

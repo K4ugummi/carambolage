@@ -184,37 +184,6 @@ impl Game {
             self.window.set_should_close(true)
         }
 
-        if self.window.get_key(Key::F1) == Action::Press {
-            self.screen.set_post_processing(1);
-        }
-        if self.window.get_key(Key::F2) == Action::Press {
-            self.screen.set_post_processing(2);
-        }
-        if self.window.get_key(Key::F3) == Action::Press {
-            self.screen.set_post_processing(3);
-        }
-        if self.window.get_key(Key::F4) == Action::Press {
-            self.screen.set_post_processing(4);
-        }
-        if self.window.get_key(Key::F5) == Action::Press {
-            self.screen.set_post_processing(5);
-        }
-        if self.window.get_key(Key::F6) == Action::Press {
-            self.screen.set_post_processing(6);
-        }
-        if self.window.get_key(Key::F7) == Action::Press {
-            self.screen.set_post_processing(7);
-        }
-        if self.window.get_key(Key::F8) == Action::Press {
-            self.screen.set_post_processing(8);
-        }
-        if self.window.get_key(Key::F9) == Action::Press {
-            self.screen.set_post_processing(9);
-        }
-        if self.window.get_key(Key::F10) == Action::Press {
-            self.screen.set_post_processing(10);
-        }
-
         for ctrl in &mut self.controller.iter_mut() {
             ctrl.process_input(&self.window, dt);
         }

@@ -24,8 +24,6 @@ pub(crate) struct Screen {
 
     frame_buffer: FrameBuffer,
     post_proc_shader: Shader,
-
-    post_proc_effect: i32,
 }
 
 impl Screen {
@@ -64,7 +62,6 @@ impl Screen {
             vbo,
             frame_buffer,
             post_proc_shader,
-            post_proc_effect: 7,
         }
     }
 
@@ -92,16 +89,11 @@ impl Screen {
             gl::Clear(gl::COLOR_BUFFER_BIT);
 
             self.post_proc_shader.bind();
-            self.post_proc_shader.set_uniform_int(0, self.post_proc_effect);
             gl::BindVertexArray(self.vao);
             gl::ActiveTexture(5);
             gl::BindTexture(gl::TEXTURE_2D, self.frame_buffer.color_buffer);
             gl::DrawArrays(gl::TRIANGLES, 0, 6);
         }
-    }
-
-    pub(crate) fn set_post_processing(&mut self, value: i32) {
-        self.post_proc_effect = value;
     }
 }
 

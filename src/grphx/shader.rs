@@ -104,7 +104,7 @@ impl Shader {
         gl::UniformMatrix4fv(id, 1, gl::FALSE, mat.as_slice().as_ptr());
     }
 
-    pub unsafe fn set_uniform_int(&self, id: i32, value: i32) {
+    pub unsafe fn _set_uniform_int(&self, id: i32, value: i32) {
         gl::Uniform1i(id, value);
     }
 

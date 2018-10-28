@@ -20,9 +20,7 @@ Sadly, you're always busy learning good patterns during your work, so you have t
 ---
 
 ## Controls
-General:  
-`[Esc]` Quit  
-`[F1]`-`[F7]` Posprocessing effect  
+Quit: `[Esc]` 
 Player 1 movement:  `[W]`,`[A]`,`[S]`,`[D]`  
 Player 2 movement: `[Up]`,`[Left]`,`[Down]`,`[Right]`
 

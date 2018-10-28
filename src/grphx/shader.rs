@@ -91,20 +91,24 @@ impl Shader {
         gl::UseProgram(self.id);
     }
 
-    pub unsafe fn bind_texture(&self, id: u32, tex: &Texture) {
+    pub unsafe fn get_uniform_location(&self, name: &str) -> i32 {
+        gl::GetUniformLocation(self.id, CString::new(name).unwrap().as_ptr())
+    }
+
+    pub unsafe fn bind_texture(id: u32, tex: &Texture) {
         gl::ActiveTexture(gl::TEXTURE0 + id);
         gl::BindTexture(gl::TEXTURE_2D, tex.id);
     }
 
-    pub unsafe fn _set_uniform_vec3(&self, id: i32, value: &Vector3<f32>) {
+    pub unsafe fn _set_uniform_vec3(id: i32, value: &Vector3<f32>) {
         gl::Uniform3fv(id, 1, value.as_slice().as_ptr());
     }
 
-    pub unsafe fn set_uniform_mat(&self, id: i32, mat: &Matrix4<f32>) {
+    pub unsafe fn set_uniform_mat(id: i32, mat: &Matrix4<f32>) {
         gl::UniformMatrix4fv(id, 1, gl::FALSE, mat.as_slice().as_ptr());
     }
 
-    pub unsafe fn _set_uniform_int(&self, id: i32, value: i32) {
+    pub unsafe fn _set_uniform_int(id: i32, value: i32) {
         gl::Uniform1i(id, value);
     }
 

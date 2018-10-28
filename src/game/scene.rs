@@ -30,11 +30,11 @@ impl Scene {
     /// Make a new scene with a given number of cars.
     pub(super) fn new() -> Scene {
         let cars = vec![
-            Car::new("c03.obj", "car-blue.png", Vector3::new(-1.5, 0., 0.), 1.0),
-            Car::new("c04.obj", "car-red.png", Vector3::new(1.5, 0., 0.), 1.0),
+            Car::new("c03.obj", "car-blue.png", Vector3::new(-1.3, 0., 0.2), 1.0),
+            Car::new("c04.obj", "car-red.png", Vector3::new(1.3, 0., 0.2), 1.0),
         ];
 
-        let level = Level::new("maps/race_track_1.obj");
+        let level = Level::new("maps/race_track_1");
         let camera = Camera::new();
 
         Scene { cars, level, camera }
@@ -57,6 +57,9 @@ impl Scene {
             car_pos.push(Isometry3::new(car.position, car.rotation));
         }
 
+        // The whole collision detection is stupid right now. I have learned a lot during my work on this game and
+        // the way it is will do the job. I just want to finish the game so it feels "round" and continue with another
+        // project. Sorry ¯\_(ツ)_/¯
         let prediction = 0.0;
         // Cars with cars
         for i in 0..car_pos.len() {
@@ -72,6 +75,41 @@ impl Scene {
                     self.cars[j].position += dir * 0.5;
                 }
             }
+        }
+
+        // Cars with level
+        for i in 0..car_pos.len() {
+            self.cars[i].position[2] -= 9.81 * dt;
+
+            let penetrate_ground = query::contact(
+                &car_pos[i],
+                &self.cars[i].cuboid,
+                &self.level.ground.0,
+                &self.level.ground.1,
+                prediction,
+            );
+            if penetrate_ground.is_some() {
+                let pen = penetrate_ground.unwrap();
+                let w1 = pen.world1;
+                let w2 = pen.world2;
+                let dir = w1 - w2;
+                self.cars[i].position -= dir;
+            };
+
+            let penetrate_border = query::contact(
+                &car_pos[i],
+                &self.cars[i].cuboid,
+                &self.level.track.0,
+                &self.level.track.1,
+                prediction,
+            );
+            if penetrate_border.is_some() {
+                let pen = penetrate_border.unwrap();
+                let w1 = pen.world1;
+                let w2 = pen.world2;
+                let dir = w1 - w2;
+                self.cars[i].position -= dir;
+            };
         }
 
         // Just camera stuff

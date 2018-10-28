@@ -16,20 +16,68 @@
 //use super::tile::{Tile, TileType};
 use grphx::Model;
 
-use nalgebra::Matrix4;
+use nalgebra::{zero, Isometry3, Matrix4, Point3, Vector3};
+use ncollide3d::shape::{Cuboid, TriMesh};
+
+use std::path::Path;
 
 pub struct Level {
     model: Model,
     matrix: Matrix4<f32>,
+    pub(super) ground: (Isometry3<f32>, Cuboid<f32>), // box fro ground
+    pub(super) track: (Isometry3<f32>, TriMesh<f32>), // Very simple mesh around track
 }
 
 impl Level {
     pub fn new(file: &str) -> Level {
         debug!("New from {}", file);
         let model = Model::new(file, "racetrack.png");
+
+        let path_str = format!("res/models/{}.col", file);
+        let path = Path::new(&path_str);
+        let obj = tobj::load_obj(path);
+
+        let (models, materials) = obj.unwrap();
+        debug!("{} meshes and {} materials", models.len(), materials.len());
+
+        let mesh = &models[0].mesh;
+        let num_vertices = mesh.positions.len() / 3;
+        let num_indices = mesh.indices.len() / 3;
+
+        let mut vertices = Vec::with_capacity(num_vertices);
+        let mut indices = Vec::with_capacity(mesh.indices.len());
+        for i in 0..num_indices {
+            indices.push(Point3::new(
+                mesh.indices[i * 3] as usize,
+                mesh.indices[i * 3 + 1] as usize,
+                mesh.indices[i * 3 + 2] as usize,
+            ));
+        }
+
+        let p = &mesh.positions;
+        for i in 0..num_vertices {
+            vertices.push(Point3::new(p[i * 3], p[i * 3 + 1], p[i * 3 + 2]));
+        }
+
         let matrix = Matrix4::identity();
 
-        Level { model, matrix }
+        let (min, max) = model.get_min_max();
+        let delta = max - min;
+        let delta_2 = delta * 0.5;
+
+        let world_box = Cuboid::new(delta * 0.5);
+        let track_border = TriMesh::new(vertices, indices, None);
+        // Ground
+        let ground = (Isometry3::new(Vector3::new(0., 0., -delta_2[2]), zero()), world_box);
+        // Track
+        let track = (Isometry3::new(zero(), zero()), track_border);
+
+        Level {
+            model,
+            matrix,
+            ground,
+            track,
+        }
     }
 
     pub fn draw(&self, view: &Matrix4<f32>, projection: &Matrix4<f32>) {

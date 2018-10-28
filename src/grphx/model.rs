@@ -14,7 +14,7 @@
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
 use grphx::{Mesh, Shader, Texture, Vertex};
 
-use nalgebra::Matrix4;
+use nalgebra::{inf, sup, zero, Matrix4, Vector3};
 use tobj;
 
 use std::path::Path;
@@ -75,5 +75,19 @@ impl Model {
                 mesh.draw();
             }
         }
+    }
+
+    pub fn get_min_max(&self) -> (Vector3<f32>, Vector3<f32>) {
+        let mut min = zero();
+        let mut max = zero();
+
+        for mesh in &self.meshes {
+            for vert in &mesh.vertices {
+                min = inf(&min, &vert.position.into());
+                max = sup(&max, &vert.position.into());
+            }
+        }
+        debug!("(min, max) = ({}, {})", min, max);
+        (min, max)
     }
 }

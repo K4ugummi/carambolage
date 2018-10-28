@@ -19,6 +19,7 @@ extern crate image;
 #[macro_use]
 extern crate log;
 extern crate nalgebra;
+extern crate ncollide3d;
 extern crate rand;
 extern crate rodio;
 extern crate simplelog;

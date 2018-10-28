@@ -14,6 +14,7 @@
 // along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 use super::controller::Controller;
 use grphx::Model;
+use ncollide3d::shape::Cuboid;
 
 use nalgebra::{zero, Matrix4, Vector3};
 
@@ -25,21 +26,25 @@ pub(crate) struct Car {
     _mass: f32,
 
     pub(crate) model: Model,
+    pub(crate) cuboid: Cuboid<f32>,
 }
 
 impl Car {
     pub fn new(model: &str, color_palette: &str, position: Vector3<f32>, mass: f32) -> Car {
-        debug!(
-            "New model: {}, color_palette: {}, position: {:?}, mass: {}",
-            model, color_palette, position, mass
-        );
+        debug!("New({}, {}, {:?}, {})", model, color_palette, position, mass);
+
+        let model = Model::new(model, color_palette);
+        let (min, max) = model.get_min_max();
+        let cuboid = Cuboid::new((max - min) * 0.25);
+
         Car {
             position,
             rotation: zero(),
             _velocity: zero(),
             _force: zero(),
             _mass: mass,
-            model: Model::new(model, color_palette),
+            model,
+            cuboid,
         }
     }
 

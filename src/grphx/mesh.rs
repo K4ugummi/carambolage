@@ -44,8 +44,8 @@ impl Default for Vertex {
 }
 
 pub struct Mesh {
-    pub(super) vertices: Vec<Vertex>,
-    pub(super) indices: Vec<u32>,
+    pub(crate) vertices: Vec<Vertex>,
+    pub(crate) indices: Vec<u32>,
 
     pub(super) vao: u32,
     pub(super) vbo: u32,

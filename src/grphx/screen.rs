@@ -75,7 +75,7 @@ impl Screen {
         unsafe {
             self.frame_buffer.bind();
             gl::Enable(gl::DEPTH_TEST);
-            gl::ClearColor(0.2, 0.2, 0.2, 1.0);
+            gl::ClearColor(0.5607, 0.7254, 0.298, 1.0);
             gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
         }
     }

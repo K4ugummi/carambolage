@@ -151,7 +151,7 @@ impl Game {
             self.scene.update(dt, &self.controller);
 
             self.screen.first_step();
-            let projection = Perspective3::new(self.settings.width as f32 / self.settings.height as f32, 70., 0.1, 100.).unwrap();
+            let projection = Perspective3::new(self.settings.width as f32 / self.settings.height as f32, 70., 1.0, 200.).unwrap();
             self.scene.draw(&projection);
 
             self.screen.second_step();

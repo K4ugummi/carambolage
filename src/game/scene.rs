@@ -125,8 +125,8 @@ impl Scene {
                 max = sup(&max, &car.position);
             }
             lerp_pos /= self.cars.len() as f32;
-            let camera_distance = (max - min).norm();
-            self.camera.move_to_height(camera_distance);
+            let camera_distance = (max - min).norm() * 1.20;
+            self.camera.move_to_height(camera_distance + 10.0);
             lerp_pos
         };
         self.camera.move_to_focus(camera_focus);

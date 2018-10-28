@@ -16,7 +16,7 @@ use super::controller::Controller;
 use grphx::Model;
 use ncollide3d::shape::Cuboid;
 
-use nalgebra::{zero, Matrix4, Vector3};
+use nalgebra::{clamp, zero, Matrix4, Vector3};
 
 pub(crate) struct Car {
     pub(crate) position: Vector3<f32>, // position in world space
@@ -24,6 +24,7 @@ pub(crate) struct Car {
     _velocity: Vector3<f32>,
     _force: Vector3<f32>,
     _mass: f32,
+    boost: f32,
 
     pub(crate) model: Model,
     pub(crate) cuboid: Cuboid<f32>,
@@ -43,6 +44,7 @@ impl Car {
             _velocity: zero(),
             _force: zero(),
             _mass: mass,
+            boost: 100.0,
             model,
             cuboid,
         }
@@ -73,7 +75,19 @@ impl Car {
             // Set homogeneous coordinate to 0 or unwrap() will panic.
             forward[3] = 0.;
 
-            self.position += Vector3::from_homogeneous(forward).unwrap() * accel * dt * 10.;
+            let booster = if ct.get_boost() {
+                self.boost = clamp(self.boost - dt * 30.0, 0.0, 100.0);
+                if self.boost > 0.1 {
+                    14.0
+                } else {
+                    10.0
+                }
+            } else {
+                self.boost = clamp(self.boost + dt * 14.0, 0.0, 100.0);
+                10.0
+            };
+
+            self.position += Vector3::from_homogeneous(forward).unwrap() * accel * booster * dt;
         }
     }
 

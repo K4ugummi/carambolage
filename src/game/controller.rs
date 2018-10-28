@@ -36,6 +36,9 @@ struct ControllerInternal {
     is_left: bool,
     right: Key,
     is_right: bool,
+
+    boost: Key,
+    is_boost: bool,
 }
 
 impl ControllerInternal {
@@ -47,6 +50,7 @@ impl ControllerInternal {
                 backward: Key::Down,
                 left: Key::Left,
                 right: Key::Right,
+                boost: Key::RightShift,
                 ..Default::default()
             },
         }
@@ -64,6 +68,8 @@ impl Default for ControllerInternal {
             is_left: false,
             right: Key::D,
             is_right: false,
+            boost: Key::LeftShift,
+            is_boost: false,
         }
     }
 }
@@ -78,6 +84,7 @@ pub struct Controller {
 
     // Buttons and input axis that can be used in the game.
     axis: Vector2<f32>,
+    boost: bool,
 }
 
 // DO NOT CHANGE WASD to other keys please. Setting your controls to e.g.
@@ -90,6 +97,7 @@ impl Controller {
             ci: ControllerInternal::new(&controller_layout),
             axis_goal: zero(),
             axis: zero(),
+            boost: false,
         }
     }
 
@@ -97,34 +105,37 @@ impl Controller {
         if window.get_key(self.ci.forward) == Action::Press && !self.ci.is_forward {
             self.set_y_axis(1.);
             self.ci.is_forward = true;
-        }
-        if window.get_key(self.ci.forward) == Action::Release && self.ci.is_forward {
+        } else if window.get_key(self.ci.forward) == Action::Release && self.ci.is_forward {
             self.set_y_axis(0.);
             self.ci.is_forward = false;
         }
         if window.get_key(self.ci.backward) == Action::Press && !self.ci.is_backward {
             self.set_y_axis(-1.);
             self.ci.is_backward = true;
-        }
-        if window.get_key(self.ci.backward) == Action::Release && self.ci.is_backward {
+        } else if window.get_key(self.ci.backward) == Action::Release && self.ci.is_backward {
             self.set_y_axis(0.);
             self.ci.is_backward = false;
         }
         if window.get_key(self.ci.left) == Action::Press && !self.ci.is_left {
             self.set_x_axis(-1.);
             self.ci.is_left = true;
-        }
-        if window.get_key(self.ci.left) == Action::Release && self.ci.is_left {
+        } else if window.get_key(self.ci.left) == Action::Release && self.ci.is_left {
             self.set_x_axis(0.);
             self.ci.is_left = false;
         }
         if window.get_key(self.ci.right) == Action::Press && !self.ci.is_right {
             self.set_x_axis(1.);
             self.ci.is_right = true;
-        }
-        if window.get_key(self.ci.right) == Action::Release && self.ci.is_right {
+        } else if window.get_key(self.ci.right) == Action::Release && self.ci.is_right {
             self.set_x_axis(0.);
             self.ci.is_right = false;
+        }
+        if window.get_key(self.ci.boost) == Action::Press && !self.ci.is_boost {
+            self.boost = true;
+            self.ci.is_boost = true;
+        } else if window.get_key(self.ci.boost) == Action::Release && self.ci.is_boost {
+            self.boost = false;
+            self.ci.is_boost = false;
         }
 
         self.update(delta_time);
@@ -146,6 +157,10 @@ impl Controller {
 
     pub fn get_y_axis(&self) -> f32 {
         self.axis[1]
+    }
+
+    pub fn get_boost(&self) -> bool {
+        self.boost
     }
 
     fn set_x_axis(&mut self, value: f32) {

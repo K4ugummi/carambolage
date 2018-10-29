@@ -78,16 +78,10 @@ impl Scene {
         }
 
         // Cars with level
-        for i in 0..car_pos.len() {
+        for (i, cp) in car_pos.iter().enumerate() {
             self.cars[i].position[2] -= 9.81 * dt;
 
-            let penetrate_ground = query::contact(
-                &car_pos[i],
-                &self.cars[i].cuboid,
-                &self.level.ground.0,
-                &self.level.ground.1,
-                prediction,
-            );
+            let penetrate_ground = query::contact(&cp, &self.cars[i].cuboid, &self.level.ground.0, &self.level.ground.1, prediction);
             if penetrate_ground.is_some() {
                 let pen = penetrate_ground.unwrap();
                 let w1 = pen.world1;
@@ -96,13 +90,7 @@ impl Scene {
                 self.cars[i].position -= dir;
             };
 
-            let penetrate_border = query::contact(
-                &car_pos[i],
-                &self.cars[i].cuboid,
-                &self.level.track.0,
-                &self.level.track.1,
-                prediction,
-            );
+            let penetrate_border = query::contact(&cp, &self.cars[i].cuboid, &self.level.track.0, &self.level.track.1, prediction);
             if penetrate_border.is_some() {
                 let pen = penetrate_border.unwrap();
                 let w1 = pen.world1;

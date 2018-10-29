@@ -26,7 +26,7 @@ use util::FrameLimiter;
 
 use glfw::{Action, Context, Glfw, Key, Window};
 use nalgebra::Perspective3;
-use rodio::Source;
+use rodio::{Sink, Source};
 use time::Duration;
 
 use std::cell::Cell;
@@ -137,7 +137,9 @@ impl Game {
         let device = rodio::default_output_device().unwrap();
         let file = File::open("res/sounds/music/The_Rush.mp3").unwrap();
         let source = rodio::Decoder::new(BufReader::new(file)).unwrap().repeat_infinite();
-        rodio::play_raw(&device, source.convert_samples());
+        let mut sinc = Sink::new(&device);
+        sinc.set_volume(0.5);
+        sinc.append(source);
 
         let nano_sec = Duration::nanoseconds(1).to_std().unwrap();
 

@@ -91,8 +91,9 @@ impl Shader {
         gl::UseProgram(self.id);
     }
 
-    pub unsafe fn get_uniform_location(&self, name: &str) -> i32 {
-        gl::GetUniformLocation(self.id, CString::new(name).unwrap().as_ptr())
+    pub unsafe fn _get_uniform_location(&self, name: &str) -> i32 {
+        let cstr = CString::new(name).unwrap();
+        gl::GetUniformLocation(self.id, cstr.as_ptr())
     }
 
     pub unsafe fn bind_texture(id: u32, tex: &Texture) {

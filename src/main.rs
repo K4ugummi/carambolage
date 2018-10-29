@@ -118,6 +118,8 @@ mod tests {
             String::from("1080"),
             String::from("-l"),
             String::from("60"),
+            String::from("-m"),
+            String::from("1"),
         ];
         let opts = get_options();
         let matches = match opts.parse(&args[1..]) {
@@ -131,5 +133,6 @@ mod tests {
         assert_eq!(settings.width, 1920);
         assert_eq!(settings.height, 1080);
         assert_eq!(settings.fps, 60);
+        assert_eq!(settings.map, 1);
     }
 }

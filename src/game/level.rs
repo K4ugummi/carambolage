@@ -24,8 +24,8 @@ use std::path::Path;
 pub struct Level {
     model: Model,
     matrix: Matrix4<f32>,
-    pub(super) ground: (Isometry3<f32>, Cuboid<f32>), // box fro ground
-    pub(super) track: (Isometry3<f32>, TriMesh<f32>), // Very simple mesh around track
+    pub(super) ground: (Isometry3<f32>, Cuboid<f32>),  // box fro ground
+    pub(super) border: (Isometry3<f32>, TriMesh<f32>), // Very simple mesh around track
 }
 
 impl Level {
@@ -33,12 +33,26 @@ impl Level {
         debug!("New from {}", file);
         let model = Model::new(file, "racetrack.png");
 
+        // No scaliing, rotating, translating (Just for render)
+        let matrix = Matrix4::identity();
+
+        let (col_ground, col_border) = Self::load_collider(file);
+        let ground = (Isometry3::new(Vector3::new(0., 0., -100.0), zero()), col_ground);
+        let border = (Isometry3::new(zero(), zero()), col_border);
+
+        Level {
+            model,
+            matrix,
+            ground,
+            border,
+        }
+    }
+
+    fn load_collider(file: &str) -> (Cuboid<f32>, TriMesh<f32>) {
         let path_str = format!("res/models/{}.col", file);
         let path = Path::new(&path_str);
         let obj = tobj::load_obj(path);
-
-        let (models, materials) = obj.unwrap();
-        debug!("{} meshes and {} materials", models.len(), materials.len());
+        let (models, _) = obj.unwrap();
 
         let mesh = &models[0].mesh;
         let num_vertices = mesh.positions.len() / 3;
@@ -59,25 +73,10 @@ impl Level {
             vertices.push(Point3::new(p[i * 3], p[i * 3 + 1], p[i * 3 + 2]));
         }
 
-        let matrix = Matrix4::identity();
+        let col_ground = Cuboid::new(Vector3::new(1_000.0, 1_000.0, 100.0));
+        let col_border = TriMesh::new(vertices, indices, None);
 
-        let (min, max) = model.get_min_max();
-        let delta = max - min;
-        let delta_2 = delta * 0.5;
-
-        let world_box = Cuboid::new(delta * 0.5);
-        let track_border = TriMesh::new(vertices, indices, None);
-        // Ground
-        let ground = (Isometry3::new(Vector3::new(0., 0., -delta_2[2]), zero()), world_box);
-        // Track
-        let track = (Isometry3::new(zero(), zero()), track_border);
-
-        Level {
-            model,
-            matrix,
-            ground,
-            track,
-        }
+        (col_ground, col_border)
     }
 
     pub fn draw(&self, view: &Matrix4<f32>, projection: &Matrix4<f32>) {

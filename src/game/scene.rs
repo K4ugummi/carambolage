@@ -29,10 +29,24 @@ pub(super) struct Scene {
 impl Scene {
     /// Make a new scene with a given number of cars.
     pub(super) fn new(map_id: u32) -> Scene {
-        let cars = vec![
-            Car::new("c03.obj", "car-blue.png", Vector3::new(-1.3, 0., 0.2), 1.0),
-            Car::new("c04.obj", "car-red.png", Vector3::new(1.3, 0., 0.2), 1.0),
-        ];
+        let mut cars = Vec::new();
+        for i in 0..2 {
+            if i % 2 == 0 {
+                cars.push(Car::new(
+                    &Car::model_from_id(3),
+                    &Car::color_from_id(1),
+                    Vector3::new(-1.15, -1.7 * i as f32, 0.5),
+                    1.0,
+                ));
+            } else {
+                cars.push(Car::new(
+                    &Car::model_from_id(4),
+                    &Car::color_from_id(6),
+                    Vector3::new(1.15, -1.7 * i as f32, 0.5),
+                    1.0,
+                ));
+            }
+        }
 
         let level = match map_id {
             1 => Level::new("maps/race_track_1"),
@@ -55,6 +69,11 @@ impl Scene {
             }
         }
 
+        self.update_collisions(dt);
+        self.update_scene_camera(dt);
+    }
+
+    fn update_collisions(&mut self, dt: f32) {
         // Update physics/position
         let mut car_pos = Vec::with_capacity(self.cars.len());
         for car in &self.cars {
@@ -83,7 +102,7 @@ impl Scene {
 
         // Cars with level
         for (i, cp) in car_pos.iter().enumerate() {
-            self.cars[i].position[2] -= 9.81 * dt;
+            self.cars[i].position[2] -= 0.81 * dt;
 
             let penetrate_ground = query::contact(&cp, &self.cars[i].cuboid, &self.level.ground.0, &self.level.ground.1, prediction);
             if penetrate_ground.is_some() {
@@ -94,7 +113,7 @@ impl Scene {
                 self.cars[i].position -= dir;
             };
 
-            let penetrate_border = query::contact(&cp, &self.cars[i].cuboid, &self.level.track.0, &self.level.track.1, prediction);
+            let penetrate_border = query::contact(&cp, &self.cars[i].cuboid, &self.level.border.0, &self.level.border.1, prediction);
             if penetrate_border.is_some() {
                 let pen = penetrate_border.unwrap();
                 let w1 = pen.world1;
@@ -103,8 +122,9 @@ impl Scene {
                 self.cars[i].position -= dir;
             };
         }
+    }
 
-        // Just camera stuff
+    fn update_scene_camera(&mut self, dt: f32) {
         let camera_focus = if self.cars.is_empty() {
             Vector3::new(0., 0., 0.)
         } else {
@@ -117,8 +137,8 @@ impl Scene {
                 max = sup(&max, &car.position);
             }
             lerp_pos /= self.cars.len() as f32;
-            let camera_distance = (max - min).norm() * 1.20;
-            self.camera.move_to_height(camera_distance + 10.0);
+            let camera_distance = (max - min).norm() * 1.20 + 10.0;
+            self.camera.move_to_height(camera_distance);
             lerp_pos
         };
         self.camera.move_to_focus(camera_focus);

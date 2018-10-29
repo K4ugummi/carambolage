@@ -98,4 +98,32 @@ impl Car {
         let model = translation * rotation * Matrix4::new_scaling(0.5f32);
         self.model.draw(&model, view, projection);
     }
+
+    /// 1:kart 2:parsche 3:farara 4:lamba 5:gtc1 6:gtc2 7:formula
+    pub fn model_from_id(id: u32) -> String {
+        match id {
+            1 => String::from("c01.obj"),
+            2 => String::from("c02.obj"),
+            3 => String::from("c03.obj"),
+            4 => String::from("c04.obj"),
+            5 => String::from("c05.obj"),
+            6 => String::from("c06.obj"),
+            7 => String::from("c07.obj"),
+            _ => String::from("c01.obj"),
+        }
+    }
+
+    /// 1:blue 2:green 3:lime 4:orange 5:purple 6:red 7:yellow
+    pub fn color_from_id(id: u32) -> String {
+        match id {
+            1 => String::from("car-blue.png"),
+            2 => String::from("car-green.png"),
+            3 => String::from("car-lime.png"),
+            4 => String::from("car-orange.png"),
+            5 => String::from("car-purple.png"),
+            6 => String::from("car-red.png"),
+            7 => String::from("car-yellow.png"),
+            _ => String::from("car-blue.png"),
+        }
+    }
 }

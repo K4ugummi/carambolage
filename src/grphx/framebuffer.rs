@@ -49,7 +49,7 @@ impl FrameBuffer {
             gl::TexImage2D(
                 gl::TEXTURE_2D,
                 0,
-                gl::RGB as i32,
+                gl::SRGB as i32,
                 self.width,
                 self.height,
                 0,
@@ -92,7 +92,7 @@ impl FrameBuffer {
         gl::TexImage2D(
             gl::TEXTURE_2D,
             0,
-            gl::RGB as i32,
+            gl::SRGB as i32,
             self.width,
             self.height,
             0,

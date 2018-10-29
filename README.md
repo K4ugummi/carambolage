@@ -41,10 +41,9 @@ Show info: ~~`[F1]`~~
 ---
 
 ## Download
-~~You can download precompiled binaries for your system below:~~  
-Sorry, we are just getting started on developing this game, so there are no precompiled binaries yet. Nevertheless if you want to run this game, feel free to clone or download this project and compile it yourself. 
-- ~~Windows~~
-- ~~Linux~~
+You can download precompiled binaries for your system below:
+- [Windows v0.1](https://carambolage.k4ugummi.de/wp-content/uploads/2018/10/carambolage-win-v0_1.zip)
+- [Linux v0.1](https://carambolage.k4ugummi.de/wp-content/uploads/2018/10/carambolage-linux-v0_1.tar.gz)
 - ~~MacOS~~
 
 ## Build

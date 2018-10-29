@@ -78,6 +78,7 @@ fn get_options() -> Options {
     opts.optflag("f", "fullscreen", "enable fullscreen mode");
     opts.optopt("w", "width", "set window width", "WIDTH");
     opts.optopt("h", "height", "set window height", "HEIGHT");
+    opts.optopt("m", "map", "set the startup map by id", "MAP");
     opts.optopt("l", "limit-fps", "set max game fps [0 = unlimited]", "FPS");
     opts
 }
@@ -92,6 +93,9 @@ fn match_options(matches: &Matches) -> GameSettings {
     }
     if matches.opt_str("h").is_some() {
         game_settings.height = matches.opt_str("h").unwrap().parse().unwrap();
+    }
+    if matches.opt_str("m").is_some() {
+        game_settings.map = matches.opt_str("m").unwrap().parse().unwrap();
     }
     if matches.opt_str("l").is_some() {
         game_settings.fps = matches.opt_str("l").unwrap().parse().unwrap();

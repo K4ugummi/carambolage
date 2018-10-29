@@ -28,13 +28,17 @@ pub(super) struct Scene {
 
 impl Scene {
     /// Make a new scene with a given number of cars.
-    pub(super) fn new() -> Scene {
+    pub(super) fn new(map_id: u32) -> Scene {
         let cars = vec![
             Car::new("c03.obj", "car-blue.png", Vector3::new(-1.3, 0., 0.2), 1.0),
             Car::new("c04.obj", "car-red.png", Vector3::new(1.3, 0., 0.2), 1.0),
         ];
 
-        let level = Level::new("maps/race_track_1");
+        let level = match map_id {
+            1 => Level::new("maps/race_track_1"),
+            2 => Level::new("maps/race_track_2"),
+            _ => Level::new("maps/race_track_1"),
+        };
         let camera = Camera::new();
 
         Scene { cars, level, camera }

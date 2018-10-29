@@ -56,6 +56,7 @@ pub struct GameSettings {
     pub is_fullscreen: bool,
     pub width: u32,
     pub height: u32,
+    pub map: u32,
     pub fps: u32,
 }
 
@@ -65,6 +66,7 @@ impl Default for GameSettings {
             is_fullscreen: false,
             width: 640,
             height: 480,
+            map: 1,
             fps: 60,
         }
     }
@@ -117,7 +119,7 @@ impl Game {
             Controller::new(true, &ControllerLayout::WASD),
             Controller::new(true, &ControllerLayout::Arrows),
         ];
-        let scene = Scene::new();
+        let scene = Scene::new(settings.map);
 
         Game {
             glfw,

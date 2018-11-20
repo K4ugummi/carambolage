@@ -16,12 +16,12 @@ extern crate getopts;
 extern crate gl;
 extern crate glfw;
 extern crate image;
-#[macro_use]
 extern crate log;
 extern crate nalgebra;
 extern crate ncollide3d;
-extern crate rand;
 extern crate rodio;
+extern crate serde;
+extern crate serde_derive;
 extern crate simplelog;
 extern crate time;
 extern crate tobj;
@@ -35,6 +35,7 @@ mod util;
 
 use game::{Game, GameSettings};
 use getopts::{Matches, Options};
+use log::info;
 use std::env;
 use std::fs::File;
 

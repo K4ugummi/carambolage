@@ -12,13 +12,13 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
-#![macro_use]
+use gl;
+use log::{debug, info};
+use serde_derive::{Deserialize, Serialize};
 
 use std::mem::size_of;
 use std::os::raw::c_void;
 use std::ptr;
-
-use gl;
 
 macro_rules! offset_of {
     ($ty:ty, $field:ident) => {
@@ -26,6 +26,10 @@ macro_rules! offset_of {
     };
 }
 
+/// A single point in 3D.
+///
+/// Currently it is used to represent a Vertex of a triangulated `Mesh`.
+#[derive(Debug, Copy, Clone, Serialize, Deserialize)]
 #[repr(C)]
 pub struct Vertex {
     pub position: [f32; 3],
@@ -33,6 +37,7 @@ pub struct Vertex {
     pub uv: [f32; 2],
 }
 
+/// Creates a `Vertex`with all values set to `0.0`.
 impl Default for Vertex {
     fn default() -> Vertex {
         Vertex {
@@ -43,6 +48,12 @@ impl Default for Vertex {
     }
 }
 
+/// Part of a 3D Model.
+///
+/// It contains a `Vec<Vertex>` each representing a Point of the Model.
+/// `Vec<u32>` is used to traw indexed triangles so three indices link to
+/// the corresponding `Vertex` in `vertices`.
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Mesh {
     pub(crate) vertices: Vec<Vertex>,
     pub(crate) indices: Vec<u32>,
@@ -53,12 +64,19 @@ pub struct Mesh {
 }
 
 impl Mesh {
+    /// Create a new Mesh by passing  vertices and indices as parameter.
     pub fn new(vertices: Vec<Vertex>, indices: Vec<u32>) -> Mesh {
+        info!(
+            "Mesh::new( vertices.len() == {}, indices.len() == {}",
+            vertices.len(),
+            indices.len()
+        );
         let mut mesh: Mesh = Default::default();
-        debug!("New {} vertices, {} indices", vertices.len(), indices.len());
+        mesh.vertices = vertices;
+        mesh.indices = indices;
 
         unsafe {
-            mesh.init(vertices, indices);
+            mesh.init();
         }
 
         mesh
@@ -71,18 +89,14 @@ impl Mesh {
         gl::BindVertexArray(0);
     }
 
-    unsafe fn init(&mut self, vertices: Vec<Vertex>, indices: Vec<u32>) {
-        self.vertices = vertices;
-        self.indices = indices;
-
+    /// Generate the vertex array object and all buffers.
+    unsafe fn init(&mut self) {
         // VAO
         gl::GenVertexArrays(1, &mut self.vao);
-        debug!("vao = {}", self.vao);
         gl::BindVertexArray(self.vao);
 
         // VBO
         gl::GenBuffers(1, &mut self.vbo);
-        debug!("vbo = {}", self.vbo);
         gl::BindBuffer(gl::ARRAY_BUFFER, self.vbo);
         let size = (self.vertices.len() * size_of::<Vertex>()) as isize;
         let data = &self.vertices[0] as *const Vertex as *const c_void;
@@ -90,7 +104,6 @@ impl Mesh {
 
         // IBO
         gl::GenBuffers(1, &mut self.ibo);
-        debug!("ibo = {}", self.ibo);
         gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, self.ibo);
         let size = (self.indices.len() * size_of::<u32>()) as isize;
         let data = &self.indices[0] as *const u32 as *const c_void;
@@ -105,6 +118,8 @@ impl Mesh {
         gl::VertexAttribPointer(2, 2, gl::FLOAT, gl::FALSE, size, offset_of!(Vertex, uv) as *const c_void);
 
         gl::BindVertexArray(0);
+
+        debug!("Mesh::init() : vao == {}, vbo == {}, ibo == {}", self.vao, self.vbo, self.ibo);
     }
 }
 

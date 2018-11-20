@@ -18,6 +18,7 @@ use std::mem::size_of;
 use std::os::raw::c_void;
 use std::ptr;
 
+/// Contains the `Framebuffer` and uses a shader for simple postprocessing.
 pub(crate) struct Screen {
     vao: u32,
     vbo: u32,
@@ -27,7 +28,9 @@ pub(crate) struct Screen {
 }
 
 impl Screen {
+    /// Create a new `Screen` with `width`and `height`in pixels.
     pub(crate) fn new(width: u32, height: u32) -> Screen {
+        // Vertex coordinates of two triangles from [-1.0, -1.0] to [1.0, 1.0].
         let vertices: [f32; 24] = [
             -1.0, 1.0, 0.0, 1.0, -1.0, -1.0, 0.0, 0.0, 1.0, -1.0, 1.0, 0.0, -1.0, 1.0, 0.0, 1.0, 1.0, -1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0,
         ];
@@ -65,12 +68,16 @@ impl Screen {
         }
     }
 
+    /// Takes the width and height in pixels for resizing the frame buffer.
     pub(crate) fn resize(&mut self, width: u32, height: u32) {
         unsafe {
             self.frame_buffer.resize(width as i32, height as i32);
         }
     }
 
+    /// First step to render our scene.
+    ///
+    /// All buffers are cleared and depth testing is enabled again.
     pub(crate) fn first_step(&self) {
         unsafe {
             self.frame_buffer.bind();
@@ -80,6 +87,10 @@ impl Screen {
         }
     }
 
+    /// Secent step to render our scene.
+    ///
+    /// The scene is rendered to our framebuffer which is drawn
+    /// to the default framebuffer.
     pub(crate) fn second_step(&self) {
         unsafe {
             self.frame_buffer.unbind();
@@ -97,6 +108,7 @@ impl Screen {
     }
 }
 
+/// Delete the generated vertex array and all buffers.
 impl Drop for Screen {
     fn drop(&mut self) {
         unsafe {

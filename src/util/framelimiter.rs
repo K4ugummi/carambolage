@@ -14,6 +14,23 @@
 // along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 use time::{Duration, PreciseTime};
 
+/// Limits the FPS to chosen value.
+///
+/// This is just a utility, that's why you have to limit the frame rate
+/// externally.
+/// # Example
+/// ```
+/// # fn main() {
+/// let frame_limiter = FrameLimiter::new(60);
+/// // GameLoop {
+///     // Warning: delta_time will be one millisecond on first start().
+///     let delta_time = frame_limiter.start();
+///     // Game stuff
+///     frame_limiter.stop();
+///     assert!(false);
+/// // }
+/// # }
+/// ```
 pub struct FrameLimiter {
     time_per_frame: Duration,
     delta_time: Duration,
@@ -22,11 +39,14 @@ pub struct FrameLimiter {
 }
 
 impl FrameLimiter {
+    /// Create a new FrameLimiter.
+    ///
+    /// Set the `frame_rate` as u32.
     pub fn new(frame_rate: u32) -> FrameLimiter {
         let time_per_frame = if frame_rate == 0 {
             Duration::nanoseconds(1)
         } else {
-            Duration::microseconds((1e6 / f64::from(frame_rate)) as i64)
+            Duration::nanoseconds((1e9 / f64::from(frame_rate)) as i64)
         };
         let time = PreciseTime::now();
 
@@ -38,6 +58,8 @@ impl FrameLimiter {
         }
     }
 
+    /// Make this the very first function call of your game loop, so all calculations add to delta time.
+    /// This function returns the delta time.
     pub fn start(&mut self) -> f32 {
         let now = PreciseTime::now();
         self.time = now;
@@ -45,9 +67,10 @@ impl FrameLimiter {
         self.dt
     }
 
+    /// Make this the very last function call of your game loop.
     pub fn stop(&mut self) -> bool {
         self.delta_time = self.time.to(PreciseTime::now());
-        self.dt = self.delta_time.num_microseconds().unwrap() as f32 * 1e-6f32;
+        self.dt = (self.delta_time.num_nanoseconds().unwrap() as f64 * 1e-9) as f32;
         self.delta_time < self.time_per_frame
     }
 }

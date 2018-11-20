@@ -16,6 +16,7 @@ use gl;
 use image;
 use image::DynamicImage::*;
 use image::GenericImageView;
+use log::{debug, error};
 
 use std::os::raw::c_void;
 use std::path::Path;

@@ -13,12 +13,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
 use grphx::{Mesh, Shader, Texture, Vertex};
-
+use log::{debug, info};
 use nalgebra::{inf, sup, zero, Matrix4, Vector3};
 use tobj;
 
 use std::path::Path;
 
+/// This is the visual representation of a gameobject.
+///
+/// Currently and can consist of seperate `Mesh`es which all are drawn with
+/// on `Texture` as a color lookup table and `Shader`program.
 pub struct Model {
     pub meshes: Vec<Mesh>,
     pub shader: Shader,
@@ -26,17 +30,21 @@ pub struct Model {
 }
 
 impl Model {
-    pub fn new(path: &str, palette: &str) -> Model {
-        let path_str = format!("{}{}", "res/models/", path);
-        debug!("New from {} with palette {}", path_str, palette);
+    /// Creates a new Model by passing a path to the obj file and a color palette name.
+    ///
+    /// The path to the obj file can be a relative or an absolut path as string.
+    /// The palette file should be placed into "res/models" relative to the project or
+    /// bin dir. The passed string for palette would look like this "car_green.png".
+    pub fn new(file: &str, palette: &str) -> Model {
+        info!("Model::new - file:{};palette:{}", file, palette);
 
-        let path = Path::new(&path_str);
-        let obj = tobj::load_obj(path);
+        let file_str = format!("{}{}", "res/models/", file);
+        let file = Path::new(&file_str);
+        let obj = tobj::load_obj(file);
 
-        let (models, materials) = obj.unwrap();
-        debug!("{} meshes and {} materials", models.len(), materials.len());
+        let (models, _materials) = obj.unwrap();
 
-        let mut meshes = Vec::new();
+        let mut meshes = Vec::with_capacity(models.len());
         for model in models {
             let mesh = &model.mesh;
             let num_vertices = mesh.positions.len() / 3;
@@ -64,19 +72,27 @@ impl Model {
         Model { meshes, shader, texture }
     }
 
+    /// This function draws the `Model`.
+    ///
+    /// Because the basic model has no translation, rotation or scale it needs the model-, view-,
+    /// and projection matrix as parameter.
     pub fn draw(&self, model: &Matrix4<f32>, view: &Matrix4<f32>, projection: &Matrix4<f32>) {
         unsafe {
             self.shader.bind();
             Shader::bind_texture(0, &self.texture);
-            Shader::set_uniform_mat(0, model);
-            Shader::set_uniform_mat(1, view);
-            Shader::set_uniform_mat(2, projection);
+            Shader::set_uniform_mat4(0, model);
+            Shader::set_uniform_mat4(1, view);
+            Shader::set_uniform_mat4(2, projection);
             for mesh in &self.meshes {
                 mesh.draw();
             }
         }
     }
 
+    /// Get the minum and maximum x-, y-, and z-coordinates of all vertices in our model.
+    ///
+    /// This could be used to generate a bounding box. This is not an efficient function
+    /// and does not manage later transformation of any mesh!
     pub fn get_min_max(&self) -> (Vector3<f32>, Vector3<f32>) {
         let mut min = zero();
         let mut max = zero();

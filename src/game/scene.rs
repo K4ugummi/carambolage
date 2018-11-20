@@ -12,13 +12,12 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
-use nalgebra::{inf, sup, Isometry3, Matrix4, Vector3};
-use ncollide3d::query;
-
-use super::camera::Camera;
 use super::car::Car;
 use super::controller::Controller;
 use super::level::Level;
+use grphx::Camera;
+use nalgebra::{inf, sup, Isometry3, Matrix4, Vector3};
+use ncollide3d::query;
 
 pub(super) struct Scene {
     pub cars: Vec<Car>,

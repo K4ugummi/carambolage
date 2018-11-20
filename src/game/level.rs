@@ -12,10 +12,8 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
-#![macro_use]
-//use super::tile::{Tile, TileType};
 use grphx::Model;
-
+use log::debug;
 use nalgebra::{zero, Isometry3, Matrix4, Point3, Vector3};
 use ncollide3d::shape::{Cuboid, TriMesh};
 

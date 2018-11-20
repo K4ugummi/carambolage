@@ -11,14 +11,20 @@ getopts = "~0.2"
 gl = "0.10.0"
 glfw = "~0.24.0"
 image = "~0.20.0"
-nalgebra = "~0.16.4"
 ncollide3d = "~0.17.0"
-rand = "~0.5"
 rodio = "~0.8.1"
 time = "~0.1.40"
 tobj = "~0.1.6"
 log = "~0.4.1"
 simplelog = "~0.5.3"
+serde = "^1.0"
+serde_derive = "^1.0"
+
+
+[dependencies.nalgebra]
+version = "^0.16"
+features = ["serde-serialize"]
+
 
 [profile.release]
 lto = true

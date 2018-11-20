@@ -14,6 +14,7 @@
 // along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 use super::controller::Controller;
 use grphx::Model;
+use log::debug;
 use ncollide3d::shape::Cuboid;
 
 use nalgebra::{clamp, zero, Matrix4, Vector3};

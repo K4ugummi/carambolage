@@ -12,10 +12,13 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
+use log::info;
 use nalgebra::{clamp, Matrix4, Point3, Vector3};
+use serde_derive::{Deserialize, Serialize};
 use util::Lerp;
 
-#[derive(Debug)]
+/// Camera to calculate the view matrix and follow ingame objects.
+#[derive(Debug, Copy, Clone, Serialize, Deserialize)]
 pub struct Camera {
     // Parameter to create view matrix.
     position: Vector3<f32>,
@@ -34,8 +37,9 @@ pub struct Camera {
 }
 
 impl Camera {
+    /// Create a new `Camera` with fixed values.
     pub fn new() -> Camera {
-        info!("Initializing camera");
+        info!("Camera::new()");
         let height = 50.;
         Camera {
             position: Vector3::new(0., 0., height),
@@ -51,31 +55,37 @@ impl Camera {
         }
     }
 
+    /// Update the cameras position relative to the delta time `dt`.
     pub fn update(&mut self, dt: f32) {
         self.focus = Vector3::lerp(&self.focus, &self.focus_goal, self.speed * dt);
         self.height = f32::lerp(&self.height, &self.height_goal, self.speed * dt);
         self.position = self.focus + Vector3::new(0., 0., self.height);
     }
 
+    /// Smooth transition to the focus goal postion.
     pub fn move_to_focus(&mut self, position: Vector3<f32>) {
         self.focus_goal = position;
     }
 
+    /// Set the focus goal and the camera instantaneously.
     pub fn _set_focus(&mut self, position: Vector3<f32>) {
         self.focus_goal = position;
         self.focus = position;
         self.position = position + Vector3::new(0., 0., self.height);
     }
 
+    /// Smooth transition to the camera height goal.
     pub fn move_to_height(&mut self, distance: f32) {
         self.height_goal = clamp(distance, self.height_min, self.height_max);
     }
 
+    /// Set the camera height instantaneously.
     pub fn _set_height(&mut self, distance: f32) {
         self.height_goal = clamp(distance, self.height_min, self.height_max);
         self.height = self.height_goal;
     }
 
+    /// Get the view matrix, calculated from camera values.
     pub fn get_viewmatrix(&self) -> Matrix4<f32> {
         Matrix4::look_at_rh(
             &Point3::from_coordinates(self.position + Vector3::new(0., -5., 0.)),

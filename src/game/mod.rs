@@ -12,7 +12,6 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
-mod camera;
 mod car;
 mod controller;
 mod level;
@@ -21,13 +20,13 @@ mod transform;
 
 use self::controller::{Controller, ControllerLayout};
 use self::scene::Scene;
-use grphx::Screen;
-use util::FrameLimiter;
-
 use glfw::{Action, Context, Glfw, Key, Window};
+use grphx::Screen;
+use log::{debug, info};
 use nalgebra::Perspective3;
 use rodio::{Sink, Source};
 use time::Duration;
+use util::FrameLimiter;
 
 use std::cell::Cell;
 use std::fs::File;

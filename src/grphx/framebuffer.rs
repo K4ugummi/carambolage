@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
 use gl;
+use log::{debug, error};
 
 use std::ptr;
 

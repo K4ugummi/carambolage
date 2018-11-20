@@ -12,19 +12,16 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
-mod camera;
-mod framebuffer;
-mod material;
-mod mesh;
-mod model;
-mod screen;
-mod shader;
-mod texture;
+use serde_derive::{Deserialize, Serialize};
 
-pub(crate) use self::camera::*;
-pub(crate) use self::framebuffer::*;
-pub(crate) use self::mesh::*;
-pub(crate) use self::model::*;
-pub(crate) use self::screen::*;
-pub(crate) use self::shader::*;
-pub(crate) use self::texture::*;
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[repr(C)]
+pub struct Material {
+    pub k_a: [f32; 3],
+    pub k_d: [f32; 3],
+    pub k_s: [f32; 3],
+    pub d: f32,
+    pub t_r: f32,
+
+    pub shininess: f32,
+}

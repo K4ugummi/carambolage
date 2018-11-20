@@ -15,7 +15,8 @@
 use grphx::Texture;
 
 use gl;
-use nalgebra::{Matrix4, Vector3};
+use log::{debug, error};
+use nalgebra::{Matrix2, Matrix3, Matrix4, Vector2, Vector3, Vector4};
 
 use std::ffi::CString;
 use std::fs::File;
@@ -23,6 +24,7 @@ use std::io::Read;
 use std::ptr;
 use std::str;
 
+/// Compiled GLSL Shader Program.
 pub struct Shader {
     pub id: u32,
 }
@@ -87,25 +89,50 @@ impl Shader {
         shader
     }
 
+    /// Bind the shader program.
     pub unsafe fn bind(&self) {
         gl::UseProgram(self.id);
     }
 
+    /// Return the location of the uniform by its name for the currently bound shader.
     pub unsafe fn _get_uniform_location(&self, name: &str) -> i32 {
         let cstr = CString::new(name).unwrap();
         gl::GetUniformLocation(self.id, cstr.as_ptr())
     }
 
+    /// Bind a `Texture` to the currently bound shader program at location `id`.
     pub unsafe fn bind_texture(id: u32, tex: &Texture) {
         gl::ActiveTexture(gl::TEXTURE0 + id);
         gl::BindTexture(gl::TEXTURE_2D, tex.id);
     }
 
+    /// Bind a `Vector2<f32>` to the currently boundshader program at location `id`.
+    pub unsafe fn _set_uniform_vec2(id: i32, value: &Vector2<f32>) {
+        gl::Uniform2fv(id, 1, value.as_slice().as_ptr());
+    }
+
+    /// Bind a `Vector3<f32>` to the currently boundshader program at location `id`.
     pub unsafe fn _set_uniform_vec3(id: i32, value: &Vector3<f32>) {
         gl::Uniform3fv(id, 1, value.as_slice().as_ptr());
     }
 
-    pub unsafe fn set_uniform_mat(id: i32, mat: &Matrix4<f32>) {
+    /// Bind a `Vector4<f32>` to the currently boundshader program at location `id`.
+    pub unsafe fn _set_uniform_vec4(id: i32, value: &Vector4<f32>) {
+        gl::Uniform4fv(id, 1, value.as_slice().as_ptr());
+    }
+
+    /// Bind a `Matrix2<f32>` to the currently boundshader program at location `id`.
+    pub unsafe fn _set_uniform_mat2(id: i32, mat: &Matrix2<f32>) {
+        gl::UniformMatrix2fv(id, 1, gl::FALSE, mat.as_slice().as_ptr());
+    }
+
+    /// Bind a `Matrix3<f32>` to the currently boundshader program at location `id`.
+    pub unsafe fn _set_uniform_mat3(id: i32, mat: &Matrix3<f32>) {
+        gl::UniformMatrix3fv(id, 1, gl::FALSE, mat.as_slice().as_ptr());
+    }
+
+    /// Bind a `Matrix4<f32>` to the currently bound shader program at location `id`.
+    pub unsafe fn set_uniform_mat4(id: i32, mat: &Matrix4<f32>) {
         gl::UniformMatrix4fv(id, 1, gl::FALSE, mat.as_slice().as_ptr());
     }
 
@@ -113,6 +140,7 @@ impl Shader {
         gl::Uniform1i(id, value);
     }
 
+    ///
     unsafe fn check_compile_errors(&self, shader: u32, shader_type: &str) {
         debug!("Checking {} shader for compile errors", shader_type);
         let mut success = i32::from(gl::FALSE);

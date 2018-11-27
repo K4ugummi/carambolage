@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["_IMPL_DESERIALIZE_FOR_Camera",""],["_IMPL_SERIALIZE_FOR_Camera",""]],"struct":[["Camera","Camera to calculate the view matrix and follow ingame objects."]]});

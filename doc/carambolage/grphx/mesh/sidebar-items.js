@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["_IMPL_DESERIALIZE_FOR_Mesh",""],["_IMPL_DESERIALIZE_FOR_Vertex",""],["_IMPL_SERIALIZE_FOR_Mesh",""],["_IMPL_SERIALIZE_FOR_Vertex",""]],"struct":[["Mesh","Part of a 3D Model."],["Vertex","A single point in 3D."]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Model","This is the visual representation of a gameobject."]]});

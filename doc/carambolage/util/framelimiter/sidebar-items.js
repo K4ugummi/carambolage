@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["FrameLimiter","Limits the FPS to chosen value."]]});

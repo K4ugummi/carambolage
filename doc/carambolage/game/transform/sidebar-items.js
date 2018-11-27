@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Transform","Position, rotation and scale of an object."]]});

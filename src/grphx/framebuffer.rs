@@ -74,14 +74,17 @@ impl FrameBuffer {
         }
     }
 
+    /// Bind the this `FrameBuffer` as thew current active one.
     pub unsafe fn bind(&self) {
         gl::BindFramebuffer(gl::FRAMEBUFFER, self.fbo);
     }
 
+    /// Unbind any bound `FrameBuffer` and bind the default one.
     pub unsafe fn unbind(&self) {
         gl::BindFramebuffer(gl::FRAMEBUFFER, 0);
     }
 
+    /// Resize the buffer with a `width` and `height` in pixels.
     pub unsafe fn resize(&mut self, width: i32, height: i32) {
         debug!("Framebuffer::resize({}, {})", width, height);
         self.width = width;

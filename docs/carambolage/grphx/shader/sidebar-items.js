@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Shader","Compiled GLSL Shader Program."]]});

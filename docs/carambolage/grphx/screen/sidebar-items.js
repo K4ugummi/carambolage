@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Screen","Contains the `Framebuffer` and uses a shader for simple postprocessing."]]});

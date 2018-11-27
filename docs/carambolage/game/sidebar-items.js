@@ -1,1 +1,0 @@
-initSidebarItems({"fn":[["error_callback",""]],"mod":[["car","GameObject, currently only a car."],["controller","User input handling."],["level","Environment of a `Scene`."],["scene","Actual runtime data."],["transform","3D translation, rotation and scale."]],"struct":[["Game",""],["GameSettings",""]],"type":[["Event",""]]});

@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Level","Environment of a `Scene`."]]});

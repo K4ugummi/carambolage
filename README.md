@@ -1,6 +1,6 @@
 # Carambolage
 ![logo small](logo-small.png "Carambolage") [![Build Status](https://api.travis-ci.com/K4ugummi/carambolage.svg?branch=master)](https://travis-ci.com/K4ugummi/carambolage) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Documentation](https://img.shields.io/badge/Documentation-v0.1.0-brightgreen.svg)](https://k4ugummi.github.io/carambolage/docs/carambolage/)
+[![Documentation](https://img.shields.io/badge/Documentation-v0.1.0-brightgreen.svg)](https://k4ugummi.github.io/docs/carambolage/)
 ---
 
 ## Contents

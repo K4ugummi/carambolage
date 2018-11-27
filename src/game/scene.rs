@@ -19,6 +19,9 @@ use grphx::Camera;
 use nalgebra::{inf, sup, Isometry3, Matrix4, Vector3};
 use ncollide3d::query;
 
+/// Main application Scene.
+///
+/// This scene consists of `GameObject`s, an `Environment` and a main `Camera`.
 pub(super) struct Scene {
     pub cars: Vec<Car>,
     pub level: Level,
@@ -26,7 +29,7 @@ pub(super) struct Scene {
 }
 
 impl Scene {
-    /// Make a new scene with a given number of cars.
+    /// Create a new scene. Choose a map via id.
     pub(super) fn new(map_id: u32) -> Scene {
         let mut cars = Vec::new();
         for i in 0..2 {
@@ -47,6 +50,7 @@ impl Scene {
             }
         }
 
+        // Choose the level according to an id.
         let level = match map_id {
             1 => Level::new("maps/race_track_1"),
             2 => Level::new("maps/race_track_2"),
@@ -57,7 +61,7 @@ impl Scene {
         Scene { cars, level, camera }
     }
 
-    /// Update the scene based on the internal state and a given time step.
+    /// Update the scene.
     pub(super) fn update(&mut self, dt: f32, controller: &[Controller]) {
         // User Input
         for (id, car) in &mut self.cars.iter_mut().enumerate() {
@@ -72,6 +76,7 @@ impl Scene {
         self.update_scene_camera(dt);
     }
 
+    /// Calculate and solve collisions.
     fn update_collisions(&mut self, dt: f32) {
         // Update physics/position
         let mut car_pos = Vec::with_capacity(self.cars.len());
@@ -123,6 +128,7 @@ impl Scene {
         }
     }
 
+    /// Calculate the position the camera should move to.
     fn update_scene_camera(&mut self, dt: f32) {
         let camera_focus = if self.cars.is_empty() {
             Vector3::new(0., 0., 0.)
@@ -144,6 +150,7 @@ impl Scene {
         self.camera.update(dt);
     }
 
+    /// Draw the entire `Scene` to the bound framebuffer.
     pub(super) fn draw(&mut self, projection: &Matrix4<f32>) {
         let view = self.camera.get_viewmatrix();
         // Draw map.

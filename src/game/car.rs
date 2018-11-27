@@ -19,6 +19,7 @@ use ncollide3d::shape::Cuboid;
 
 use nalgebra::{clamp, zero, Matrix4, Vector3};
 
+/// A GameObject controlled by a player.
 pub(crate) struct Car {
     pub(crate) position: Vector3<f32>, // position in world space
     pub(crate) rotation: Vector3<f32>, // rotation in radians per axis
@@ -32,6 +33,10 @@ pub(crate) struct Car {
 }
 
 impl Car {
+    /// Create a new `Car`.
+    ///
+    /// For `model` and `color_palette` see `model_from_id()` and `color_from_id()`.
+    /// `mass` is the mass of the car in [kg]
     pub fn new(model: &str, color_palette: &str, position: Vector3<f32>, mass: f32) -> Car {
         debug!("New({}, {}, {:?}, {})", model, color_palette, position, mass);
 
@@ -92,6 +97,7 @@ impl Car {
         }
     }
 
+    /// Draw the car to the currently bound framebuffer.
     pub(super) fn draw(&self, view: &Matrix4<f32>, projection: &Matrix4<f32>) {
         // x,y-axis rotation are fixed to 0. No rollovers!
         let rotation = Matrix4::from_euler_angles(0., 0., self.rotation[2]);
@@ -100,6 +106,8 @@ impl Car {
         self.model.draw(&model, view, projection);
     }
 
+    /// Return a `Car` file name from an id.
+    ///
     /// 1:kart 2:parsche 3:farara 4:lamba 5:gtc1 6:gtc2 7:formula
     pub fn model_from_id(id: u32) -> String {
         match id {
@@ -114,6 +122,8 @@ impl Car {
         }
     }
 
+    /// Return a `Car` color palette file name from an id.
+    ///
     /// 1:blue 2:green 3:lime 4:orange 5:purple 6:red 7:yellow
     pub fn color_from_id(id: u32) -> String {
         match id {

@@ -28,6 +28,15 @@
 <span id="28">28</span>
 <span id="29">29</span>
 <span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
 </pre><pre class="rust ">
 <span class="comment">// This file is part of Carambolage.</span>
 
@@ -43,13 +52,22 @@
 
 <span class="comment">// You should have received a copy of the GNU General Public License</span>
 <span class="comment">// along with Carambolage.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+
+<span class="doccomment">/// Camera module to calculate view matrix.</span>
 <span class="kw">mod</span> <span class="ident">camera</span>;
+<span class="doccomment">/// Frame buffer for background rendering.</span>
 <span class="kw">mod</span> <span class="ident">framebuffer</span>;
+<span class="doccomment">/// ~~Material~~ unused.</span>
 <span class="kw">mod</span> <span class="ident">material</span>;
+<span class="doccomment">/// 3D Mesh for Model</span>
 <span class="kw">mod</span> <span class="ident">mesh</span>;
+<span class="doccomment">/// 3D Model for rendering.</span>
 <span class="kw">mod</span> <span class="ident">model</span>;
+<span class="doccomment">/// Handle FrameBuffer blending.</span>
 <span class="kw">mod</span> <span class="ident">screen</span>;
+<span class="doccomment">/// OpenGL shader program and usability functions.</span>
 <span class="kw">mod</span> <span class="ident">shader</span>;
+<span class="doccomment">/// 2D Texture for Models</span>
 <span class="kw">mod</span> <span class="ident">texture</span>;
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use</span> <span class="self">self</span>::<span class="ident">camera</span>::<span class="kw-2">*</span>;

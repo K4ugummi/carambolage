@@ -19,6 +19,7 @@ use log::debug;
 use nalgebra::{zero, Vector2};
 use util::Lerp;
 
+/// Control with WASD or arrow keys.
 #[derive(Debug)]
 pub enum ControllerLayout {
     WASD,
@@ -73,22 +74,22 @@ impl Default for ControllerInternal {
     }
 }
 
-// Prototype controller emulation for keyboard users.
+/// Prototype controller emulation for keyboard users.
 #[derive(Copy, Clone, Debug)]
 pub struct Controller {
-    // Internal settings and flags.
+    /// Internal settings and flags.
     is_smooth: bool,
     ci: ControllerInternal,
     axis_goal: Vector2<f32>,
 
-    // Buttons and input axis that can be used in the game.
+    /// Buttons and input axis that can be used in the game.
     axis: Vector2<f32>,
     boost: bool,
 }
 
-// DO NOT CHANGE WASD to other keys please. Setting your controls to e.g.
-// arrow keys will come later. Thanks in advance, K4ugummi.
 impl Controller {
+    /// Create a new controller. You can activate smooth axis interpolation for up, left, down, right
+    /// by setting `smooth`to true.
     pub fn new(smooth: bool, controller_layout: &ControllerLayout) -> Controller {
         debug!("New smooth: {}, layout: {:?}", smooth, controller_layout);
         Controller {
@@ -100,7 +101,10 @@ impl Controller {
         }
     }
 
-    pub fn process_input(&mut self, window: &Window, delta_time: f32) {
+    /// Process input keys for this controller.
+    ///
+    /// The input is handled from glfw::Window due to event polling.
+    pub fn process_input(&mut self, window: &Window, dt: f32) {
         if window.get_key(self.ci.forward) == Action::Press && !self.ci.is_forward {
             self.set_y_axis(1.);
             self.ci.is_forward = true;
@@ -137,10 +141,6 @@ impl Controller {
             self.ci.is_boost = false;
         }
 
-        self.update(delta_time);
-    }
-
-    fn update(&mut self, dt: f32) {
         if self.is_smooth {
             self.axis = Vector2::lerp(&self.axis, &self.axis_goal, 5. * dt);
             self.axis[0] = (self.axis[0] * 10_000.).trunc() / 10_000.;
@@ -150,22 +150,27 @@ impl Controller {
         }
     }
 
+    /// Return the x axis value, clamped between [-1.0f32; 1.0f32].
     pub fn get_x_axis(&self) -> f32 {
         self.axis[0]
     }
 
+    /// Return the y axis value, clamped between [-1.0f32; 1.0f32].
     pub fn get_y_axis(&self) -> f32 {
         self.axis[1]
     }
 
+    /// Return true if the boost button is pressed.
     pub fn get_boost(&self) -> bool {
         self.boost
     }
 
+    /// Sets the x axis value to make `process_input` better readable.
     fn set_x_axis(&mut self, value: f32) {
         self.axis_goal[0] = value;
     }
 
+    /// Sets the y axis value to make `process_input` better readable.
     fn set_y_axis(&mut self, value: f32) {
         self.axis_goal[1] = value;
     }

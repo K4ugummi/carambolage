@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["get_options",""],["main",""],["match_options",""]],"mod":[["game",""],["grphx",""],["physx",""],["util",""]]});
+initSidebarItems({"fn":[["get_options",""],["main",""],["match_options",""]],"mod":[["game","Core application logic."],["grphx","Graphics module of carambolage."],["physx","Physics module of carambolage."],["util","Utility modules and traits."]]});

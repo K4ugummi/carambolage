@@ -81,6 +81,16 @@
 <span id="81">81</span>
 <span id="82">82</span>
 <span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
+<span id="89">89</span>
+<span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
 </pre><pre class="rust ">
 <span class="comment">// This file is part of Carambolage.</span>
 
@@ -103,14 +113,22 @@
 
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">Path</span>;
 
+<span class="doccomment">/// Environment of a `Scene`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Currently our Environment consist of a race track with some colliders.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Level</span> {
+    <span class="doccomment">/// Racetrack model</span>
     <span class="ident">model</span>: <span class="ident">Model</span>,
+    <span class="doccomment">/// Identity matrix for model rendering.</span>
     <span class="ident">matrix</span>: <span class="ident">Matrix4</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">ground</span>: (<span class="ident">Isometry3</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>, <span class="ident">Cuboid</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>),  <span class="comment">// box fro ground</span>
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">border</span>: (<span class="ident">Isometry3</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>, <span class="ident">TriMesh</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>), <span class="comment">// Very simple mesh around track</span>
+    <span class="doccomment">/// A simple box collider for the ground.</span>
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">ground</span>: (<span class="ident">Isometry3</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>, <span class="ident">Cuboid</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>),
+    <span class="doccomment">/// Racetrack border collider. Keep this mesh as simple as possible.</span>
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">border</span>: (<span class="ident">Isometry3</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>, <span class="ident">TriMesh</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>),
 }
 
 <span class="kw">impl</span> <span class="ident">Level</span> {
+    <span class="doccomment">/// Load a model from raw model files.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">file</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">Level</span> {
         <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;New from {}&quot;</span>, <span class="ident">file</span>);
         <span class="kw">let</span> <span class="ident">model</span> <span class="op">=</span> <span class="ident">Model</span>::<span class="ident">new</span>(<span class="ident">file</span>, <span class="string">&quot;racetrack.png&quot;</span>);
@@ -130,6 +148,7 @@
         }
     }
 
+    <span class="doccomment">/// Load the collider mesh from an obj file.</span>
     <span class="kw">fn</span> <span class="ident">load_collider</span>(<span class="ident">file</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> (<span class="ident">Cuboid</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>, <span class="ident">TriMesh</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>) {
         <span class="kw">let</span> <span class="ident">path_str</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;res/models/{}.col&quot;</span>, <span class="ident">file</span>);
         <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">path_str</span>);
@@ -161,6 +180,7 @@
         (<span class="ident">col_ground</span>, <span class="ident">col_border</span>)
     }
 
+    <span class="doccomment">/// Render the environment to the bound framebuffer.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">draw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">view</span>: <span class="kw-2">&amp;</span><span class="ident">Matrix4</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>, <span class="ident">projection</span>: <span class="kw-2">&amp;</span><span class="ident">Matrix4</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>) {
         <span class="self">self</span>.<span class="ident">model</span>.<span class="ident">draw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">matrix</span>, <span class="ident">view</span>, <span class="ident">projection</span>);
     }

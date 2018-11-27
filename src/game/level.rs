@@ -19,14 +19,22 @@ use ncollide3d::shape::{Cuboid, TriMesh};
 
 use std::path::Path;
 
+/// Environment of a `Scene`.
+///
+/// Currently our Environment consist of a race track with some colliders.
 pub struct Level {
+    /// Racetrack model
     model: Model,
+    /// Identity matrix for model rendering.
     matrix: Matrix4<f32>,
-    pub(super) ground: (Isometry3<f32>, Cuboid<f32>),  // box fro ground
-    pub(super) border: (Isometry3<f32>, TriMesh<f32>), // Very simple mesh around track
+    /// A simple box collider for the ground.
+    pub(super) ground: (Isometry3<f32>, Cuboid<f32>),
+    /// Racetrack border collider. Keep this mesh as simple as possible.
+    pub(super) border: (Isometry3<f32>, TriMesh<f32>),
 }
 
 impl Level {
+    /// Load a model from raw model files.
     pub fn new(file: &str) -> Level {
         debug!("New from {}", file);
         let model = Model::new(file, "racetrack.png");
@@ -46,6 +54,7 @@ impl Level {
         }
     }
 
+    /// Load the collider mesh from an obj file.
     fn load_collider(file: &str) -> (Cuboid<f32>, TriMesh<f32>) {
         let path_str = format!("res/models/{}.col", file);
         let path = Path::new(&path_str);
@@ -77,6 +86,7 @@ impl Level {
         (col_ground, col_border)
     }
 
+    /// Render the environment to the bound framebuffer.
     pub fn draw(&self, view: &Matrix4<f32>, projection: &Matrix4<f32>) {
         self.model.draw(&self.matrix, view, projection);
     }

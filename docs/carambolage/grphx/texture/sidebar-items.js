@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["load_texture",""]],"struct":[["Texture",""]]});
+initSidebarItems({"fn":[["load_texture",""]],"struct":[["Texture","A 2D Texture for OpenGL"]]});

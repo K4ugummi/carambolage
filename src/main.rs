@@ -28,9 +28,13 @@ extern crate tobj;
 
 use simplelog::*;
 
+/// Core application logic.
 mod game;
+/// Graphics module of carambolage.
 mod grphx;
+/// Physics module of carambolage.
 mod physx;
+/// Utility modules and traits.
 mod util;
 
 use game::{Game, GameSettings};

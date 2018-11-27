@@ -12,13 +12,22 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
+
+/// Camera module to calculate view matrix.
 mod camera;
+/// Frame buffer for background rendering.
 mod framebuffer;
+/// Material unused.
 mod material;
+/// 3D Mesh for Model
 mod mesh;
+/// 3D Model for rendering.
 mod model;
+/// Handle FrameBuffer blending.
 mod screen;
+/// OpenGL shader program and usability functions.
 mod shader;
+/// 2D Texture for Models
 mod texture;
 
 pub(crate) use self::camera::*;

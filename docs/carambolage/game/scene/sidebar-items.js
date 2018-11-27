@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Scene",""]]});
+initSidebarItems({"struct":[["Scene","Main application Scene."]]});

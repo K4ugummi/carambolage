@@ -21,6 +21,7 @@ use log::{debug, error};
 use std::os::raw::c_void;
 use std::path::Path;
 
+/// A 2D Texture for OpenGL
 pub struct Texture {
     pub id: u32,
 }

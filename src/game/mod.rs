@@ -12,10 +12,16 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
+
+/// GameObject, currently only a car.
 mod car;
+/// User input handling.
 mod controller;
+/// Environment of a `Scene`.
 mod level;
+/// Actual runtime data.
 mod scene;
+/// 3D translation, rotation and scale.
 mod transform;
 
 use self::controller::{Controller, ControllerLayout};

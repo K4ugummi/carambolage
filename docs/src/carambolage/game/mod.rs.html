@@ -198,6 +198,12 @@
 <span id="198">198</span>
 <span id="199">199</span>
 <span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
 </pre><pre class="rust ">
 <span class="comment">// This file is part of Carambolage.</span>
 
@@ -213,10 +219,16 @@
 
 <span class="comment">// You should have received a copy of the GNU General Public License</span>
 <span class="comment">// along with Carambolage.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+
+<span class="doccomment">/// GameObject, currently only a car.</span>
 <span class="kw">mod</span> <span class="ident">car</span>;
+<span class="doccomment">/// User input handling.</span>
 <span class="kw">mod</span> <span class="ident">controller</span>;
+<span class="doccomment">/// Environment of a `Scene`.</span>
 <span class="kw">mod</span> <span class="ident">level</span>;
+<span class="doccomment">/// Actual runtime data.</span>
 <span class="kw">mod</span> <span class="ident">scene</span>;
+<span class="doccomment">/// 3D translation, rotation and scale.</span>
 <span class="kw">mod</span> <span class="ident">transform</span>;
 
 <span class="kw">use</span> <span class="self">self</span>::<span class="ident">controller</span>::{<span class="ident">Controller</span>, <span class="ident">ControllerLayout</span>};

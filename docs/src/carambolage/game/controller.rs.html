@@ -170,6 +170,11 @@
 <span id="170">170</span>
 <span id="171">171</span>
 <span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
 </pre><pre class="rust ">
 <span class="comment">// This file is part of Carambolage.</span>
 
@@ -192,6 +197,7 @@
 <span class="kw">use</span> <span class="ident">nalgebra</span>::{<span class="ident">zero</span>, <span class="ident">Vector2</span>};
 <span class="kw">use</span> <span class="ident">util</span>::<span class="ident">Lerp</span>;
 
+<span class="doccomment">/// Control with WASD or arrow keys.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ControllerLayout</span> {
     <span class="ident">WASD</span>,
@@ -246,22 +252,22 @@
     }
 }
 
-<span class="comment">// Prototype controller emulation for keyboard users.</span>
+<span class="doccomment">/// Prototype controller emulation for keyboard users.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Controller</span> {
-    <span class="comment">// Internal settings and flags.</span>
+    <span class="doccomment">/// Internal settings and flags.</span>
     <span class="ident">is_smooth</span>: <span class="ident">bool</span>,
     <span class="ident">ci</span>: <span class="ident">ControllerInternal</span>,
     <span class="ident">axis_goal</span>: <span class="ident">Vector2</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>,
 
-    <span class="comment">// Buttons and input axis that can be used in the game.</span>
+    <span class="doccomment">/// Buttons and input axis that can be used in the game.</span>
     <span class="ident">axis</span>: <span class="ident">Vector2</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>,
     <span class="ident">boost</span>: <span class="ident">bool</span>,
 }
 
-<span class="comment">// DO NOT CHANGE WASD to other keys please. Setting your controls to e.g.</span>
-<span class="comment">// arrow keys will come later. Thanks in advance, K4ugummi.</span>
 <span class="kw">impl</span> <span class="ident">Controller</span> {
+    <span class="doccomment">/// Create a new controller. You can activate smooth axis interpolation for up, left, down, right</span>
+    <span class="doccomment">/// by setting `smooth`to true.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">smooth</span>: <span class="ident">bool</span>, <span class="ident">controller_layout</span>: <span class="kw-2">&amp;</span><span class="ident">ControllerLayout</span>) <span class="op">-&gt;</span> <span class="ident">Controller</span> {
         <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;New smooth: {}, layout: {:?}&quot;</span>, <span class="ident">smooth</span>, <span class="ident">controller_layout</span>);
         <span class="ident">Controller</span> {
@@ -273,7 +279,10 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">process_input</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">window</span>: <span class="kw-2">&amp;</span><span class="ident">Window</span>, <span class="ident">delta_time</span>: <span class="ident">f32</span>) {
+    <span class="doccomment">/// Process input keys for this controller.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The input is handled from glfw::Window due to event polling.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">process_input</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">window</span>: <span class="kw-2">&amp;</span><span class="ident">Window</span>, <span class="ident">dt</span>: <span class="ident">f32</span>) {
         <span class="kw">if</span> <span class="ident">window</span>.<span class="ident">get_key</span>(<span class="self">self</span>.<span class="ident">ci</span>.<span class="ident">forward</span>) <span class="op">==</span> <span class="ident">Action</span>::<span class="ident">Press</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">ci</span>.<span class="ident">is_forward</span> {
             <span class="self">self</span>.<span class="ident">set_y_axis</span>(<span class="number">1.</span>);
             <span class="self">self</span>.<span class="ident">ci</span>.<span class="ident">is_forward</span> <span class="op">=</span> <span class="bool-val">true</span>;
@@ -310,10 +319,6 @@
             <span class="self">self</span>.<span class="ident">ci</span>.<span class="ident">is_boost</span> <span class="op">=</span> <span class="bool-val">false</span>;
         }
 
-        <span class="self">self</span>.<span class="ident">update</span>(<span class="ident">delta_time</span>);
-    }
-
-    <span class="kw">fn</span> <span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">dt</span>: <span class="ident">f32</span>) {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_smooth</span> {
             <span class="self">self</span>.<span class="ident">axis</span> <span class="op">=</span> <span class="ident">Vector2</span>::<span class="ident">lerp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">axis</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">axis_goal</span>, <span class="number">5.</span> <span class="op">*</span> <span class="ident">dt</span>);
             <span class="self">self</span>.<span class="ident">axis</span>[<span class="number">0</span>] <span class="op">=</span> (<span class="self">self</span>.<span class="ident">axis</span>[<span class="number">0</span>] <span class="op">*</span> <span class="number">10_000.</span>).<span class="ident">trunc</span>() <span class="op">/</span> <span class="number">10_000.</span>;
@@ -323,22 +328,27 @@
         }
     }
 
+    <span class="doccomment">/// Return the x axis value, clamped between [-1.0f32; 1.0f32].</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_x_axis</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">f32</span> {
         <span class="self">self</span>.<span class="ident">axis</span>[<span class="number">0</span>]
     }
 
+    <span class="doccomment">/// Return the y axis value, clamped between [-1.0f32; 1.0f32].</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_y_axis</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">f32</span> {
         <span class="self">self</span>.<span class="ident">axis</span>[<span class="number">1</span>]
     }
 
+    <span class="doccomment">/// Return true if the boost button is pressed.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_boost</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">boost</span>
     }
 
+    <span class="doccomment">/// Sets the x axis value to make `process_input` better readable.</span>
     <span class="kw">fn</span> <span class="ident">set_x_axis</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
         <span class="self">self</span>.<span class="ident">axis_goal</span>[<span class="number">0</span>] <span class="op">=</span> <span class="ident">value</span>;
     }
 
+    <span class="doccomment">/// Sets the y axis value to make `process_input` better readable.</span>
     <span class="kw">fn</span> <span class="ident">set_y_axis</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
         <span class="self">self</span>.<span class="ident">axis_goal</span>[<span class="number">1</span>] <span class="op">=</span> <span class="ident">value</span>;
     }

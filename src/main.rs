@@ -56,7 +56,8 @@ fn main() {
     CombinedLogger::init(vec![
         TermLogger::new(LevelFilter::Warn, terminal_log_config).unwrap(),
         WriteLogger::new(LevelFilter::Debug, write_log_config, File::create("carambolage.log").unwrap()),
-    ]).unwrap();
+    ])
+    .unwrap();
 
     // Start the game
     info!("Starting game");

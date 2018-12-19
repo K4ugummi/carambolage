@@ -100,7 +100,8 @@ impl Game {
                         glfw::WindowMode::Windowed
                     }
                 })
-            }).expect("Failed to create GLFW window");
+            })
+            .expect("Failed to create GLFW window");
 
         window.make_current();
         window.set_framebuffer_size_polling(true);

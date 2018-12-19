@@ -94,36 +94,27 @@ impl Scene {
                 // Most stupid collision detection, but we'll have a world an maybe max 8 cars, wo who cares.
                 let penetrate = query::contact(&car_pos[i], &self.cars[i].cuboid, &car_pos[j], &self.cars[j].cuboid, prediction);
                 if penetrate.is_some() {
-                    let pen = penetrate.unwrap();
-                    let w1 = pen.world1;
-                    let w2 = pen.world2;
-                    let dir = w1 - w2;
-                    self.cars[i].position -= dir * 0.5;
-                    self.cars[j].position += dir * 0.5;
+                    self.cars[i].velocity = 0.;
+                    self.cars[j].velocity = 0.;
                 }
             }
         }
 
         // Cars with level
         for (i, cp) in car_pos.iter().enumerate() {
-            self.cars[i].position[2] -= 0.81 * dt;
-
+            /*
             let penetrate_ground = query::contact(&cp, &self.cars[i].cuboid, &self.level.ground.0, &self.level.ground.1, prediction);
             if penetrate_ground.is_some() {
                 let pen = penetrate_ground.unwrap();
                 let w1 = pen.world1;
                 let w2 = pen.world2;
-                let dir = w1 - w2;
-                self.cars[i].position -= dir;
+                self.cars[i].velocity *= -0.1;
             };
+            */
 
             let penetrate_border = query::contact(&cp, &self.cars[i].cuboid, &self.level.border.0, &self.level.border.1, prediction);
             if penetrate_border.is_some() {
-                let pen = penetrate_border.unwrap();
-                let w1 = pen.world1;
-                let w2 = pen.world2;
-                let dir = w1 - w2;
-                self.cars[i].position -= dir;
+                self.cars[i].velocity = 0.;
             };
         }
     }

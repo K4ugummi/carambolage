@@ -12,11 +12,10 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
-use grphx::Model;
+use crate::grphx::Model;
 use log::debug;
 use nalgebra::{zero, Isometry3, Matrix4, Point3, Vector3};
 use ncollide3d::shape::{Cuboid, TriMesh};
-
 use std::path::Path;
 
 /// Environment of a `Scene`.

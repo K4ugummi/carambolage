@@ -14,10 +14,10 @@
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
 use self::ControllerInternal as CI;
 use self::ControllerLayout as CL;
+use crate::util::Lerp;
 use glfw::{Action, Key, Window};
 use log::debug;
 use nalgebra::{zero, Vector2};
-use util::Lerp;
 
 /// Control with WASD or arrow keys.
 #[derive(Debug)]

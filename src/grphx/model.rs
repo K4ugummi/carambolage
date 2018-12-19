@@ -12,12 +12,11 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
-use grphx::{Mesh, Shader, Texture, Vertex};
+use crate::grphx::{Mesh, Shader, Texture, Vertex};
 use log::{debug, info};
 use nalgebra::{inf, sup, zero, Matrix4, Vector3};
-use tobj;
-
 use std::path::Path;
+use tobj;
 
 /// This is the visual representation of a gameobject.
 ///

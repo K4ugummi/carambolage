@@ -12,20 +12,6 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
-extern crate getopts;
-extern crate gl;
-extern crate glfw;
-extern crate image;
-extern crate log;
-extern crate nalgebra;
-extern crate ncollide3d;
-extern crate rodio;
-extern crate serde;
-extern crate serde_derive;
-extern crate simplelog;
-extern crate time;
-extern crate tobj;
-
 use simplelog::*;
 
 /// Core application logic.
@@ -37,7 +23,7 @@ mod physx;
 /// Utility modules and traits.
 mod util;
 
-use game::{Game, GameSettings};
+use crate::game::{Game, GameSettings};
 use getopts::{Matches, Options};
 use log::info;
 use std::env;
@@ -70,7 +56,8 @@ fn main() {
     CombinedLogger::init(vec![
         TermLogger::new(LevelFilter::Warn, terminal_log_config).unwrap(),
         WriteLogger::new(LevelFilter::Debug, write_log_config, File::create("carambolage.log").unwrap()),
-    ]).unwrap();
+    ])
+    .unwrap();
 
     // Start the game
     info!("Starting game");

@@ -176,7 +176,9 @@ impl Game {
     pub fn process_events(&mut self) {
         for (_, event) in glfw::flush_messages(&self.events) {
             if let glfw::WindowEvent::FramebufferSize(width, height) = event {
-                unsafe { gl::Viewport(0, 0, width, height); }
+                unsafe {
+                    gl::Viewport(0, 0, width, height);
+                }
                 self.settings.width = width as u32;
                 self.settings.height = height as u32;
                 self.screen.resize(width as u32, height as u32);

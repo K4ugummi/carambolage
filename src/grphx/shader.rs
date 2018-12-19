@@ -105,7 +105,7 @@ impl Shader {
     }
 
     /// Bind a `Vector2<f32>` to the currently boundshader program at location `id`.
-    pub unsafe fn _set_uniform_vec2(id: i32, value: &Vector2<f32>) {
+    pub unsafe fn _set_uniform_vec2(id: i32, value: Vector2<f32>) {
         gl::Uniform2fv(id, 1, value.as_slice().as_ptr());
     }
 

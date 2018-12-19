@@ -5,6 +5,7 @@ authors = [
     "Fabian Drinck <fabian.drinck@rwth-aachen.de>",
     "Stephan Schauerte <stephan@schauerte.online>"
 ]
+edition = "2018"
 
 [dependencies]
 getopts = "~0.2"

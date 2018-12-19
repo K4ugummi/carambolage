@@ -26,19 +26,18 @@ mod transform;
 
 use self::controller::{Controller, ControllerLayout};
 use self::scene::Scene;
+use crate::grphx::Screen;
+use crate::util::FrameLimiter;
 use glfw::{Action, Context, Glfw, Key, Window};
-use grphx::Screen;
 use log::{debug, info};
 use nalgebra::Perspective3;
 use rodio::{Sink, Source};
-use time::Duration;
-use util::FrameLimiter;
-
 use std::cell::Cell;
 use std::fs::File;
 use std::io::BufReader;
 use std::sync::mpsc::Receiver;
 use std::thread::sleep;
+use time::Duration;
 
 type Event = Receiver<(f64, glfw::WindowEvent)>;
 

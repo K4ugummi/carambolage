@@ -12,12 +12,10 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
-use grphx::Texture;
-
+use crate::grphx::Texture;
 use gl;
 use log::{debug, error};
 use nalgebra::{Matrix2, Matrix3, Matrix4, Vector2, Vector3, Vector4};
-
 use std::ffi::CString;
 use std::fs::File;
 use std::io::Read;

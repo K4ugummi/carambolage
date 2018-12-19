@@ -15,7 +15,7 @@
 use super::car::Car;
 use super::controller::Controller;
 use super::level::Level;
-use grphx::Camera;
+use crate::grphx::Camera;
 use nalgebra::{inf, sup, Isometry3, Matrix4, Vector3};
 use ncollide3d::query;
 

@@ -173,17 +173,15 @@ impl Game {
         }
     }
 
-    #[cfg_attr(feature = "cargo-clippy", allow(single_match))]
     pub fn process_events(&mut self) {
         for (_, event) in glfw::flush_messages(&self.events) {
-            match event {
-                glfw::WindowEvent::FramebufferSize(width, height) => unsafe {
+            if let glfw::WindowEvent::FramebufferSize(width, height) = event {
+                unsafe {
                     gl::Viewport(0, 0, width, height);
-                    self.settings.width = width as u32;
-                    self.settings.height = height as u32;
-                    self.screen.resize(width as u32, height as u32);
-                },
-                _ => {}
+                }
+                self.settings.width = width as u32;
+                self.settings.height = height as u32;
+                self.screen.resize(width as u32, height as u32);
             }
         }
     }
@@ -199,7 +197,7 @@ impl Game {
     }
 }
 
-#[cfg_attr(feature = "cargo-clippy", allow(needless_pass_by_value))]
+#[allow(clippy::needless_pass_by_value)]
 fn error_callback(_: glfw::Error, description: String, error_count: &Cell<usize>) {
     println!("GLFW error {}: {}", error_count.get(), description);
     error_count.set(error_count.get() + 1);

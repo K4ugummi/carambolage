@@ -34,6 +34,8 @@ pub struct Camera {
     // Parameter for camera movement.
     focus_goal: Vector3<f32>,
     height_goal: f32,
+    pub is_smooth_zoom: bool,
+    pub is_smooth_pan: bool,
 }
 
 impl Camera {
@@ -52,13 +54,24 @@ impl Camera {
 
             focus_goal: Vector3::new(0., 0., 0.),
             height_goal: height,
+
+            is_smooth_zoom: true,
+            is_smooth_pan: true,
         }
     }
 
     /// Update the cameras position relative to the delta time `dt`.
     pub fn update(&mut self, dt: f32) {
-        self.focus = Vector3::lerp(&self.focus, &self.focus_goal, self.speed * dt);
-        self.height = f32::lerp(&self.height, &self.height_goal, self.speed * dt);
+        if self.is_smooth_pan {
+            self.focus = Vector3::lerp(&self.focus, &self.focus_goal, self.speed * dt);
+        } else {
+            self.focus = self.focus_goal;
+        }
+        if self.is_smooth_zoom {
+            self.height = f32::lerp(&self.height, &self.height_goal, self.speed * dt);
+        } else {
+            self.height = self.height_goal;
+        }
         self.position = self.focus + Vector3::new(0., 0., self.height);
     }
 

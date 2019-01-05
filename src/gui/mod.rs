@@ -56,7 +56,7 @@ impl AppUI {
             style.colors[ImGuiCol::PopupBg as usize] = ImVec4::new(0.26, 0.26, 0.26, 0.60);
             style.colors[ImGuiCol::Border as usize] = ImVec4::new(0.26, 0.26, 0.26, 1.00);
             style.colors[ImGuiCol::BorderShadow as usize] = ImVec4::new(0.26, 0.26, 0.26, 1.00);
-            style.colors[ImGuiCol::FrameBg as usize] = ImVec4::new(0.96, 0.16, 0.16, 0.60);
+            style.colors[ImGuiCol::FrameBg as usize] = ImVec4::new(0.16, 0.16, 0.16, 0.40);
             style.colors[ImGuiCol::FrameBgHovered as usize] = ImVec4::new(0.16, 0.16, 0.16, 0.60);
             style.colors[ImGuiCol::FrameBgActive as usize] = ImVec4::new(0.16, 0.16, 0.16, 0.60);
             style.colors[ImGuiCol::TitleBg as usize] = ImVec4::new(0.36, 0.36, 0.36, 0.60);
@@ -99,7 +99,7 @@ impl AppUI {
             .add_default_font_with_config(ImFontConfig::new().oversample_h(1).pixel_snap_h(true).size_pixels(font_size));
 
         imgui.fonts().add_font_with_config(
-            include_bytes!("../../res/fonts/SansForgetica-Regular.otf"),
+            include_bytes!("../../res/fonts/ProFontWindows.ttf"),
             ImFontConfig::new()
                 .merge_mode(true)
                 .oversample_h(1)
@@ -164,8 +164,9 @@ impl AppUI {
                 self.is_key_esc = false;
             }
 
-
             let mut is_ingame_menu = self.is_ingame_menu;
+            let mut is_smooth_zoom = scene.camera.is_smooth_zoom;
+            let mut is_smooth_pan = scene.camera.is_smooth_pan;
             if is_ingame_menu {
                 ui.open_popup(im_str!("Menu"));
             }
@@ -183,11 +184,16 @@ impl AppUI {
                         is_ingame_menu = false;
                     }
                     ui.separator();
+                    ui.checkbox(im_str!("Smooth zoom"), &mut is_smooth_zoom);
+                    ui.checkbox(im_str!("Smooth pan"), &mut is_smooth_pan);
+                    ui.separator();
                     if ui.button(im_str!("Exit"), (200., 40.)) {
                         should_close = true;
                     }
                 });
             self.is_ingame_menu = is_ingame_menu;
+            scene.camera.is_smooth_zoom = is_smooth_zoom;
+            scene.camera.is_smooth_pan = is_smooth_pan;
         }
 
         window.set_should_close(should_close);

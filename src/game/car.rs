@@ -20,16 +20,16 @@ use ncollide3d::shape::Cuboid;
 use nalgebra::{clamp, zero, Matrix4, Vector3};
 
 /// A GameObject controlled by a player.
-pub(crate) struct Car {
-    pub(crate) position: Vector3<f32>, // position in world space
-    pub(crate) rotation: Vector3<f32>, // rotation in radians per axis
+pub struct Car {
+    pub position: Vector3<f32>, // position in world space
+    pub rotation: Vector3<f32>, // rotation in radians per axis
     _velocity: Vector3<f32>,
     _force: Vector3<f32>,
     _mass: f32,
-    boost: f32,
+    pub boost: f32,
 
-    pub(crate) model: Model,
-    pub(crate) cuboid: Cuboid<f32>,
+    pub model: Model,
+    pub cuboid: Cuboid<f32>,
 }
 
 impl Car {

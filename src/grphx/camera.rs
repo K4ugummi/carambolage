@@ -88,8 +88,8 @@ impl Camera {
     /// Get the view matrix, calculated from camera values.
     pub fn get_viewmatrix(&self) -> Matrix4<f32> {
         Matrix4::look_at_rh(
-            &Point3::from_coordinates(self.position + Vector3::new(0., -5., 0.)),
-            &Point3::from_coordinates(self.focus_goal),
+            &Point3::from(self.position + Vector3::new(0., -5., 0.)),
+            &Point3::from(self.focus_goal),
             &self.up,
         )
     }

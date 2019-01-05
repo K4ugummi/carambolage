@@ -18,6 +18,8 @@ use simplelog::*;
 mod game;
 /// Graphics module of carambolage.
 mod grphx;
+/// User interface
+mod gui;
 /// Physics module of carambolage.
 mod physx;
 /// Utility modules and traits.

@@ -10,6 +10,11 @@ addons:
     packages:
       - xorg-dev
       - libasound2-dev
+      - cmake
+      - libxrandr-dev
+      - libxinerama-dev
+      - libxcursor-dev
+      - libxi-dev
       
 before_script:
   - rustup component add rustfmt-preview

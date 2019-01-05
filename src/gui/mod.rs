@@ -153,9 +153,10 @@ impl AppUI {
                         .build();
                 });
 
+            let mut close_ingame_menu = false;
             if !self.is_key_esc && window.get_key(glfw::Key::Escape) == glfw::Action::Press {
                 if self.is_ingame_menu {
-                    ui.close_current_popup();
+                    close_ingame_menu = true;
                 }
                 self.is_ingame_menu = !self.is_ingame_menu;
                 self.is_key_esc = true;
@@ -163,10 +164,11 @@ impl AppUI {
                 self.is_key_esc = false;
             }
 
-            if self.is_ingame_menu {
+
+            let mut is_ingame_menu = self.is_ingame_menu;
+            if is_ingame_menu {
                 ui.open_popup(im_str!("Menu"));
             }
-
             ui.popup_modal(im_str!("Menu"))
                 .title_bar(false)
                 //.position((width / 2. - 100., height / 2.), imgui::ImGuiCond::Always)
@@ -176,14 +178,16 @@ impl AppUI {
                 .resizable(false)
                 .movable(false)
                 .build(|| {
-                    if ui.button(im_str!("Continue"), (200., 40.)) {
+                    if ui.button(im_str!("Continue"), (200., 40.)) || close_ingame_menu {
                         ui.close_current_popup();
+                        is_ingame_menu = false;
                     }
                     ui.separator();
                     if ui.button(im_str!("Exit"), (200., 40.)) {
                         should_close = true;
                     }
-                })
+                });
+            self.is_ingame_menu = is_ingame_menu;
         }
 
         window.set_should_close(should_close);

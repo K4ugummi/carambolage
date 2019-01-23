@@ -22,7 +22,7 @@ use ncollide3d::query;
 /// Main application Scene.
 ///
 /// This scene consists of `GameObject`s, an `Environment` and a main `Camera`.
-pub(super) struct Scene {
+pub struct Scene {
     pub cars: Vec<Car>,
     pub level: Level,
     pub camera: Camera,
@@ -30,7 +30,7 @@ pub(super) struct Scene {
 
 impl Scene {
     /// Create a new scene. Choose a map via id.
-    pub(super) fn new(map_id: u32) -> Scene {
+    pub fn new(map_id: u32) -> Scene {
         let mut cars = Vec::new();
         for i in 0..2 {
             if i % 2 == 0 {
@@ -62,7 +62,7 @@ impl Scene {
     }
 
     /// Update the scene.
-    pub(super) fn update(&mut self, dt: f32, controller: &[Controller]) {
+    pub fn update(&mut self, dt: f32, controller: &[Controller]) {
         // User Input
         for (id, car) in &mut self.cars.iter_mut().enumerate() {
             if id < controller.len() {
@@ -151,7 +151,7 @@ impl Scene {
     }
 
     /// Draw the entire `Scene` to the bound framebuffer.
-    pub(super) fn draw(&mut self, projection: &Matrix4<f32>) {
+    pub fn draw(&mut self, projection: &Matrix4<f32>) {
         let view = self.camera.get_viewmatrix();
         // Draw map.
         self.level.draw(&view, &projection);

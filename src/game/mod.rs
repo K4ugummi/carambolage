@@ -14,21 +14,22 @@
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
 
 /// GameObject, currently only a car.
-mod car;
+pub mod car;
 /// User input handling.
-mod controller;
+pub mod controller;
 /// Environment of a `Scene`.
-mod level;
+pub mod level;
 /// Actual runtime data.
-mod scene;
+pub mod scene;
 /// 3D translation, rotation and scale.
-mod transform;
+pub mod transform;
 
 use self::controller::{Controller, ControllerLayout};
 use self::scene::Scene;
 use crate::grphx::Screen;
+use crate::gui::AppUI;
 use crate::util::FrameLimiter;
-use glfw::{Action, Context, Glfw, Key, Window};
+use glfw::{Context, Glfw, Window};
 use log::{debug, info};
 use nalgebra::Perspective3;
 use rodio::{Sink, Source};
@@ -47,6 +48,7 @@ pub(crate) struct Game {
     window: Window,
     events: Event,
     frame_limiter: FrameLimiter,
+    gui: AppUI,
 
     screen: Screen,
 
@@ -104,10 +106,10 @@ impl Game {
             .expect("Failed to create GLFW window");
 
         window.make_current();
-        window.set_framebuffer_size_polling(true);
-        window.set_cursor_pos_polling(true);
-        window.set_scroll_polling(true);
+        window.set_all_polling(true);
         window.set_cursor_mode(glfw::CursorMode::Normal);
+
+        let gui = AppUI::new(&mut window);
 
         debug!("Initializing openGL attributes");
         gl::load_with(|symbol| window.get_proc_address(symbol) as *const _);
@@ -131,6 +133,7 @@ impl Game {
             window,
             events,
             frame_limiter,
+            gui,
 
             screen,
 
@@ -160,14 +163,18 @@ impl Game {
             self.scene.update(dt, &self.controller);
 
             self.screen.first_step();
-            let projection = Perspective3::new(self.settings.width as f32 / self.settings.height as f32, 70., 1.0, 200.).unwrap();
+            let projection = Perspective3::new(self.settings.width as f32 / self.settings.height as f32, 70., 1.0, 200.).into_inner();
             self.scene.draw(&projection);
 
             self.screen.second_step();
 
+            self.gui.draw(&mut self.window, &mut self.scene);
+
             self.window.swap_buffers();
+
             while self.frame_limiter.stop() {
                 self.glfw.poll_events();
+                self.process_events();
                 sleep(nano_sec);
             }
         }
@@ -175,6 +182,7 @@ impl Game {
 
     pub fn process_events(&mut self) {
         for (_, event) in glfw::flush_messages(&self.events) {
+            self.gui.handle_event(&event);
             if let glfw::WindowEvent::FramebufferSize(width, height) = event {
                 unsafe {
                     gl::Viewport(0, 0, width, height);
@@ -187,10 +195,6 @@ impl Game {
     }
 
     pub fn process_input(&mut self, dt: f32) {
-        if self.window.get_key(Key::Escape) == Action::Press {
-            self.window.set_should_close(true)
-        }
-
         for ctrl in &mut self.controller.iter_mut() {
             ctrl.process_input(&self.window, dt);
         }

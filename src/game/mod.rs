@@ -24,6 +24,8 @@ pub mod scene;
 /// 3D translation, rotation and scale.
 pub mod transform;
 
+use imgui_glfw_rs::glfw as glfw;
+
 use self::controller::{Controller, ControllerLayout};
 use self::scene::Scene;
 use crate::grphx::Screen;

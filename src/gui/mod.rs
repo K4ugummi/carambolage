@@ -1,3 +1,5 @@
+use imgui_glfw_rs::glfw;
+
 use crate::game::scene::Scene;
 use glfw::{Window, WindowEvent};
 use imgui::{im_str, FontGlyphRange, ImFontConfig, ImGui, ImGuiCol, ImVec2, ImVec4};

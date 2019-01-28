@@ -10,7 +10,6 @@ edition = "2018"
 [dependencies]
 getopts = "^0.2"
 gl = "^0.11"
-glfw = "^0.26"
 image = "^0.21"
 ncollide3d = "^0.17"
 rodio = "~0.8"

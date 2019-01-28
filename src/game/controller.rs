@@ -12,7 +12,7 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
-use imgui_glfw_rs::glfw as glfw;
+use imgui_glfw_rs::glfw;
 
 use self::ControllerInternal as CI;
 use self::ControllerLayout as CL;

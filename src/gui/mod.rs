@@ -1,4 +1,4 @@
-use imgui_glfw_rs::glfw as glfw;
+use imgui_glfw_rs::glfw;
 
 use crate::game::scene::Scene;
 use glfw::{Window, WindowEvent};

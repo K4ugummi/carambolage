@@ -108,7 +108,7 @@ dependencies = [
  "glfw 0.26.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "image 0.21.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "imgui 0.0.21 (registry+https://github.com/rust-lang/crates.io-index)",
- "imgui-glfw-rs 0.2.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "imgui-glfw-rs 0.2.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "imgui-opengl-renderer 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "nalgebra 0.16.13 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -437,7 +437,7 @@ dependencies = [
 
 [[package]]
 name = "imgui-glfw-rs"
-version = "0.2.4"
+version = "0.2.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "glfw 0.26.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1232,7 +1232,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum hound 3.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "8a164bb2ceaeff4f42542bdb847c41517c78a60f5649671b2a07312b6e117549"
 "checksum image 0.21.0 (registry+https://github.com/rust-lang/crates.io-index)" = "52fb0666a1273dac46f9725aa4859bcd5595fc3554cf3495051b4de8db745e7d"
 "checksum imgui 0.0.21 (registry+https://github.com/rust-lang/crates.io-index)" = "42ce4bcdc6187241a000565b7944cb6e866e7defb7247f2d6404410f904e161f"
-"checksum imgui-glfw-rs 0.2.4 (registry+https://github.com/rust-lang/crates.io-index)" = "a33ffc476ecd54d32ccf921d758c1dd7ad0bc6fee185567ae9b7c27ba39ac205"
+"checksum imgui-glfw-rs 0.2.5 (registry+https://github.com/rust-lang/crates.io-index)" = "5cd7b4dfee0fd770df9e153ed4ff61923ddb8998476d71a48c56c1ffeb6ff306"
 "checksum imgui-opengl-renderer 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)" = "355965fa07f38e4c1dbce07ed7711ca3bf437c049415d6ece62c69261269ee77"
 "checksum imgui-sys 0.0.21 (registry+https://github.com/rust-lang/crates.io-index)" = "3c7c53417637b6d47ed92a2679015101e50acb13f07c95180b29ccca3d4e4f93"
 "checksum inflate 0.4.4 (registry+https://github.com/rust-lang/crates.io-index)" = "84c683bde2d8413b8f1be3e459c30e4817672b6e7a31d9212b0323154e76eba7"

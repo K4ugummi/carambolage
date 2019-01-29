@@ -1,4 +1,5 @@
 use imgui_glfw_rs::glfw;
+use imgui_glfw_rs::imgui;
 
 use crate::game::scene::Scene;
 use glfw::{Window, WindowEvent};
@@ -50,8 +51,8 @@ impl AppUI {
             style.frame_rounding = 3.0;
             style.window_title_align = ImVec2::new(0.5, 0.5);
 
-            style.colors[ImGuiCol::Text as usize] = ImVec4::new(0.13, 0.13, 0.13, 1.00);
-            style.colors[ImGuiCol::TextDisabled as usize] = ImVec4::new(0.50, 0.50, 0.50, 1.00);
+            style.colors[ImGuiCol::Text as usize] = ImVec4::new(0.93, 0.93, 0.93, 1.00);
+            style.colors[ImGuiCol::TextDisabled as usize] = ImVec4::new(0.70, 0.70, 0.70, 1.00);
             style.colors[ImGuiCol::WindowBg as usize] = ImVec4::new(0.16, 0.16, 0.16, 0.60);
             style.colors[ImGuiCol::ChildBg as usize] = ImVec4::new(0.18, 0.18, 0.18, 0.60);
             style.colors[ImGuiCol::PopupBg as usize] = ImVec4::new(0.26, 0.26, 0.26, 0.60);
@@ -173,8 +174,6 @@ impl AppUI {
             }
             ui.popup_modal(im_str!("Menu"))
                 .title_bar(false)
-                //.position((width / 2. - 100., height / 2.), imgui::ImGuiCond::Always)
-                //.size((200., 0.), imgui::ImGuiCond::Always)
                 .always_use_window_padding(true)
                 .collapsible(false)
                 .resizable(false)
@@ -185,6 +184,7 @@ impl AppUI {
                         is_ingame_menu = false;
                     }
                     ui.separator();
+                    ui.text(im_str!("Camera settings:"));
                     ui.checkbox(im_str!("Smooth zoom"), &mut is_smooth_zoom);
                     ui.checkbox(im_str!("Smooth pan"), &mut is_smooth_pan);
                     ui.separator();

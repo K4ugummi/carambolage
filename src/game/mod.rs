@@ -34,10 +34,7 @@ use crate::util::FrameLimiter;
 use glfw::{Context, Glfw, Window};
 use log::{debug, info};
 use nalgebra::Perspective3;
-use rodio::{Sink, Source};
 use std::cell::Cell;
-use std::fs::File;
-use std::io::BufReader;
 use std::sync::mpsc::Receiver;
 use std::thread::sleep;
 use time::Duration;
@@ -146,13 +143,6 @@ impl Game {
     }
 
     pub(crate) fn run(&mut self) {
-        let device = rodio::default_output_device().unwrap();
-        let file = File::open("res/sounds/music/The_Rush.mp3").unwrap();
-        let source = rodio::Decoder::new(BufReader::new(file)).unwrap().repeat_infinite();
-        let mut sinc = Sink::new(&device);
-        sinc.set_volume(0.5);
-        sinc.append(source);
-
         let nano_sec = Duration::nanoseconds(1).to_std().unwrap();
 
         while !self.window.should_close() {

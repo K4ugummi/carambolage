@@ -12,7 +12,7 @@
 
 ## A game written in Rust!
 
-![screenshot](.github/ui.png "Screenshot")
+![screenshot](.github/ui.JPG "Screenshot")
 ![screenshot-menu](.github/ui-menu.JPG "Screenshot")
 
 We are big fans of Rust and have been using this programming language in our working environment for some time now. After getting used to the fact that Rust doesn't let us get away with stupid things that crash our code at runtime (at least that's how we see it at the moment), we've become attached to this modern language. 
@@ -23,7 +23,7 @@ Sadly, you're always busy learning good patterns during your work, so you have t
 
 ## Controls
 ![controls](controls.jpg "Controls")
-Quit: `[Esc]`  
+Open Menu: `[Esc]`  
 
 Player 1  
 movement:  `[W]`,`[A]`,`[S]`,`[D]`  
@@ -32,8 +32,6 @@ boost: `[Left Shift]`
 Player 2  
 movement: `[Up]`,`[Left]`,`[Down]`,`[Right]`  
 boost: `[Right Shift]`  
-
-Show info: ~~`[F1]`~~
 
 ---
 

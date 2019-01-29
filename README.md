@@ -12,7 +12,8 @@
 
 ## A game written in Rust!
 
-![screenshot](Example_201810.png "Screenshot")
+![screenshot](.github/ui.png "Screenshot")
+![screenshot-menu](.github/ui-menu.JPG "Screenshot")
 
 We are big fans of Rust and have been using this programming language in our working environment for some time now. After getting used to the fact that Rust doesn't let us get away with stupid things that crash our code at runtime (at least that's how we see it at the moment), we've become attached to this modern language. 
 

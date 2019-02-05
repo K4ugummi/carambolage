@@ -23,7 +23,7 @@ imgui-opengl-renderer = "^0.3"
 
 
 [dependencies.nalgebra]
-version = "^0.16"
+version = "^0.17"
 features = ["serde-serialize"]
 
 

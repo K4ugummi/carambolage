@@ -122,39 +122,29 @@ impl AppUI {
         let (width, height) = window.get_size();
         let width = width as f32;
         let height = height as f32;
-
+        let box_width = 250.0;
         let mut should_close = false;
 
         if self.is_ingame {
-            ui.window(im_str!("Player 1"))
-                .title_bar(true)
-                .position((20.0, height - 100.), imgui::ImGuiCond::Always)
-                .size((250.0, 0.0), imgui::ImGuiCond::Once)
-                .always_use_window_padding(true)
-                .collapsible(false)
-                .resizable(false)
-                .movable(false)
-                .build(|| {
-                    ui.progress_bar(scene.cars[0].boost / 100.)
-                        .overlay_text(im_str!("BOOST"))
-                        .size((-1., 40.))
-                        .build();
-                });
-            ui.window(im_str!("Player 2"))
-                .title_bar(true)
-                .position((width - 270., height - 100.), imgui::ImGuiCond::Always)
-                .size((250.0, 0.0), imgui::ImGuiCond::Once)
-                .always_use_window_padding(true)
-                .collapsible(false)
-                .resizable(false)
-                .movable(false)
-                .build(|| {
-                    ui.progress_bar(scene.cars[1].boost / 100.)
-                        .overlay_text(im_str!("BOOST"))
-                        .size((-1., 40.))
-                        .build();
-                });
-
+            let mut carIter = scene.cars.iter().enumerate();
+            let mut current_width = 20.0;
+            for (index, car) in carIter {
+                ui.window(im_str!("Player {}", index + 1))
+                    .title_bar(true)
+                    .position((current_width, height - 100.), imgui::ImGuiCond::Always)
+                    .size((box_width, 0.0), imgui::ImGuiCond::Once)
+                    .always_use_window_padding(true)
+                    .collapsible(false)
+                    .resizable(false)
+                    .movable(false)
+                    .build(|| {
+                        ui.progress_bar(car.boost / 100.)
+                            .overlay_text(im_str!("BOOST"))
+                            .size((-1., 40.))
+                            .build();
+                    });
+                current_width = current_width + box_width;
+            }
             let mut close_ingame_menu = false;
             if !self.is_key_esc && window.get_key(glfw::Key::Escape) == glfw::Action::Press {
                 if self.is_ingame_menu {

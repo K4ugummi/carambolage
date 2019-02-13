@@ -41,7 +41,6 @@ fn main() {
         Ok(m) => m,
         Err(f) => panic!(f.to_string()),
     };
-
     // Filter settings
     let game_settings = match_options(&matches);
 
@@ -74,6 +73,7 @@ fn get_options() -> Options {
     opts.optopt("h", "height", "set window height", "HEIGHT");
     opts.optopt("m", "map", "set the startup map by id", "MAP");
     opts.optopt("l", "limit-fps", "set max game fps [0 = unlimited]", "FPS");
+    opts.optopt("p", "players", "set number of players", "PLAYERS");
     opts
 }
 
@@ -93,6 +93,9 @@ fn match_options(matches: &Matches) -> GameSettings {
     }
     if matches.opt_str("l").is_some() {
         game_settings.fps = matches.opt_str("l").unwrap().parse().unwrap();
+    }
+    if matches.opt_str("p").is_some() {
+        game_settings.players = matches.opt_str("p").unwrap().parse().unwrap();
     }
     game_settings
 }
@@ -128,5 +131,6 @@ mod tests {
         assert_eq!(settings.height, 1080);
         assert_eq!(settings.fps, 60);
         assert_eq!(settings.map, 1);
+        assert_eq!(settings.players, 2);
     }
 }

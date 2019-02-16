@@ -52,8 +52,8 @@ dependencies = [
  "getopts 0.2.18 (registry+https://github.com/rust-lang/crates.io-index)",
  "gl 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "image 0.21.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "imgui-glfw-rs 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)",
- "imgui-opengl-renderer 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "imgui-glfw-rs 0.2.7 (registry+https://github.com/rust-lang/crates.io-index)",
+ "imgui-opengl-renderer 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "nalgebra 0.17.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "ncollide3d 0.18.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -268,33 +268,33 @@ dependencies = [
 
 [[package]]
 name = "imgui"
-version = "0.0.21"
+version = "0.0.22"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "imgui-sys 0.0.21 (registry+https://github.com/rust-lang/crates.io-index)",
+ "imgui-sys 0.0.22 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "imgui-glfw-rs"
-version = "0.2.6"
+version = "0.2.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "glfw 0.26.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "imgui 0.0.21 (registry+https://github.com/rust-lang/crates.io-index)",
+ "imgui 0.0.22 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "imgui-opengl-renderer"
-version = "0.3.2"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "gl_generator 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "imgui 0.0.21 (registry+https://github.com/rust-lang/crates.io-index)",
+ "imgui 0.0.22 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "imgui-sys"
-version = "0.0.21"
+version = "0.0.22"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "bitflags 1.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -899,10 +899,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum glfw 0.26.1 (registry+https://github.com/rust-lang/crates.io-index)" = "f801ba4a4d97df7a9f759c07c07d3c2f06d1799353eacc9035e55054ce29a6bf"
 "checksum glfw-sys 3.2.2 (registry+https://github.com/rust-lang/crates.io-index)" = "f72bb86276679c5370276224546eef2dce99b23da2f364fd8b097c79db310b39"
 "checksum image 0.21.0 (registry+https://github.com/rust-lang/crates.io-index)" = "52fb0666a1273dac46f9725aa4859bcd5595fc3554cf3495051b4de8db745e7d"
-"checksum imgui 0.0.21 (registry+https://github.com/rust-lang/crates.io-index)" = "42ce4bcdc6187241a000565b7944cb6e866e7defb7247f2d6404410f904e161f"
-"checksum imgui-glfw-rs 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)" = "3e762f994138e7dca7d7ab40b67c3bc3dc71a09a84e434b7686f94c8616b573e"
-"checksum imgui-opengl-renderer 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)" = "355965fa07f38e4c1dbce07ed7711ca3bf437c049415d6ece62c69261269ee77"
-"checksum imgui-sys 0.0.21 (registry+https://github.com/rust-lang/crates.io-index)" = "3c7c53417637b6d47ed92a2679015101e50acb13f07c95180b29ccca3d4e4f93"
+"checksum imgui 0.0.22 (registry+https://github.com/rust-lang/crates.io-index)" = "ad121d9fd06452a86fe5fe4301c7d388a5193e3999fd7b21124e584a616e61b0"
+"checksum imgui-glfw-rs 0.2.7 (registry+https://github.com/rust-lang/crates.io-index)" = "f201f7625bba55df20882e11d8046f3278a40b87b86c9d31f019c67100fba69f"
+"checksum imgui-opengl-renderer 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "c4b8da1d8274e400e88838c7fe53d7f4c25d80f71aa96ab665d279c006b8f21d"
+"checksum imgui-sys 0.0.22 (registry+https://github.com/rust-lang/crates.io-index)" = "ccc3dab84744a8a4ce208332f71ce8705d824bc1c4ac2d2bca59a5705d415835"
 "checksum inflate 0.4.4 (registry+https://github.com/rust-lang/crates.io-index)" = "84c683bde2d8413b8f1be3e459c30e4817672b6e7a31d9212b0323154e76eba7"
 "checksum jpeg-decoder 0.1.15 (registry+https://github.com/rust-lang/crates.io-index)" = "c8b7d43206b34b3f94ea9445174bda196e772049b9bddbc620c9d29b2d20110d"
 "checksum khronos_api 2.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "037ab472c33f67b5fbd3e9163a2645319e5356fcd355efa6d4eb7fff4bbcb554"

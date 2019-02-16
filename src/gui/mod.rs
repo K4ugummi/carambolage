@@ -81,15 +81,12 @@ impl AppUI {
             style.colors[ImGuiCol::ResizeGrip as usize] = ImVec4::new(0.36, 0.36, 0.36, 1.00);
             style.colors[ImGuiCol::ResizeGripHovered as usize] = ImVec4::new(0.6, 0.4, 0.0, 1.0);
             style.colors[ImGuiCol::ResizeGripActive as usize] = ImVec4::new(0.7, 0.5, 0.0, 1.0);
-            style.colors[ImGuiCol::CloseButton as usize] = ImVec4::new(0.59, 0.59, 0.59, 1.00);
-            style.colors[ImGuiCol::CloseButtonHovered as usize] = ImVec4::new(0.98, 0.39, 0.36, 1.00);
-            style.colors[ImGuiCol::CloseButtonActive as usize] = ImVec4::new(0.98, 0.39, 0.36, 1.00);
             style.colors[ImGuiCol::PlotLines as usize] = ImVec4::new(0.39, 0.39, 0.39, 1.00);
             style.colors[ImGuiCol::PlotLinesHovered as usize] = ImVec4::new(1.00, 0.43, 0.35, 1.00);
             style.colors[ImGuiCol::PlotHistogram as usize] = ImVec4::new(0.10, 0.70, 0.00, 1.00);
             style.colors[ImGuiCol::PlotHistogramHovered as usize] = ImVec4::new(1.00, 0.60, 0.00, 1.00);
             style.colors[ImGuiCol::TextSelectedBg as usize] = ImVec4::new(0.32, 0.52, 0.65, 1.00);
-            style.colors[ImGuiCol::ModalWindowDarkening as usize] = ImVec4::new(0.20, 0.20, 0.20, 0.50);
+            style.colors[ImGuiCol::ModalWindowDimBg as usize] = ImVec4::new(0.20, 0.20, 0.20, 0.50);
         }
 
         imgui.set_ini_filename(None);

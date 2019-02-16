@@ -18,8 +18,8 @@ log = "~0.4"
 simplelog = "~0.5"
 serde = "^1.0"
 serde_derive = "^1.0"
-imgui-glfw-rs = "^0.2.6"
-imgui-opengl-renderer = "^0.3"
+imgui-glfw-rs = "^0.2.7"
+imgui-opengl-renderer = "0.4"
 
 
 [dependencies.nalgebra]

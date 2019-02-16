@@ -91,7 +91,7 @@ impl Screen {
     ///
     /// The scene is rendered to our framebuffer which is drawn
     /// to the default framebuffer.
-    pub(crate) fn second_step(&self) {
+    pub(crate) fn second_step(&self, gamma: f32) {
         unsafe {
             self.frame_buffer.unbind();
 
@@ -101,6 +101,7 @@ impl Screen {
 
             self.post_proc_shader.bind();
             gl::BindVertexArray(self.vao);
+            gl::Uniform1f(4, gamma);
             gl::ActiveTexture(5);
             gl::BindTexture(gl::TEXTURE_2D, self.frame_buffer.color_buffer);
             gl::DrawArrays(gl::TRIANGLES, 0, 6);

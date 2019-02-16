@@ -15,12 +15,20 @@ addons:
       - libxinerama-dev
       - libxcursor-dev
       - libxi-dev
-      
-before_script:
-  - rustup component add rustfmt-preview
 
-script:
-  - cargo fmt --all -- --check
-  - cargo build
-  - cargo test
+before_script:
+- cargo -V
+- rustup -V
+
+jobs:
+  include:
+    - stage: Format check
+      before_script: rustup component add rustfmt-preview
+      script: cargo fmt --all -- --check
+    - stage: Build
+      script: cargo build
+    - stage: Test
+      script: cargo test
+    - stage: Deploy
+      script: echo "Deploying someday..."
 

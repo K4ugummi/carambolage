@@ -20,6 +20,7 @@ layout (location = 0) in vec2 vUV;
 
 out vec4 FragColor;
 
+layout (location = 4) uniform float uGamma = 2.2;
 layout (location = 5) uniform sampler2D screen;
 
 const float offset = 1.0 / 1000.0; 
@@ -62,6 +63,6 @@ void main() {
     else {
         FragColor = texture(screen, vUV);
     }
-    float gamma = 2.2;
-    FragColor.rgb = pow(FragColor.rgb, vec3(1.0/gamma));
+
+    FragColor.rgb = pow(FragColor.rgb, vec3(1.0/uGamma));
 }

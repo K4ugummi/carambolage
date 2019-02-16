@@ -63,6 +63,7 @@ pub struct GameSettings {
     pub height: u32,
     pub map: u32,
     pub fps: u32,
+    pub gamma: f32,
 }
 
 impl Default for GameSettings {
@@ -73,6 +74,7 @@ impl Default for GameSettings {
             height: 480,
             map: 1,
             fps: 60,
+            gamma: 2.2,
         }
     }
 }
@@ -158,9 +160,9 @@ impl Game {
             let projection = Perspective3::new(self.settings.width as f32 / self.settings.height as f32, 70., 1.0, 200.).into_inner();
             self.scene.draw(&projection);
 
-            self.screen.second_step();
+            self.screen.second_step(self.settings.gamma);
 
-            self.gui.draw(&mut self.window, &mut self.scene);
+            self.gui.draw(&mut self.window, &mut self.scene, &mut self.settings);
 
             self.window.swap_buffers();
 

@@ -2,10 +2,12 @@ use imgui_glfw_rs::glfw;
 use imgui_glfw_rs::imgui;
 
 use crate::game::scene::Scene;
+use crate::game::GameSettings;
 use glfw::{Window, WindowEvent};
 use imgui::{im_str, FontGlyphRange, ImFontConfig, ImGui, ImGuiCol, ImVec2, ImVec4};
 use imgui_glfw_rs::ImguiGLFW;
 use imgui_opengl_renderer::Renderer;
+use nalgebra::clamp;
 
 pub struct AppUI {
     imgui: ImGui,
@@ -53,17 +55,17 @@ impl AppUI {
 
             style.colors[ImGuiCol::Text as usize] = ImVec4::new(0.93, 0.93, 0.93, 1.00);
             style.colors[ImGuiCol::TextDisabled as usize] = ImVec4::new(0.70, 0.70, 0.70, 1.00);
-            style.colors[ImGuiCol::WindowBg as usize] = ImVec4::new(0.16, 0.16, 0.16, 0.60);
-            style.colors[ImGuiCol::ChildBg as usize] = ImVec4::new(0.18, 0.18, 0.18, 0.60);
-            style.colors[ImGuiCol::PopupBg as usize] = ImVec4::new(0.26, 0.26, 0.26, 0.60);
+            style.colors[ImGuiCol::WindowBg as usize] = ImVec4::new(0.16, 0.16, 0.16, 0.70);
+            style.colors[ImGuiCol::ChildBg as usize] = ImVec4::new(0.18, 0.18, 0.18, 0.70);
+            style.colors[ImGuiCol::PopupBg as usize] = ImVec4::new(0.26, 0.26, 0.26, 0.70);
             style.colors[ImGuiCol::Border as usize] = ImVec4::new(0.26, 0.26, 0.26, 1.00);
             style.colors[ImGuiCol::BorderShadow as usize] = ImVec4::new(0.26, 0.26, 0.26, 1.00);
             style.colors[ImGuiCol::FrameBg as usize] = ImVec4::new(0.16, 0.16, 0.16, 0.40);
             style.colors[ImGuiCol::FrameBgHovered as usize] = ImVec4::new(0.16, 0.16, 0.16, 0.60);
             style.colors[ImGuiCol::FrameBgActive as usize] = ImVec4::new(0.16, 0.16, 0.16, 0.60);
-            style.colors[ImGuiCol::TitleBg as usize] = ImVec4::new(0.36, 0.36, 0.36, 0.60);
-            style.colors[ImGuiCol::TitleBgCollapsed as usize] = ImVec4::new(0.36, 0.36, 0.36, 0.60);
-            style.colors[ImGuiCol::TitleBgActive as usize] = ImVec4::new(0.36, 0.36, 0.36, 0.60);
+            style.colors[ImGuiCol::TitleBg as usize] = ImVec4::new(0.36, 0.36, 0.36, 0.80);
+            style.colors[ImGuiCol::TitleBgCollapsed as usize] = ImVec4::new(0.36, 0.36, 0.36, 0.80);
+            style.colors[ImGuiCol::TitleBgActive as usize] = ImVec4::new(0.36, 0.36, 0.36, 0.80);
             style.colors[ImGuiCol::MenuBarBg as usize] = ImVec4::new(0.26, 0.26, 0.26, 1.00);
             style.colors[ImGuiCol::ScrollbarBg as usize] = ImVec4::new(0.21, 0.21, 0.21, 1.00);
             style.colors[ImGuiCol::ScrollbarGrab as usize] = ImVec4::new(0.36, 0.36, 0.36, 1.00);
@@ -113,7 +115,7 @@ impl AppUI {
         imgui
     }
 
-    pub fn draw(&mut self, window: &mut Window, scene: &mut Scene) {
+    pub fn draw(&mut self, window: &mut Window, scene: &mut Scene, settings: &mut GameSettings) {
         let ui = self.imgui_glfw.frame(window, &mut self.imgui);
 
         let (width, height) = window.get_size();
@@ -123,34 +125,36 @@ impl AppUI {
         let mut should_close = false;
 
         if self.is_ingame {
-            ui.window(im_str!("Player 1"))
-                .title_bar(true)
-                .position((20.0, height - 100.), imgui::ImGuiCond::Always)
-                .size((250.0, 0.0), imgui::ImGuiCond::Once)
-                .always_use_window_padding(true)
-                .collapsible(false)
-                .resizable(false)
-                .movable(false)
-                .build(|| {
-                    ui.progress_bar(scene.cars[0].boost / 100.)
-                        .overlay_text(im_str!("BOOST"))
-                        .size((-1., 40.))
-                        .build();
-                });
-            ui.window(im_str!("Player 2"))
-                .title_bar(true)
-                .position((width - 270., height - 100.), imgui::ImGuiCond::Always)
-                .size((250.0, 0.0), imgui::ImGuiCond::Once)
-                .always_use_window_padding(true)
-                .collapsible(false)
-                .resizable(false)
-                .movable(false)
-                .build(|| {
-                    ui.progress_bar(scene.cars[1].boost / 100.)
-                        .overlay_text(im_str!("BOOST"))
-                        .size((-1., 40.))
-                        .build();
-                });
+            fn boost_to_rgba(boost: f32) -> (f32, f32, f32, f32) {
+                let bst = boost * 0.01;
+                (1.0 - bst, clamp(bst, 0.0, 0.77), 0.0, 1.0)
+            }
+            fn player_ui_pos(width: f32, height: f32, id: usize) -> (f32, f32) {
+                match id {
+                    0 => (20.0, height - 100.),
+                    1 => (width - 270., height - 100.),
+                    _ => unreachable!(),
+                }
+            }
+
+            for (id, car) in scene.cars.iter().enumerate() {
+                ui.window(im_str!("Player {}", id + 1))
+                    .title_bar(true)
+                    .position(player_ui_pos(width, height, id), imgui::ImGuiCond::Always)
+                    .size((250.0, 0.0), imgui::ImGuiCond::Once)
+                    .always_use_window_padding(true)
+                    .collapsible(false)
+                    .resizable(false)
+                    .movable(false)
+                    .build(|| {
+                        ui.with_color_var(ImGuiCol::PlotHistogram, boost_to_rgba(car.boost), || {
+                            ui.progress_bar(car.boost / 100.)
+                                .overlay_text(im_str!("BOOST"))
+                                .size((-1., 40.))
+                                .build();
+                        });
+                    });
+            }
 
             let mut close_ingame_menu = false;
             if !self.is_key_esc && window.get_key(glfw::Key::Escape) == glfw::Action::Press {
@@ -185,10 +189,14 @@ impl AppUI {
                     ui.checkbox(im_str!("Smooth zoom"), &mut is_smooth_zoom);
                     ui.checkbox(im_str!("Smooth pan"), &mut is_smooth_pan);
                     ui.separator();
+                    ui.input_float(im_str!("Gamma"), &mut settings.gamma).step(0.1).build();
+                    ui.separator();
                     if ui.button(im_str!("Exit"), (200., 40.)) {
                         should_close = true;
                     }
                 });
+            settings.gamma = clamp(settings.gamma, 0.5, 2.5);
+
             self.is_ingame_menu = is_ingame_menu;
             scene.camera.is_smooth_zoom = is_smooth_zoom;
             scene.camera.is_smooth_pan = is_smooth_pan;

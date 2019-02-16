@@ -30,9 +30,9 @@ pub struct Scene {
 
 impl Scene {
     /// Create a new scene. Choose a map via id.
-    pub fn new(map_id: u32) -> Scene {
+    pub fn new(map_id: u32, players: u32) -> Scene {
         let mut cars = Vec::new();
-        for i in 0..2 {
+        for i in 0..players {
             if i % 2 == 0 {
                 cars.push(Car::new(
                     &Car::model_from_id(3),

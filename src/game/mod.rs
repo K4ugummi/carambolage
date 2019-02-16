@@ -63,6 +63,7 @@ pub struct GameSettings {
     pub height: u32,
     pub map: u32,
     pub fps: u32,
+    pub players: u32
 }
 
 impl Default for GameSettings {
@@ -73,6 +74,7 @@ impl Default for GameSettings {
             height: 480,
             map: 1,
             fps: 60,
+            players: 2
         }
     }
 }
@@ -125,7 +127,7 @@ impl Game {
             Controller::new(true, &ControllerLayout::WASD),
             Controller::new(true, &ControllerLayout::Arrows),
         ];
-        let scene = Scene::new(settings.map);
+        let scene = Scene::new(settings.map, settings.players);
 
         Game {
             glfw,

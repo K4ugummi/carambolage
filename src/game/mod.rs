@@ -36,8 +36,6 @@ use log::{debug, info};
 use nalgebra::Perspective3;
 use std::cell::Cell;
 use std::sync::mpsc::Receiver;
-use std::thread::sleep;
-use time::Duration;
 
 type Event = Receiver<(f64, glfw::WindowEvent)>;
 
@@ -145,8 +143,6 @@ impl Game {
     }
 
     pub(crate) fn run(&mut self) {
-        let nano_sec = Duration::nanoseconds(1).to_std().unwrap();
-
         while !self.window.should_close() {
             let dt = self.frame_limiter.start();
             self.window.make_current();

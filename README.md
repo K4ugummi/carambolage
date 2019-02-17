@@ -1,6 +1,5 @@
 # Carambolage
-![logo small](logo-small.png "Carambolage") [![Build Status](https://api.travis-ci.com/K4ugummi/carambolage.svg?branch=master)](https://travis-ci.com/K4ugummi/carambolage) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Documentation](https://img.shields.io/badge/Documentation-v0.1.0-brightgreen.svg)](https://k4ugummi.github.io/docs/carambolage/)
+![logo small](other/logo-small.png "Carambolage") [![Build Status](https://api.travis-ci.com/K4ugummi/carambolage.svg?branch=master)](https://travis-ci.com/K4ugummi/carambolage) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ---
 
 ## Contents
@@ -12,8 +11,7 @@
 
 ## A game written in Rust!
 
-![screenshot](.github/ui.JPG "Screenshot")
-![screenshot-menu](.github/ui-menu.JPG "Screenshot")
+![screenshot](other/screen-ingame.png "Screenshot")
 
 We are big fans of Rust and have been using this programming language in our working environment for some time now. After getting used to the fact that Rust doesn't let us get away with stupid things that crash our code at runtime (at least that's how we see it at the moment), we've become attached to this modern language. 
 
@@ -52,7 +50,11 @@ You have to setup GLFW on your system in order to build the game.
 ---
 
 ## Contributing
-Sorry, no contributing guideline yet.
+1. Fork the project
+2. Create a new branch `git checkout -b <branch>`
+3. Make changes
+4. Run `cargo fmt`
+5. Run `cargo clippy` and make sure it compiles wihtout warnings.
 
 ### Dependencies
 - [GLFW](https://github.com/PistonDevelopers/glfw-rs)

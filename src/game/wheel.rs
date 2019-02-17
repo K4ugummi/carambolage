@@ -17,7 +17,7 @@
 
 use super::controller::Controller;
 use crate::grphx::Model;
-use nalgebra::{Vector3, Matrix4, zero};
+use nalgebra::{zero, Matrix4, Vector3};
 use ncollide3d::shape::Cylinder;
 
 pub struct Wheel {
@@ -27,20 +27,19 @@ pub struct Wheel {
     radius: f32,
     friction: f32,
     is_slipping: bool,
-    
-    pub model: Model,           // Model of the wheel
-    pub cylinder: Cylinder<f32>,     // Wheel collider
+
+    pub model: Model,            // Model of the wheel
+    pub cylinder: Cylinder<f32>, // Wheel collider
 }
 
 impl Wheel {
     pub fn new(model: &str, color_palette: &str, position: Vector3<f32>) -> Self {
-        
         let model = Model::new(model, color_palette);
         let (min, max) = model.get_min_max();
         let radius = (max.x - min.x) * 0.5;
         let half_height = (max.y - min.y) * 0.5;
         let cylinder = Cylinder::new(half_height, radius);
-        
+
         Wheel {
             position,
             rotation: zero(),

@@ -39,15 +39,14 @@ boost: `[Right Shift]`
 ---
 
 ## Download
-You can download precompiled binaries for your system below:
-- [Windows v0.1](https://carambolage.k4ugummi.de/wp-content/uploads/2018/10/carambolage-win-v0_1.zip)
-- [Linux v0.1](https://carambolage.k4ugummi.de/wp-content/uploads/2018/10/carambolage-linux-v0_1.tar.gz)
-- ~~MacOS~~
+No precompiled binaries yet ¯\\\_(ツ)\_/¯
 
 ## Build
-First, you have to download and install the [Rust-lang compiler](https://www.rust-lang.org/).
-
-You have to setup [GLFW](https://www.glfw.org/) on your system in order to build the game, because it handles a the OpenGL context window for your platform.
+1. Download and install the [Rust-lang compiler](https://www.rust-lang.org/).
+2. You have to setup [GLFW](https://www.glfw.org/) on your system in order to build the game, because it handles a the OpenGL context window for your platform.
+3. Clone this repository `git clone https://github.com/K4ugummi/carambolage.git`
+4. `cd carambolage`
+5. Build and run the game `cargo run --release`
 
 ---
 

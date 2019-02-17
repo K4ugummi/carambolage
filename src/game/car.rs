@@ -37,15 +37,15 @@ impl Car {
     ///
     /// For `model` and `color_palette` see `model_from_id()` and `color_from_id()`.
     /// `mass` is the mass of the car in [kg]
-    pub fn new(model: &str, color_palette: &str, position: Vector3<f32>, mass: f32) -> Car {
-        debug!("New({}, {}, {:?}, {})", model, color_palette, position, mass);
+    pub fn new(model: &str, color_palette: &str, mass: f32) -> Car {
+        debug!("New({}, {}, {})", model, color_palette, mass);
 
         let model = Model::new(model, color_palette);
         let (min, max) = model.get_min_max();
         let cuboid = Cuboid::new((max - min) * 0.25);
 
         Car {
-            position,
+            position: zero(),
             rotation: zero(),
             _velocity: zero(),
             _force: zero(),

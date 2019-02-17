@@ -27,7 +27,7 @@ pub struct Camera {
 
     // Internal parameter.
     height: f32,
-    height_min: f32,
+    pub height_min: f32,
     height_max: f32,
     speed: f32,
 
@@ -42,18 +42,17 @@ impl Camera {
     /// Create a new `Camera` with fixed values.
     pub fn new() -> Camera {
         info!("Camera::new()");
-        let height = 50.;
         Camera {
-            position: Vector3::new(0., 0., height),
+            position: Vector3::new(0., 0., 50.),
             focus: Vector3::new(0., 0., 0.),
             up: Vector3::new(0., 1., 0.),
-            height,
+            height: 50.,
             height_min: 30.,
             height_max: 140.,
             speed: 1.8,
 
             focus_goal: Vector3::new(0., 0., 0.),
-            height_goal: height,
+            height_goal: 50.,
 
             is_smooth_zoom: true,
             is_smooth_pan: true,

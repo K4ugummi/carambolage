@@ -16,7 +16,7 @@ pub fn draw_main_menu(
 ) {
     ui.window(im_str!("Main menu"))
         .title_bar(false)
-        .position((0.,0.), imgui::ImGuiCond::Always)
+        .position((0., 0.), imgui::ImGuiCond::Always)
         .size((0.0, 0.0), imgui::ImGuiCond::Once)
         .always_use_window_padding(true)
         .collapsible(false)

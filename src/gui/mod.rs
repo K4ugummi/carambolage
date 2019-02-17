@@ -123,9 +123,16 @@ impl AppUI {
         let ui = self.imgui_glfw.frame(window, &mut self.imgui);
 
         if self.is_ingame {
-            draw_game_ui(window, scene, settings, &ui, &mut self.is_ingame_menu, &mut self.is_key_esc, &mut self.is_ingame);
-        }
-        else {
+            draw_game_ui(
+                window,
+                scene,
+                settings,
+                &ui,
+                &mut self.is_ingame_menu,
+                &mut self.is_key_esc,
+                &mut self.is_ingame,
+            );
+        } else {
             draw_main_menu(window, scene, settings, &ui, &mut self.is_key_esc, &mut self.is_ingame);
         }
 

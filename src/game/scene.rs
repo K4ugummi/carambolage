@@ -16,7 +16,7 @@ use super::car::Car;
 use super::controller::Controller;
 use super::level::Level;
 use crate::grphx::Camera;
-use nalgebra::{inf, sup, Isometry3, Matrix4, Vector3};
+use nalgebra::{inf, sup, zero, Isometry3, Matrix4, Vector3};
 use ncollide3d::query;
 
 /// Main application Scene.
@@ -32,23 +32,8 @@ impl Scene {
     /// Create a new scene. Choose a map via id.
     pub fn new(map_id: u32) -> Scene {
         let mut cars = Vec::new();
-        for i in 0..2 {
-            if i % 2 == 0 {
-                cars.push(Car::new(
-                    &Car::model_from_id(3),
-                    &Car::color_from_id(1),
-                    Vector3::new(-1.15, -1.7 * i as f32, 0.5),
-                    1.0,
-                ));
-            } else {
-                cars.push(Car::new(
-                    &Car::model_from_id(4),
-                    &Car::color_from_id(6),
-                    Vector3::new(1.15, -1.7 * i as f32, 0.5),
-                    1.0,
-                ));
-            }
-        }
+        cars.push(Car::new(&Car::model_from_id(3), &Car::color_from_id(1), 1.0));
+        cars.push(Car::new(&Car::model_from_id(4), &Car::color_from_id(6), 1.0));
 
         // Choose the level according to an id.
         let level = match map_id {
@@ -58,7 +43,21 @@ impl Scene {
         };
         let camera = Camera::new();
 
-        Scene { cars, level, camera }
+        let mut scene = Scene { cars, level, camera };
+        scene.reset_cars();
+        scene
+    }
+
+    pub fn reset_cars(&mut self) {
+        for i in 0..self.cars.len() {
+            self.cars[i].boost = 100.0;
+            self.cars[i].rotation = zero();
+            if i % 2 == 0 {
+                self.cars[i].position = Vector3::new(-1.15, -1.7 * i as f32, 0.5);
+            } else {
+                self.cars[i].position = Vector3::new(1.15, -1.7 * i as f32, 0.5);
+            }
+        }
     }
 
     /// Update the scene.
@@ -149,8 +148,7 @@ impl Scene {
             };
             self.camera.move_to_focus(camera_focus);
             self.camera.update(dt);
-        }
-        else {
+        } else {
             let height_min = self.camera.height_min;
             let is_smooth_zoom = self.camera.is_smooth_zoom;
             let is_smooth_pan = self.camera.is_smooth_pan;
@@ -165,7 +163,6 @@ impl Scene {
             self.camera.height_min = height_min;
             self.camera.is_smooth_zoom = is_smooth_zoom;
             self.camera.is_smooth_pan = is_smooth_pan;
-
         }
     }
 

@@ -26,5 +26,8 @@ pub fn draw_main_menu(
             if ui.button(im_str!("Start game"), (200., 40.)) {
                 *is_ingame = true;
             }
+            if ui.button(im_str!("Exit"), (200., 40.)) {
+                window.set_should_close(true);
+            }
         });
 }

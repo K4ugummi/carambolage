@@ -21,6 +21,17 @@ pub(super) fn draw_game_ui(
 
     let mut should_close = false;
 
+    ui.window(im_str!("FPS"))
+        .title_bar(false)
+        .position((width * 0.5 - 70.,0.), imgui::ImGuiCond::Always)
+        .size((140.0, 0.0), imgui::ImGuiCond::Once)
+        .collapsible(false)
+        .resizable(false)
+        .movable(false)
+        .build(|| {
+            ui.text(im_str!("FPS: {:.2}", ui.framerate()));
+        });
+
     for (id, car) in scene.cars.iter().enumerate() {
         ui.window(im_str!("Player {}", id + 1))
             .title_bar(true)

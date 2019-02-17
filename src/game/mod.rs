@@ -173,7 +173,6 @@ impl Game {
             while self.frame_limiter.stop() {
                 self.glfw.poll_events();
                 self.process_events();
-                sleep(nano_sec);
             }
         }
     }

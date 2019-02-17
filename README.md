@@ -11,7 +11,7 @@
 
 ## A game written in Rust!
 
-![screenshot](other/screen-ingame.png "Screenshot")
+![screenshot](https://media.githubusercontent.com/media/K4ugummi/carambolage/master/other/screen-ingame.PNG "Screenshot")
 
 We are big fans of Rust and have been using this programming language in our working environment for some time now. After getting used to the fact that Rust doesn't let us get away with stupid things that crash our code at runtime (at least that's how we see it at the moment), we've become attached to this modern language. 
 
@@ -20,7 +20,7 @@ Sadly, you're always busy learning good patterns during your work, so you have t
 ---
 
 ## Controls
-![controls](controls.jpg "Controls")
+![controls](https://media.githubusercontent.com/media/K4ugummi/carambolage/master/other/controls.jpg "Controls")
 Open Menu: `[Esc]`  
 
 Player 1  

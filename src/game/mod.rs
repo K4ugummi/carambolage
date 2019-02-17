@@ -108,7 +108,7 @@ impl Game {
 
         window.make_current();
         window.set_all_polling(true);
-        window.set_cursor_mode(glfw::CursorMode::Normal);
+        window.set_cursor_mode(glfw::CursorMode::Disabled);
 
         let gui = AppUI::new(&mut window);
 
@@ -154,7 +154,11 @@ impl Game {
             self.process_events();
             self.process_input(dt);
 
-            self.scene.update(dt, &self.controller);
+            if !self.gui.is_menu_control {
+                self.scene.update(dt, &self.controller, self.gui.is_ingame);
+            } else {
+                self.scene.update(dt, &[], self.gui.is_ingame);
+            }
 
             self.screen.first_step();
             let projection = Perspective3::new(self.settings.width as f32 / self.settings.height as f32, 70., 1.0, 200.).into_inner();

@@ -62,7 +62,7 @@ impl Scene {
     }
 
     /// Update the scene.
-    pub fn update(&mut self, dt: f32, controller: &[Controller]) {
+    pub fn update(&mut self, dt: f32, controller: &[Controller], is_ingame: bool) {
         // User Input
         for (id, car) in &mut self.cars.iter_mut().enumerate() {
             if id < controller.len() {
@@ -73,7 +73,7 @@ impl Scene {
         }
 
         self.update_collisions(dt);
-        self.update_scene_camera(dt);
+        self.update_scene_camera(dt, is_ingame);
     }
 
     /// Calculate and solve collisions.
@@ -129,25 +129,44 @@ impl Scene {
     }
 
     /// Calculate the position the camera should move to.
-    fn update_scene_camera(&mut self, dt: f32) {
-        let camera_focus = if self.cars.is_empty() {
-            Vector3::new(0., 0., 0.)
-        } else {
-            let mut min = self.cars[0].position;
-            let mut max = self.cars[0].position;
-            let mut lerp_pos = Vector3::new(0., 0., 0.);
-            for car in &self.cars {
-                lerp_pos += car.position;
-                min = inf(&min, &car.position);
-                max = sup(&max, &car.position);
-            }
-            lerp_pos /= self.cars.len() as f32;
-            let camera_distance = (max - min).norm() * 1.20 + 10.0;
-            self.camera.move_to_height(camera_distance);
-            lerp_pos
-        };
-        self.camera.move_to_focus(camera_focus);
-        self.camera.update(dt);
+    fn update_scene_camera(&mut self, dt: f32, is_ingame: bool) {
+        if is_ingame {
+            let camera_focus = if self.cars.is_empty() {
+                Vector3::new(0., 0., 0.)
+            } else {
+                let mut min = self.cars[0].position;
+                let mut max = self.cars[0].position;
+                let mut lerp_pos = Vector3::new(0., 0., 0.);
+                for car in &self.cars {
+                    lerp_pos += car.position;
+                    min = inf(&min, &car.position);
+                    max = sup(&max, &car.position);
+                }
+                lerp_pos /= self.cars.len() as f32;
+                let camera_distance = (max - min).norm() * 1.20 + 10.0;
+                self.camera.move_to_height(camera_distance);
+                lerp_pos
+            };
+            self.camera.move_to_focus(camera_focus);
+            self.camera.update(dt);
+        }
+        else {
+            let height_min = self.camera.height_min;
+            let is_smooth_zoom = self.camera.is_smooth_zoom;
+            let is_smooth_pan = self.camera.is_smooth_pan;
+
+            self.camera.height_min = 10.;
+            self.camera.is_smooth_zoom = true;
+            self.camera.is_smooth_pan = true;
+            self.camera.move_to_focus(Vector3::new(0., 0., 0.));
+            self.camera.move_to_height(10.);
+            self.camera.update(dt);
+
+            self.camera.height_min = height_min;
+            self.camera.is_smooth_zoom = is_smooth_zoom;
+            self.camera.is_smooth_pan = is_smooth_pan;
+
+        }
     }
 
     /// Draw the entire `Scene` to the bound framebuffer.

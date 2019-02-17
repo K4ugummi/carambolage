@@ -1,13 +1,15 @@
-use imgui_glfw_rs::glfw;
-use imgui_glfw_rs::imgui;
+mod game_ui;
+mod main_menu_ui;
 
+use self::{game_ui::*, main_menu_ui::*};
 use crate::game::scene::Scene;
 use crate::game::GameSettings;
 use glfw::{Window, WindowEvent};
-use imgui::{im_str, FontGlyphRange, ImFontConfig, ImGui, ImGuiCol, ImVec2, ImVec4};
+use imgui::{FontGlyphRange, ImFontConfig, ImGui, ImGuiCol, ImVec2, ImVec4};
+use imgui_glfw_rs::glfw;
+use imgui_glfw_rs::imgui;
 use imgui_glfw_rs::ImguiGLFW;
 use imgui_opengl_renderer::Renderer;
-use nalgebra::clamp;
 
 pub struct AppUI {
     imgui: ImGui,
@@ -15,7 +17,8 @@ pub struct AppUI {
     imgui_renderer: Renderer,
 
     pub is_ingame: bool,
-    pub is_ingame_menu: bool,
+    is_ingame_menu: bool,
+    pub is_menu_control: bool,
 
     is_key_esc: bool,
 }
@@ -33,8 +36,9 @@ impl AppUI {
             imgui_glfw,
             imgui_renderer,
 
-            is_ingame: true,
+            is_ingame: false,
             is_ingame_menu: false,
+            is_menu_control: false,
 
             is_key_esc: false,
         }
@@ -118,91 +122,26 @@ impl AppUI {
     pub fn draw(&mut self, window: &mut Window, scene: &mut Scene, settings: &mut GameSettings) {
         let ui = self.imgui_glfw.frame(window, &mut self.imgui);
 
-        let (width, height) = window.get_size();
-        let width = width as f32;
-        let height = height as f32;
-
-        let mut should_close = false;
-
         if self.is_ingame {
-            fn boost_to_rgba(boost: f32) -> (f32, f32, f32, f32) {
-                let bst = boost * 0.01;
-                (1.0 - bst, clamp(bst, 0.0, 0.77), 0.0, 1.0)
-            }
-            fn player_ui_pos(width: f32, height: f32, id: usize) -> (f32, f32) {
-                match id {
-                    0 => (20.0, height - 100.),
-                    1 => (width - 270., height - 100.),
-                    _ => unreachable!(),
-                }
-            }
-
-            for (id, car) in scene.cars.iter().enumerate() {
-                ui.window(im_str!("Player {}", id + 1))
-                    .title_bar(true)
-                    .position(player_ui_pos(width, height, id), imgui::ImGuiCond::Always)
-                    .size((250.0, 0.0), imgui::ImGuiCond::Once)
-                    .always_use_window_padding(true)
-                    .collapsible(false)
-                    .resizable(false)
-                    .movable(false)
-                    .build(|| {
-                        ui.with_color_var(ImGuiCol::PlotHistogram, boost_to_rgba(car.boost), || {
-                            ui.progress_bar(car.boost / 100.)
-                                .overlay_text(im_str!("BOOST"))
-                                .size((-1., 40.))
-                                .build();
-                        });
-                    });
-            }
-
-            let mut close_ingame_menu = false;
-            if !self.is_key_esc && window.get_key(glfw::Key::Escape) == glfw::Action::Press {
-                if self.is_ingame_menu {
-                    close_ingame_menu = true;
-                }
-                self.is_ingame_menu = !self.is_ingame_menu;
-                self.is_key_esc = true;
-            } else if self.is_key_esc && window.get_key(glfw::Key::Escape) == glfw::Action::Release {
-                self.is_key_esc = false;
-            }
-
-            let mut is_ingame_menu = self.is_ingame_menu;
-            let mut is_smooth_zoom = scene.camera.is_smooth_zoom;
-            let mut is_smooth_pan = scene.camera.is_smooth_pan;
-            if is_ingame_menu {
-                ui.open_popup(im_str!("Menu"));
-            }
-            ui.popup_modal(im_str!("Menu"))
-                .title_bar(false)
-                .always_use_window_padding(true)
-                .collapsible(false)
-                .resizable(false)
-                .movable(false)
-                .build(|| {
-                    if ui.button(im_str!("Continue"), (200., 40.)) || close_ingame_menu {
-                        ui.close_current_popup();
-                        is_ingame_menu = false;
-                    }
-                    ui.separator();
-                    ui.text(im_str!("Camera settings:"));
-                    ui.checkbox(im_str!("Smooth zoom"), &mut is_smooth_zoom);
-                    ui.checkbox(im_str!("Smooth pan"), &mut is_smooth_pan);
-                    ui.separator();
-                    ui.input_float(im_str!("Gamma"), &mut settings.gamma).step(0.1).build();
-                    ui.separator();
-                    if ui.button(im_str!("Exit"), (200., 40.)) {
-                        should_close = true;
-                    }
-                });
-            settings.gamma = clamp(settings.gamma, 0.5, 2.5);
-
-            self.is_ingame_menu = is_ingame_menu;
-            scene.camera.is_smooth_zoom = is_smooth_zoom;
-            scene.camera.is_smooth_pan = is_smooth_pan;
+            draw_game_ui(window, scene, settings, &ui, &mut self.is_ingame_menu, &mut self.is_key_esc, &mut self.is_ingame);
+        }
+        else {
+            draw_main_menu(window, scene, settings, &ui, &mut self.is_key_esc, &mut self.is_ingame);
         }
 
-        window.set_should_close(should_close);
+        let is_menu_changed = self.is_menu_control;
+        self.is_menu_control = self.is_ingame_menu || !self.is_ingame;
+        if self.is_menu_control != is_menu_changed {
+            let (win_width, win_height) = window.get_size();
+            let curs_x = win_width / 2;
+            let curs_y = win_height / 2;
+            window.set_cursor_pos(curs_x as f64, curs_y as f64);
+            if self.is_menu_control {
+                window.set_cursor_mode(glfw::CursorMode::Normal);
+            } else {
+                window.set_cursor_mode(glfw::CursorMode::Disabled);
+            }
+        }
 
         self.imgui_renderer.render(ui);
     }

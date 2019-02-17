@@ -1,6 +1,5 @@
 # Carambolage
-![logo small](logo-small.png "Carambolage") [![Build Status](https://api.travis-ci.com/K4ugummi/carambolage.svg?branch=master)](https://travis-ci.com/K4ugummi/carambolage) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Documentation](https://img.shields.io/badge/Documentation-v0.1.0-brightgreen.svg)](https://k4ugummi.github.io/docs/carambolage/)
+![logo small](other/logo-small.png "Carambolage") [![Build Status](https://api.travis-ci.com/K4ugummi/carambolage.svg?branch=master)](https://travis-ci.com/K4ugummi/carambolage) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ---
 
 ## Contents
@@ -12,8 +11,7 @@
 
 ## A game written in Rust!
 
-![screenshot](.github/ui.JPG "Screenshot")
-![screenshot-menu](.github/ui-menu.JPG "Screenshot")
+![screenshot](https://media.githubusercontent.com/media/K4ugummi/carambolage/master/other/screen-ingame.PNG "Screenshot")
 
 We are big fans of Rust and have been using this programming language in our working environment for some time now. After getting used to the fact that Rust doesn't let us get away with stupid things that crash our code at runtime (at least that's how we see it at the moment), we've become attached to this modern language. 
 
@@ -22,7 +20,7 @@ Sadly, you're always busy learning good patterns during your work, so you have t
 ---
 
 ## Controls
-![controls](controls.jpg "Controls")
+![controls](https://media.githubusercontent.com/media/K4ugummi/carambolage/master/other/controls.jpg "Controls")
 Open Menu: `[Esc]`  
 
 Player 1  
@@ -47,12 +45,19 @@ You can download precompiled binaries for your system below:
 - ~~MacOS~~
 
 ## Build
-You have to setup GLFW on your system in order to build the game.
+First, you have to download and install the [Rust-lang compiler](https://www.rust-lang.org/).
+
+You have to setup [GLFW](https://www.glfw.org/) on your system in order to build the game, because it handles a the OpenGL context window for your platform.
 
 ---
 
 ## Contributing
-Sorry, no contributing guideline yet.
+1. Fork the project
+2. Create a new branch `git checkout -b <branch>`
+3. Make changes
+4. Run `cargo fmt`
+5. Run `cargo clippy` and make sure it compiles wihtout warnings.
+6. Push your changes to your fork and create a pull request
 
 ### Dependencies
 - [GLFW](https://github.com/PistonDevelopers/glfw-rs)

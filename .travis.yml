@@ -3,7 +3,12 @@ language: rust
 rust:
   - stable
 
-cache: cargo
+before_cache:
+  - rm -rf /home/travis/.cargo/registry
+
+cache:
+  directories:
+    - /home/travis/.cargo
 
 addons:
   apt:
@@ -15,12 +20,56 @@ addons:
       - libxinerama-dev
       - libxcursor-dev
       - libxi-dev
-      
-before_script:
-  - rustup component add rustfmt-preview
 
-script:
-  - cargo fmt --all -- --check
-  - cargo build
-  - cargo test
+stages:
+  - check
+  - build
+  - deploy
 
+jobs:
+  include:
+  - stage: check
+    before_script:
+    - rustup component add rustfmt-preview
+    script:
+    - cargo fmt --all -- --check
+  - stage: build
+    script:
+    - cargo build
+  - stage: deploy
+    script:
+      - cargo build --release
+      - mkdir carambolage-linux
+      - cp target/release/carambolage carambolage-linux/carambolage
+      - cp -r res/ carambolage-linux/
+      - tar -zcvf carambolage-linux.tar.gz carambolage-linux
+    addons:
+      apt:
+        packages:
+          - mingw-w64
+          - gcc-mingw-w64-x86-64
+    install:
+      - rustup target install x86_64-pc-windows-gnu
+    script:
+      - rustup run stable cargo rustc --release --target=x86_64-pc-windows-gnu -- -C linker=x86_64-w64-mingw32-gcc
+      - cd target/
+        && ls
+        && cd x86_64-pc-windows-gnu/ 
+        && ls
+        && cd release
+        && ls
+      - mkdir carambolage-windows
+      - cp target/x86_64-pc-windows-gnu/release/carambolage carambolage-windows/carambolage
+      - cp -r res/ carambolage-windows/
+      - zip -r carambolage-windows.zip carambolage-windows
+    # before_deploy:
+    # - export RELEASE_FILES=$(ls carambolage-*.*)
+    # deploy:
+    #   provider: releases
+    #   api_key: "GITHUB OAUTH TOKEN"
+    #   file_glob: true
+    #   file: "${RELEASE_FILES}"
+    #   skip_cleanup: true
+    #   overwrite: true
+    #   on:
+    #     branch: master

@@ -23,7 +23,7 @@ pub(super) fn draw_game_ui(
 
     ui.window(im_str!("FPS"))
         .title_bar(false)
-        .position((width * 0.5 - 70.,0.), imgui::ImGuiCond::Always)
+        .position((width * 0.5 - 70., 0.), imgui::ImGuiCond::Always)
         .size((140.0, 0.0), imgui::ImGuiCond::Once)
         .collapsible(false)
         .resizable(false)

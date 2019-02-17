@@ -45,7 +45,9 @@ You can download precompiled binaries for your system below:
 - ~~MacOS~~
 
 ## Build
-You have to setup GLFW on your system in order to build the game.
+First, you have to download and install the [Rust-lang compiler](https://www.rust-lang.org/).
+
+You have to setup [GLFW](https://www.glfw.org/) on your system in order to build the game, because it handles a the OpenGL context window for your platform.
 
 ---
 
@@ -55,6 +57,7 @@ You have to setup GLFW on your system in order to build the game.
 3. Make changes
 4. Run `cargo fmt`
 5. Run `cargo clippy` and make sure it compiles wihtout warnings.
+6. Push your changes to your fork and create a pull request
 
 ### Dependencies
 - [GLFW](https://github.com/PistonDevelopers/glfw-rs)

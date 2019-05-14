@@ -11,7 +11,7 @@ edition = "2018"
 getopts = "^0.2"
 gl = "^0.11"
 image = "^0.21"
-ncollide3d = "^0.18"
+ncollide3d = "^0.19"
 time = "~0.1"
 tobj = "~0.1"
 log = "~0.4"
@@ -23,7 +23,7 @@ imgui-opengl-renderer = "0.4"
 
 
 [dependencies.nalgebra]
-version = "^0.17"
+version = "^0.18"
 features = ["serde-serialize"]
 
 

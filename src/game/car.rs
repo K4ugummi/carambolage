@@ -17,7 +17,7 @@ use crate::grphx::Model;
 use log::debug;
 use ncollide3d::shape::Cuboid;
 
-use nalgebra::{clamp, zero, Matrix4, Vector3};
+use nalgebra::{Matrix4, Vector3, clamp, zero};
 
 /// A GameObject controlled by a player.
 pub struct Car {
@@ -83,11 +83,7 @@ impl Car {
 
             let booster = if ct.get_boost() {
                 self.boost = clamp(self.boost - dt * 30.0, 0.0, 100.0);
-                if self.boost > 0.1 {
-                    14.0
-                } else {
-                    10.0
-                }
+                if self.boost > 0.1 { 14.0 } else { 10.0 }
             } else {
                 self.boost = clamp(self.boost + dt * 14.0, 0.0, 100.0);
                 10.0

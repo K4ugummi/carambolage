@@ -14,9 +14,10 @@
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
 use crate::grphx::Model;
 use log::debug;
-use nalgebra::{zero, Isometry3, Matrix4, Point3, Vector3};
+use nalgebra::{Isometry3, Matrix4, Point3, Vector3, zero};
 use ncollide3d::shape::{Cuboid, TriMesh};
 use std::path::Path;
+use tobj::*;
 
 /// Environment of a `Scene`.
 ///
@@ -57,7 +58,14 @@ impl Level {
     fn load_collider(file: &str) -> (Cuboid<f32>, TriMesh<f32>) {
         let path_str = format!("res/models/{}.col", file);
         let path = Path::new(&path_str);
-        let obj = tobj::load_obj(path);
+        let obj = tobj::load_obj(
+            path,
+            &LoadOptions {
+                single_index: true,
+                triangulate: true,
+                ..Default::default()
+            },
+        );
         let (models, _) = obj.unwrap();
 
         let mesh = &models[0].mesh;

@@ -14,7 +14,7 @@
 // along with Carambolage.  If not, see <http://www.gnu.org/licenses/>.
 use crate::util::Lerp;
 use log::info;
-use nalgebra::{clamp, Matrix4, Point3, Vector3};
+use nalgebra::{Matrix4, Point3, Vector3, clamp};
 use serde_derive::{Deserialize, Serialize};
 
 /// Camera to calculate the view matrix and follow ingame objects.

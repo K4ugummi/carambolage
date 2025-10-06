@@ -12,7 +12,7 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-use time::{Duration, PreciseTime};
+use time::{Duration, UtcDateTime};
 
 /// Limits the FPS to chosen value.
 ///
@@ -35,7 +35,7 @@ pub struct FrameLimiter {
     time_per_frame: Duration,
     delta_time: Duration,
     dt: f32,
-    time: PreciseTime,
+    time: UtcDateTime,
 }
 
 impl FrameLimiter {
@@ -48,7 +48,7 @@ impl FrameLimiter {
         } else {
             Duration::nanoseconds((1e9 / f64::from(frame_rate)) as i64)
         };
-        let time = PreciseTime::now();
+        let time = UtcDateTime::now();
 
         FrameLimiter {
             time_per_frame,
@@ -61,7 +61,7 @@ impl FrameLimiter {
     /// Make this the very first function call of your game loop, so all calculations add to delta time.
     /// This function returns the delta time.
     pub fn start(&mut self) -> f32 {
-        let now = PreciseTime::now();
+        let now = UtcDateTime::now();
         self.time = now;
 
         self.dt
@@ -69,8 +69,8 @@ impl FrameLimiter {
 
     /// Make this the very last function call of your game loop.
     pub fn stop(&mut self) -> bool {
-        self.delta_time = self.time.to(PreciseTime::now());
-        self.dt = (self.delta_time.num_nanoseconds().unwrap() as f64 * 1e-9) as f32;
+        self.delta_time = UtcDateTime::now() - self.time;
+        self.dt = (self.delta_time.whole_nanoseconds() as f64 * 1e-9) as f32;
         self.delta_time < self.time_per_frame
     }
 }

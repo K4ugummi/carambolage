@@ -16,7 +16,7 @@ use super::car::Car;
 use super::controller::Controller;
 use super::level::Level;
 use crate::grphx::Camera;
-use nalgebra::{inf, sup, zero, Isometry3, Matrix4, Vector3};
+use nalgebra::{Isometry3, Matrix4, Vector3, inf, sup, zero};
 use ncollide3d::query;
 
 /// Main application Scene.

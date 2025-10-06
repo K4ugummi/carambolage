@@ -12,7 +12,7 @@
 
 // You should have received a copy of the GNU General Public License
 // along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-use nalgebra::{clamp, Vector2, Vector3};
+use nalgebra::{Vector2, Vector3, clamp};
 
 mod framelimiter;
 

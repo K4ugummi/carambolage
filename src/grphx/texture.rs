@@ -63,7 +63,7 @@ unsafe fn load_texture(path: &str) -> u32 {
         }
     };
 
-    let data = img.raw_pixels();
+    let data = img.pixels();
 
     gl::BindTexture(gl::TEXTURE_2D, tex_id);
     gl::TexImage2D(
@@ -75,7 +75,7 @@ unsafe fn load_texture(path: &str) -> u32 {
         0,
         image_format,
         gl::UNSIGNED_BYTE,
-        &data[0] as *const u8 as *const c_void,
+        img.as_bytes().as_ptr() as *const _,
     );
     gl::GenerateMipmap(gl::TEXTURE_2D);
 

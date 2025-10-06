@@ -31,18 +31,18 @@ use self::scene::Scene;
 use crate::grphx::Screen;
 use crate::gui::AppUI;
 use crate::util::FrameLimiter;
-use glfw::{Context, Glfw, Window};
+use glfw::{Context, Glfw, GlfwReceiver, PWindow};
 use log::{debug, info};
 use nalgebra::Perspective3;
 use std::cell::Cell;
 use std::sync::mpsc::Receiver;
 
-type Event = Receiver<(f64, glfw::WindowEvent)>;
+type Event = GlfwReceiver<(f64, glfw::WindowEvent)>;
 
 pub(crate) struct Game {
     // Glfw and GL
     glfw: Glfw,
-    window: Window,
+    window: PWindow,
     events: Event,
     frame_limiter: FrameLimiter,
     gui: AppUI,
@@ -83,14 +83,15 @@ impl Game {
         let frame_limiter = FrameLimiter::new(settings.fps);
 
         debug!("Initializing glfw window");
-        let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
+        let mut glfw = glfw::init(glfw::fail_on_errors).unwrap();
         glfw.window_hint(glfw::WindowHint::ContextVersion(3, 3));
         glfw.window_hint(glfw::WindowHint::OpenGlProfile(glfw::OpenGlProfileHint::Core));
         glfw.window_hint(glfw::WindowHint::SRgbCapable(true));
-        glfw.set_error_callback(Some(glfw::Callback {
-            f: error_callback,
-            data: Cell::new(0),
-        }));
+        // glfw.set_error_callback(Some(glfw::Callback {
+        //     f: error_callback,
+        //     data: Cell::new(0),
+        // }));
+        //glfw.set_error_callback(None);
 
         let (mut window, events) = glfw
             .with_primary_monitor(|glfw, m| {

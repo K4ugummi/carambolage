@@ -18,7 +18,7 @@ use self::ControllerInternal as CI;
 use self::ControllerLayout as CL;
 use glfw::{Action, Key, Window};
 use log::debug;
-use nalgebra::{zero, Vector2};
+use nalgebra::{Vector2, zero};
 
 /// Control with WASD or arrow keys.
 #[derive(Debug)]

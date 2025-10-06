@@ -39,25 +39,15 @@ fn main() {
     let opts = get_options();
     let matches = match opts.parse(&args[1..]) {
         Ok(m) => m,
-        Err(f) => panic!(f.to_string()),
+        Err(f) => panic!("{}", f.to_string()),
     };
 
     // Filter settings
     let game_settings = match_options(&matches);
 
-    let terminal_log_config = Config {
-        time: Some(Level::Error),
-        target: Some(Level::Debug),
-        ..Default::default()
-    };
-    let write_log_config = Config {
-        time: Some(Level::Error),
-        target: Some(Level::Debug),
-        ..Default::default()
-    };
     CombinedLogger::init(vec![
-        TermLogger::new(LevelFilter::Warn, terminal_log_config).unwrap(),
-        WriteLogger::new(LevelFilter::Debug, write_log_config, File::create("carambolage.log").unwrap()),
+        TermLogger::new(LevelFilter::Warn, Config::default(), TerminalMode::Mixed, ColorChoice::Auto),
+        WriteLogger::new(LevelFilter::Debug, Config::default(), File::create("carambolage.log").unwrap()),
     ])
     .unwrap();
 

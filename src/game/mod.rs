@@ -35,7 +35,6 @@ use glfw::{Context, Glfw, GlfwReceiver, PWindow};
 use log::{debug, info};
 use nalgebra::Perspective3;
 use std::cell::Cell;
-use std::sync::mpsc::Receiver;
 
 type Event = GlfwReceiver<(f64, glfw::WindowEvent)>;
 

@@ -22,7 +22,7 @@ pub(super) fn draw_game_ui(
 
     let mut should_close = false;
 
-    ui.window(("FPS"))
+    ui.window("FPS")
         .title_bar(false)
         .position([width * 0.5 - 70., 0.], imgui::Condition::Always)
         .size([140.0, 0.0], imgui::Condition::Once)

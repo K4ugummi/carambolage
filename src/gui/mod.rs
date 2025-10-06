@@ -5,7 +5,7 @@ use self::{game_ui::*, main_menu_ui::*};
 use crate::game::GameSettings;
 use crate::game::scene::Scene;
 use glfw::{Window, WindowEvent};
-use imgui::{Context as ImContext, FontConfig, StyleColor};
+use imgui::{Context as ImContext, StyleColor};
 use imgui_glfw_rs::ImguiGLFW;
 use imgui_glfw_rs::glfw;
 use imgui_glfw_rs::imgui;

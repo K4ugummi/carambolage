@@ -18,7 +18,6 @@ use image::DynamicImage::*;
 use image::GenericImageView;
 use log::{debug, error};
 
-use std::os::raw::c_void;
 use std::path::Path;
 
 /// A 2D Texture for OpenGL
@@ -38,7 +37,7 @@ impl Default for Texture {
     }
 }
 
-unsafe fn load_texture(path: &str) -> u32 {
+unsafe fn load_texture(path: &str) -> u32 { unsafe {
     let path_str = format!("{}{}", "res/textures/", path);
     debug!("New from {}", path_str);
 
@@ -87,7 +86,7 @@ unsafe fn load_texture(path: &str) -> u32 {
     debug!("id:{}, width:{}px, height:{}px", tex_id, img.width(), img.height());
 
     tex_id
-}
+}}
 
 impl Drop for Texture {
     fn drop(&mut self) {

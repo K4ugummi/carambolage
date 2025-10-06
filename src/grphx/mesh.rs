@@ -83,14 +83,14 @@ impl Mesh {
     }
 
     /// render the mesh
-    pub unsafe fn draw(&self) {
+    pub unsafe fn draw(&self) { unsafe {
         gl::BindVertexArray(self.vao);
         gl::DrawElements(gl::TRIANGLES, self.indices.len() as i32, gl::UNSIGNED_INT, ptr::null());
         gl::BindVertexArray(0);
-    }
+    }}
 
     /// Generate the vertex array object and all buffers.
-    unsafe fn init(&mut self) {
+    unsafe fn init(&mut self) { unsafe {
         // VAO
         gl::GenVertexArrays(1, &mut self.vao);
         gl::BindVertexArray(self.vao);
@@ -120,7 +120,7 @@ impl Mesh {
         gl::BindVertexArray(0);
 
         debug!("Mesh::init() : vao == {}, vbo == {}, ibo == {}", self.vao, self.vbo, self.ibo);
-    }
+    }}
 }
 
 impl Default for Mesh {

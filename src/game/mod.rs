@@ -23,6 +23,8 @@ pub mod level;
 pub mod scene;
 /// 3D translation, rotation and scale.
 pub mod transform;
+/// Wheel physics.
+pub mod wheel;
 
 use imgui_glfw_rs::glfw;
 
